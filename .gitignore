@@ -3,6 +3,7 @@ bom
 Drivers/CMSIS
 Drivers/STM32*
 Datasheets
+Debug
 GuitarProcessorBoard/*backups
 GuitarProcessorBoard/*cache
 
