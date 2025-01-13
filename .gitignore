@@ -1,4 +1,6 @@
 bom
 *.ld
-Drivers
+Drivers/CMSIS
+Drivers/STM32*
+Datasheets
 
