@@ -2030,6 +2030,12 @@
 		(uuid "3f1a326f-fb66-4325-a347-6b695d86ee5b")
 	)
 	(junction
+		(at 141.732 71.882)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "492662e1-b780-4828-9e63-2e72dc78f89f")
+	)
+	(junction
 		(at 70.104 94.742)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2333,6 +2339,16 @@
 	)
 	(wire
 		(pts
+			(xy 55.372 149.86) (xy 55.372 151.638)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1dd16bca-e82f-4af1-a84b-da43f6401a5b")
+	)
+	(wire
+		(pts
 			(xy 144.526 96.266) (xy 144.526 97.282)
 		)
 		(stroke
@@ -2500,6 +2516,16 @@
 			(type default)
 		)
 		(uuid "405be033-9dfd-4459-9310-f82b4840d168")
+	)
+	(wire
+		(pts
+			(xy 141.732 71.882) (xy 141.986 71.882)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4173ab02-13ee-4bb2-a43d-3ab3fdf92715")
 	)
 	(wire
 		(pts
@@ -3143,6 +3169,16 @@
 	)
 	(wire
 		(pts
+			(xy 55.372 143.002) (xy 55.372 144.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a274b719-664e-4228-be89-84187c3d6d4c")
+	)
+	(wire
+		(pts
 			(xy 189.23 66.04) (xy 195.326 66.04)
 		)
 		(stroke
@@ -3210,6 +3246,16 @@
 			(type default)
 		)
 		(uuid "b7ad7951-3289-4dae-a682-9f17d94f794b")
+	)
+	(wire
+		(pts
+			(xy 141.732 64.008) (xy 141.732 71.882)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b7f4e99a-51bd-424b-885d-3edf5802d7fb")
 	)
 	(wire
 		(pts
@@ -3283,7 +3329,7 @@
 	)
 	(wire
 		(pts
-			(xy 140.97 71.882) (xy 141.986 71.882)
+			(xy 140.97 71.882) (xy 141.732 71.882)
 		)
 		(stroke
 			(width 0)
@@ -3572,6 +3618,17 @@
 		)
 		(uuid "036fe3f9-d5d6-49ad-8fd6-65d38f12a256")
 	)
+	(label "Wet"
+		(at 55.372 151.638 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "0782ecd0-d3b9-4dab-a96a-255e96b5e194")
+	)
 	(label "Bias2"
 		(at 241.046 128.27 0)
 		(fields_autoplaced yes)
@@ -3606,7 +3663,7 @@
 		(uuid "4c4d9edc-3324-4f5e-9141-d4609ddff878")
 	)
 	(label "DAC_OUT"
-		(at 150.114 71.882 0)
+		(at 141.732 64.008 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3670,6 +3727,17 @@
 			(justify left bottom)
 		)
 		(uuid "c8186235-1f56-40a7-b7d1-cdd73fbc173e")
+	)
+	(label "DAC_OUT"
+		(at 55.372 144.78 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "ced3f4c0-3df5-4ad4-ac4b-2625009bdf53")
 	)
 	(label "Bias1"
 		(at 47.498 116.84 180)
@@ -3950,7 +4018,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 146.05 70.866 90)
 			(effects
 				(font
@@ -4020,7 +4088,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 263.144 100.076 90)
 			(effects
 				(font
@@ -4088,7 +4156,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 212.852 73.406 90)
 			(effects
 				(font
@@ -4264,6 +4332,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 55.372 149.86 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "149a736a-2f2a-46d2-a356-b8224a9cc854")
+		(property "Reference" "TP203"
+			(at 57.15 145.2879 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "WET"
+			(at 57.15 147.8279 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm_VAL"
+			(at 60.452 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 60.452 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "test point"
+			(at 55.372 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "40159ff0-6e77-432f-9e2b-8ec3ee886168")
+		)
+		(instances
+			(project "GuitarProcessorBoard"
+				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
+					(reference "TP203")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_US")
 		(at 40.894 79.248 90)
 		(unit 1)
@@ -4289,7 +4424,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 41.148 78.232 90)
 			(effects
 				(font
@@ -4493,7 +4628,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 263.144 91.44 90)
 			(effects
 				(font
@@ -4723,7 +4858,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 113.9952 141.478 0)
 			(effects
 				(font
@@ -4791,7 +4926,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 53.594 70.866 90)
 			(effects
 				(font
@@ -4859,7 +4994,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 213.106 92.964 90)
 			(effects
 				(font
@@ -4927,7 +5062,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 42.164 110.744 90)
 			(effects
 				(font
@@ -4997,7 +5132,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 125.4252 141.732 0)
 			(effects
 				(font
@@ -5066,7 +5201,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
 			(at 185.166 76.962 0)
 			(effects
 				(font
@@ -5172,7 +5307,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 162.5092 105.664 0)
 			(effects
 				(font
@@ -5240,7 +5375,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 35.814 110.7948 0)
 			(effects
 				(font
@@ -5375,7 +5510,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
 			(at 252.222 79.502 0)
 			(effects
 				(font
@@ -5403,46 +5538,46 @@
 			)
 		)
 		(pin "12"
-			(uuid "c2006bff-7b42-4c08-a2a4-df4e7dd0d4f4")
+			(uuid "c2006bff-7b42-4c08-a2a4-df4e7dd0d4f5")
 		)
 		(pin "13"
-			(uuid "80c8419c-8fb5-4a3c-b0cc-dd4d0c464ca2")
+			(uuid "80c8419c-8fb5-4a3c-b0cc-dd4d0c464ca3")
 		)
 		(pin "14"
-			(uuid "3475c8be-13c9-4114-a442-013c80e79c6d")
+			(uuid "3475c8be-13c9-4114-a442-013c80e79c6e")
 		)
 		(pin "11"
-			(uuid "f33a2ff4-7078-4a69-9cc7-15b194fa1fe3")
+			(uuid "f33a2ff4-7078-4a69-9cc7-15b194fa1fe4")
 		)
 		(pin "4"
-			(uuid "68bdad37-d2ba-4001-9333-db05e5a5f0a4")
+			(uuid "68bdad37-d2ba-4001-9333-db05e5a5f0a5")
 		)
 		(pin "7"
-			(uuid "5437620b-08c2-4786-9b2a-7b17bec27af8")
+			(uuid "5437620b-08c2-4786-9b2a-7b17bec27af9")
 		)
 		(pin "10"
-			(uuid "3441d21a-0f3b-4174-9c3b-1f05005952d4")
+			(uuid "3441d21a-0f3b-4174-9c3b-1f05005952d5")
 		)
 		(pin "8"
-			(uuid "a216ce8f-485b-4177-b397-ab585e79b925")
+			(uuid "a216ce8f-485b-4177-b397-ab585e79b926")
 		)
 		(pin "9"
-			(uuid "6e50317f-bc85-4219-8fff-8239f6d871fb")
+			(uuid "6e50317f-bc85-4219-8fff-8239f6d871fc")
 		)
 		(pin "5"
-			(uuid "d87fb24b-f873-435b-bcad-db8a27fceb71")
+			(uuid "d87fb24b-f873-435b-bcad-db8a27fceb72")
 		)
 		(pin "2"
-			(uuid "f15103ef-9f65-4ddb-8274-37e716677c8f")
+			(uuid "f15103ef-9f65-4ddb-8274-37e716677c90")
 		)
 		(pin "1"
-			(uuid "80db0979-e98d-4289-adb7-c5328eea12d4")
+			(uuid "80db0979-e98d-4289-adb7-c5328eea12d5")
 		)
 		(pin "3"
-			(uuid "24d88edf-af54-4621-a5c2-ed5f30e6902a")
+			(uuid "24d88edf-af54-4621-a5c2-ed5f30e6902b")
 		)
 		(pin "6"
-			(uuid "ef05290d-c469-484c-b1da-095b0bcc019a")
+			(uuid "ef05290d-c469-484c-b1da-095b0bcc019b")
 		)
 		(instances
 			(project ""
@@ -5481,7 +5616,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 173.1772 105.664 0)
 			(effects
 				(font
@@ -5549,7 +5684,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 77.724 93.7768 0)
 			(effects
 				(font
@@ -5686,7 +5821,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 214.0712 137.16 0)
 			(effects
 				(font
@@ -5756,7 +5891,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 151.0792 79.502 0)
 			(effects
 				(font
@@ -5826,7 +5961,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 235.6612 136.906 0)
 			(effects
 				(font
@@ -5894,7 +6029,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 207.01 93.0148 0)
 			(effects
 				(font
@@ -6095,7 +6230,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 204.978 73.4568 0)
 			(effects
 				(font
@@ -6165,7 +6300,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 263.0932 86.106 0)
 			(effects
 				(font
@@ -6367,7 +6502,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 54.61 103.378 90)
 			(effects
 				(font
@@ -6503,7 +6638,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
 			(at 54.102 116.84 0)
 			(effects
 				(font
@@ -6531,46 +6666,46 @@
 			)
 		)
 		(pin "12"
-			(uuid "c2006bff-7b42-4c08-a2a4-df4e7dd0d4f4")
+			(uuid "c2006bff-7b42-4c08-a2a4-df4e7dd0d4f6")
 		)
 		(pin "13"
-			(uuid "80c8419c-8fb5-4a3c-b0cc-dd4d0c464ca2")
+			(uuid "80c8419c-8fb5-4a3c-b0cc-dd4d0c464ca4")
 		)
 		(pin "14"
-			(uuid "3475c8be-13c9-4114-a442-013c80e79c6d")
+			(uuid "3475c8be-13c9-4114-a442-013c80e79c6f")
 		)
 		(pin "11"
-			(uuid "f33a2ff4-7078-4a69-9cc7-15b194fa1fe3")
+			(uuid "f33a2ff4-7078-4a69-9cc7-15b194fa1fe5")
 		)
 		(pin "4"
-			(uuid "68bdad37-d2ba-4001-9333-db05e5a5f0a4")
+			(uuid "68bdad37-d2ba-4001-9333-db05e5a5f0a6")
 		)
 		(pin "7"
-			(uuid "5437620b-08c2-4786-9b2a-7b17bec27af8")
+			(uuid "5437620b-08c2-4786-9b2a-7b17bec27afa")
 		)
 		(pin "10"
-			(uuid "3441d21a-0f3b-4174-9c3b-1f05005952d4")
+			(uuid "3441d21a-0f3b-4174-9c3b-1f05005952d6")
 		)
 		(pin "8"
-			(uuid "a216ce8f-485b-4177-b397-ab585e79b925")
+			(uuid "a216ce8f-485b-4177-b397-ab585e79b927")
 		)
 		(pin "9"
-			(uuid "6e50317f-bc85-4219-8fff-8239f6d871fb")
+			(uuid "6e50317f-bc85-4219-8fff-8239f6d871fd")
 		)
 		(pin "5"
-			(uuid "d87fb24b-f873-435b-bcad-db8a27fceb71")
+			(uuid "d87fb24b-f873-435b-bcad-db8a27fceb73")
 		)
 		(pin "2"
-			(uuid "f15103ef-9f65-4ddb-8274-37e716677c8f")
+			(uuid "f15103ef-9f65-4ddb-8274-37e716677c91")
 		)
 		(pin "1"
-			(uuid "80db0979-e98d-4289-adb7-c5328eea12d4")
+			(uuid "80db0979-e98d-4289-adb7-c5328eea12d6")
 		)
 		(pin "3"
-			(uuid "24d88edf-af54-4621-a5c2-ed5f30e6902a")
+			(uuid "24d88edf-af54-4621-a5c2-ed5f30e6902c")
 		)
 		(pin "6"
-			(uuid "ef05290d-c469-484c-b1da-095b0bcc019a")
+			(uuid "ef05290d-c469-484c-b1da-095b0bcc019c")
 		)
 		(instances
 			(project ""
@@ -6607,7 +6742,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 254 65.532 90)
 			(effects
 				(font
@@ -6877,7 +7012,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 218.694 124.46 90)
 			(effects
 				(font
@@ -7081,7 +7216,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 218.694 133.096 90)
 			(effects
 				(font
@@ -7216,7 +7351,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 169.926 70.866 90)
 			(effects
 				(font
@@ -7351,7 +7486,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 185.674 65.024 90)
 			(effects
 				(font
@@ -7419,7 +7554,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 77.47 81.0768 0)
 			(effects
 				(font
@@ -7472,7 +7607,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b67aaee8-8e2e-4bae-b418-a099023e62fa")
-		(property "Reference" "U203"
+		(property "Reference" "U202"
 			(at 197.358 127.2539 0)
 			(effects
 				(font
@@ -7490,7 +7625,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
 			(at 194.31 125.984 0)
 			(effects
 				(font
@@ -7518,51 +7653,51 @@
 			)
 		)
 		(pin "12"
-			(uuid "c2006bff-7b42-4c08-a2a4-df4e7dd0d4f4")
+			(uuid "c2006bff-7b42-4c08-a2a4-df4e7dd0d4f7")
 		)
 		(pin "13"
-			(uuid "80c8419c-8fb5-4a3c-b0cc-dd4d0c464ca2")
+			(uuid "80c8419c-8fb5-4a3c-b0cc-dd4d0c464ca5")
 		)
 		(pin "14"
-			(uuid "3475c8be-13c9-4114-a442-013c80e79c6d")
+			(uuid "3475c8be-13c9-4114-a442-013c80e79c70")
 		)
 		(pin "11"
-			(uuid "f33a2ff4-7078-4a69-9cc7-15b194fa1fe3")
+			(uuid "f33a2ff4-7078-4a69-9cc7-15b194fa1fe6")
 		)
 		(pin "4"
-			(uuid "68bdad37-d2ba-4001-9333-db05e5a5f0a4")
+			(uuid "68bdad37-d2ba-4001-9333-db05e5a5f0a7")
 		)
 		(pin "7"
-			(uuid "5437620b-08c2-4786-9b2a-7b17bec27af8")
+			(uuid "5437620b-08c2-4786-9b2a-7b17bec27afb")
 		)
 		(pin "10"
-			(uuid "3441d21a-0f3b-4174-9c3b-1f05005952d4")
+			(uuid "3441d21a-0f3b-4174-9c3b-1f05005952d7")
 		)
 		(pin "8"
-			(uuid "a216ce8f-485b-4177-b397-ab585e79b925")
+			(uuid "a216ce8f-485b-4177-b397-ab585e79b928")
 		)
 		(pin "9"
-			(uuid "6e50317f-bc85-4219-8fff-8239f6d871fb")
+			(uuid "6e50317f-bc85-4219-8fff-8239f6d871fe")
 		)
 		(pin "5"
-			(uuid "d87fb24b-f873-435b-bcad-db8a27fceb71")
+			(uuid "d87fb24b-f873-435b-bcad-db8a27fceb74")
 		)
 		(pin "2"
-			(uuid "f15103ef-9f65-4ddb-8274-37e716677c8f")
+			(uuid "f15103ef-9f65-4ddb-8274-37e716677c92")
 		)
 		(pin "1"
-			(uuid "80db0979-e98d-4289-adb7-c5328eea12d4")
+			(uuid "80db0979-e98d-4289-adb7-c5328eea12d7")
 		)
 		(pin "3"
-			(uuid "24d88edf-af54-4621-a5c2-ed5f30e6902a")
+			(uuid "24d88edf-af54-4621-a5c2-ed5f30e6902d")
 		)
 		(pin "6"
-			(uuid "ef05290d-c469-484c-b1da-095b0bcc019a")
+			(uuid "ef05290d-c469-484c-b1da-095b0bcc019d")
 		)
 		(instances
 			(project ""
 				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
-					(reference "U203")
+					(reference "U202")
 					(unit 5)
 				)
 			)
@@ -7594,7 +7729,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 164.846 70.9168 0)
 			(effects
 				(font
@@ -7770,6 +7905,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 55.372 143.002 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "c8a761e5-fbc6-4d3a-a2fb-22255d4c32c9")
+		(property "Reference" "TP202"
+			(at 57.15 138.4299 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "DAC"
+			(at 57.15 140.9699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm_VAL"
+			(at 60.452 143.002 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 60.452 143.002 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "test point"
+			(at 55.372 143.002 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "dc02c262-08e9-447d-9b6f-4882303de4e6")
+		)
+		(instances
+			(project "GuitarProcessorBoard"
+				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
+					(reference "TP202")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_Potentiometer_US")
 		(at 217.678 81.788 0)
 		(unit 1)
@@ -7796,7 +7998,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Potentiometer_THT:Potentiometer_Alpha_RV16AF_42_Single_Long"
 			(at 217.678 81.788 0)
 			(effects
 				(font
@@ -7869,7 +8071,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 136.8552 141.732 0)
 			(effects
 				(font
@@ -7939,7 +8141,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 150.8252 105.664 0)
 			(effects
 				(font
@@ -8007,7 +8209,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 234.442 73.406 90)
 			(effects
 				(font
@@ -8077,7 +8279,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 240.284 132.842 90)
 			(effects
 				(font
@@ -8145,7 +8347,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 228.6 93.0148 0)
 			(effects
 				(font
@@ -8213,7 +8415,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 229.362 73.4568 0)
 			(effects
 				(font
@@ -8283,7 +8485,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 192.4812 132.588 0)
 			(effects
 				(font
@@ -8419,7 +8621,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
 			(at 53.34 84.582 0)
 			(effects
 				(font
@@ -8447,46 +8649,46 @@
 			)
 		)
 		(pin "12"
-			(uuid "c2006bff-7b42-4c08-a2a4-df4e7dd0d4f4")
+			(uuid "c2006bff-7b42-4c08-a2a4-df4e7dd0d4f8")
 		)
 		(pin "13"
-			(uuid "80c8419c-8fb5-4a3c-b0cc-dd4d0c464ca2")
+			(uuid "80c8419c-8fb5-4a3c-b0cc-dd4d0c464ca6")
 		)
 		(pin "14"
-			(uuid "3475c8be-13c9-4114-a442-013c80e79c6d")
+			(uuid "3475c8be-13c9-4114-a442-013c80e79c71")
 		)
 		(pin "11"
-			(uuid "f33a2ff4-7078-4a69-9cc7-15b194fa1fe3")
+			(uuid "f33a2ff4-7078-4a69-9cc7-15b194fa1fe7")
 		)
 		(pin "4"
-			(uuid "68bdad37-d2ba-4001-9333-db05e5a5f0a4")
+			(uuid "68bdad37-d2ba-4001-9333-db05e5a5f0a8")
 		)
 		(pin "7"
-			(uuid "5437620b-08c2-4786-9b2a-7b17bec27af8")
+			(uuid "5437620b-08c2-4786-9b2a-7b17bec27afc")
 		)
 		(pin "10"
-			(uuid "3441d21a-0f3b-4174-9c3b-1f05005952d4")
+			(uuid "3441d21a-0f3b-4174-9c3b-1f05005952d8")
 		)
 		(pin "8"
-			(uuid "a216ce8f-485b-4177-b397-ab585e79b925")
+			(uuid "a216ce8f-485b-4177-b397-ab585e79b929")
 		)
 		(pin "9"
-			(uuid "6e50317f-bc85-4219-8fff-8239f6d871fb")
+			(uuid "6e50317f-bc85-4219-8fff-8239f6d871ff")
 		)
 		(pin "5"
-			(uuid "d87fb24b-f873-435b-bcad-db8a27fceb71")
+			(uuid "d87fb24b-f873-435b-bcad-db8a27fceb75")
 		)
 		(pin "2"
-			(uuid "f15103ef-9f65-4ddb-8274-37e716677c8f")
+			(uuid "f15103ef-9f65-4ddb-8274-37e716677c93")
 		)
 		(pin "1"
-			(uuid "80db0979-e98d-4289-adb7-c5328eea12d4")
+			(uuid "80db0979-e98d-4289-adb7-c5328eea12d8")
 		)
 		(pin "3"
-			(uuid "24d88edf-af54-4621-a5c2-ed5f30e6902a")
+			(uuid "24d88edf-af54-4621-a5c2-ed5f30e6902e")
 		)
 		(pin "6"
-			(uuid "ef05290d-c469-484c-b1da-095b0bcc019a")
+			(uuid "ef05290d-c469-484c-b1da-095b0bcc019e")
 		)
 		(instances
 			(project ""
@@ -8525,7 +8727,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 78.232 64.516 90)
 			(effects
 				(font
@@ -8595,7 +8797,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 240.284 124.206 90)
 			(effects
 				(font
@@ -8730,7 +8932,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 234.442 92.964 90)
 			(effects
 				(font
