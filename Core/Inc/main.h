@@ -68,6 +68,10 @@ void Error_Handler(void);
 #define ADC_A_GPIO_Port GPIOA
 #define ADC_EXP_Pin GPIO_PIN_3
 #define ADC_EXP_GPIO_Port GPIOA
+#define CODEC_SCL_Pin GPIO_PIN_10
+#define CODEC_SCL_GPIO_Port GPIOB
+#define CODEC_SDA_Pin GPIO_PIN_11
+#define CODEC_SDA_GPIO_Port GPIOB
 #define ENC_L_Pin GPIO_PIN_12
 #define ENC_L_GPIO_Port GPIOB
 #define ENC_R_Pin GPIO_PIN_13
@@ -80,16 +84,18 @@ void Error_Handler(void);
 #define BYP_LED_GPIO_Port GPIOD
 #define PIXELS_Pin GPIO_PIN_6
 #define PIXELS_GPIO_Port GPIOC
-#define BTN_R_Pin GPIO_PIN_9
-#define BTN_R_GPIO_Port GPIOC
-#define BTN_L_Pin GPIO_PIN_8
-#define BTN_L_GPIO_Port GPIOA
+#define BTN_BACK_Pin GPIO_PIN_8
+#define BTN_BACK_GPIO_Port GPIOA
 #define BYP_Pin GPIO_PIN_9
 #define BYP_GPIO_Port GPIOA
-#define TAP_Pin GPIO_PIN_10
-#define TAP_GPIO_Port GPIOA
-#define MODE_Pin GPIO_PIN_11
+#define MODE_Pin GPIO_PIN_10
 #define MODE_GPIO_Port GPIOA
+#define TAP_Pin GPIO_PIN_11
+#define TAP_GPIO_Port GPIOA
+#define DISP_SCL_Pin GPIO_PIN_6
+#define DISP_SCL_GPIO_Port GPIOB
+#define DISP_SDA_Pin GPIO_PIN_7
+#define DISP_SDA_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

@@ -6,8 +6,46 @@
 	(paper "A4")
 	(lib_symbols)
 	(sheet
-		(at 108.458 68.326)
-		(size 46.228 24.384)
+		(at 55.626 27.178)
+		(size 35.814 24.384)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "29c54663-b974-4b35-ac83-25332e43dd96")
+		(property "Sheetname" "MCU"
+			(at 55.626 26.4664 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "MCU.kicad_sch"
+			(at 55.626 52.1466 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "GuitarProcessorBoard"
+				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 20.32 27.178)
+		(size 34.036 24.384)
 		(fields_autoplaced yes)
 		(stroke
 			(width 0.1524)
@@ -18,7 +56,7 @@
 		)
 		(uuid "ef3a9a4a-abe1-4d77-855c-3594c7f88930")
 		(property "Sheetname" "Audio"
-			(at 108.458 67.6144 0)
+			(at 20.32 26.4664 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27,7 +65,7 @@
 			)
 		)
 		(property "Sheetfile" "Audio.kicad_sch"
-			(at 108.458 93.2946 0)
+			(at 20.32 52.1466 0)
 			(effects
 				(font
 					(size 1.27 1.27)
