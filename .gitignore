@@ -6,5 +6,6 @@ Datasheets
 Debug
 GuitarProcessorBoard/*backups
 GuitarProcessorBoard/*cache
+GuitarProcessorBoard/*.lck
 
 

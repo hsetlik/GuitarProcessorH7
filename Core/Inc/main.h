@@ -60,6 +60,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LED_CLK_Pin GPIO_PIN_2
+#define LED_CLK_GPIO_Port GPIOE
+#define LED_LATCH_Pin GPIO_PIN_4
+#define LED_LATCH_GPIO_Port GPIOE
+#define LED_NRST_Pin GPIO_PIN_5
+#define LED_NRST_GPIO_Port GPIOE
+#define LED_DATA_Pin GPIO_PIN_6
+#define LED_DATA_GPIO_Port GPIOE
 #define ADC_C_Pin GPIO_PIN_0
 #define ADC_C_GPIO_Port GPIOC
 #define ADC_B_Pin GPIO_PIN_1
@@ -78,10 +86,6 @@ void Error_Handler(void);
 #define ENC_R_GPIO_Port GPIOB
 #define ENC_B_Pin GPIO_PIN_14
 #define ENC_B_GPIO_Port GPIOB
-#define TEMPO_LED_Pin GPIO_PIN_14
-#define TEMPO_LED_GPIO_Port GPIOD
-#define BYP_LED_Pin GPIO_PIN_15
-#define BYP_LED_GPIO_Port GPIOD
 #define PIXELS_Pin GPIO_PIN_6
 #define PIXELS_GPIO_Port GPIOC
 #define BTN_BACK_Pin GPIO_PIN_8
