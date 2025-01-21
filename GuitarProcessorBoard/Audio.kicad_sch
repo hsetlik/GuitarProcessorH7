@@ -2042,12 +2042,6 @@
 		(uuid "4fb7b333-7fcf-4493-b831-ce24757a2e78")
 	)
 	(junction
-		(at 62.23 82.042)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "5936de2f-aca7-47bb-9db8-4684ba71d307")
-	)
-	(junction
 		(at 238.76 74.422)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2124,6 +2118,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "eaa8fd73-75ba-4924-934f-530fbf110f2d")
+	)
+	(junction
+		(at 62.23 82.042)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ecb30e91-2243-4e90-affd-ac38587cf12b")
 	)
 	(junction
 		(at 149.86 97.282)
@@ -2369,7 +2369,7 @@
 	)
 	(wire
 		(pts
-			(xy 119.38 37.846) (xy 119.38 57.912)
+			(xy 119.38 37.592) (xy 119.38 57.912)
 		)
 		(stroke
 			(width 0)
@@ -2679,17 +2679,7 @@
 	)
 	(wire
 		(pts
-			(xy 213.106 128.524) (xy 217.678 128.524)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "56b73780-5faa-4222-80cb-e757bb70275b")
-	)
-	(wire
-		(pts
-			(xy 92.456 35.306) (xy 124.46 35.306)
+			(xy 92.202 35.052) (xy 99.822 35.052)
 		)
 		(stroke
 			(width 0)
@@ -2826,16 +2816,6 @@
 			(type default)
 		)
 		(uuid "6d8cad23-e3d6-4ea0-9e11-a326e3f29fca")
-	)
-	(wire
-		(pts
-			(xy 234.696 128.27) (xy 239.268 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6fbda855-90bc-4a6f-8e83-9d436531461e")
 	)
 	(wire
 		(pts
@@ -3009,6 +2989,16 @@
 	)
 	(wire
 		(pts
+			(xy 107.442 35.052) (xy 124.46 35.052)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "89979a8b-e15c-4693-9da3-4fb3fc853c24")
+	)
+	(wire
+		(pts
 			(xy 262.128 95.504) (xy 271.78 95.504)
 		)
 		(stroke
@@ -3056,16 +3046,6 @@
 			(type default)
 		)
 		(uuid "90199f14-61bc-4e9d-9cc6-3ab238cdf1d6")
-	)
-	(wire
-		(pts
-			(xy 213.106 129.54) (xy 213.106 128.524)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "905494a8-500e-4b54-8699-4a7b9e3ee237")
 	)
 	(wire
 		(pts
@@ -3279,16 +3259,6 @@
 	)
 	(wire
 		(pts
-			(xy 213.106 137.16) (xy 213.106 137.922)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "beb94fea-f685-4685-aad1-b07cfbf06eda")
-	)
-	(wire
-		(pts
 			(xy 44.704 79.248) (xy 45.974 79.248)
 		)
 		(stroke
@@ -3359,7 +3329,7 @@
 	)
 	(wire
 		(pts
-			(xy 92.456 37.846) (xy 119.38 37.846)
+			(xy 92.71 37.592) (xy 119.38 37.592)
 		)
 		(stroke
 			(width 0)
@@ -3459,16 +3429,6 @@
 	)
 	(wire
 		(pts
-			(xy 234.696 136.906) (xy 234.696 137.668)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e5371b53-eb67-4f65-b357-67809837a33b")
-	)
-	(wire
-		(pts
 			(xy 104.14 134.366) (xy 104.14 136.144)
 		)
 		(stroke
@@ -3509,7 +3469,7 @@
 	)
 	(wire
 		(pts
-			(xy 124.46 35.306) (xy 124.46 57.912)
+			(xy 124.46 35.052) (xy 124.46 57.912)
 		)
 		(stroke
 			(width 0)
@@ -3546,16 +3506,6 @@
 			(type default)
 		)
 		(uuid "f743c7fb-365c-4c37-b082-18ad2241d718")
-	)
-	(wire
-		(pts
-			(xy 234.696 129.286) (xy 234.696 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f7673cbb-36b2-466a-a656-410bc70e6e79")
 	)
 	(wire
 		(pts
@@ -3818,7 +3768,7 @@
 	)
 	(global_label "I2S_SDI"
 		(shape output)
-		(at 92.456 35.306 180)
+		(at 92.202 35.052 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3828,7 +3778,7 @@
 		)
 		(uuid "55b63a26-9be8-4642-85a0-1b8cf183f50a")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 82.3951 35.306 0)
+			(at 82.1411 35.052 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3950,7 +3900,7 @@
 	)
 	(global_label "I2S_SDO"
 		(shape input)
-		(at 92.456 37.846 180)
+		(at 92.71 37.592 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3960,7 +3910,7 @@
 		)
 		(uuid "f63d6e9d-4dcf-428c-8c6b-87fc28ef24a6")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 81.6694 37.846 0)
+			(at 81.9234 37.592 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4528,73 +4478,6 @@
 			(project ""
 				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
 					(reference "#PWR0202")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 234.696 137.668 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "1ff837d6-a148-4571-a7fe-da963cc40cd4")
-		(property "Reference" "#PWR0218"
-			(at 234.696 144.018 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 234.696 141.478 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 234.696 137.668 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 234.696 137.668 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 234.696 137.668 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "9516f704-8c8f-45a1-bbb4-fffc3fde0153")
-		)
-		(instances
-			(project "GuitarProcessorBoard"
-				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
-					(reference "#PWR0218")
 					(unit 1)
 				)
 			)
@@ -5176,7 +5059,7 @@
 	)
 	(symbol
 		(lib_id "Amplifier_Operational:TL074")
-		(at 186.436 74.422 0)
+		(at 54.61 82.042 0)
 		(mirror x)
 		(unit 3)
 		(exclude_from_sim no)
@@ -5186,7 +5069,7 @@
 		(fields_autoplaced yes)
 		(uuid "40a079d5-52a1-4d97-83ad-3aca8860595f")
 		(property "Reference" "U202"
-			(at 186.436 81.28 0)
+			(at 54.61 88.9 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5194,7 +5077,7 @@
 			)
 		)
 		(property "Value" "TL074"
-			(at 186.436 83.82 0)
+			(at 54.61 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5202,7 +5085,7 @@
 			)
 		)
 		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
-			(at 185.166 76.962 0)
+			(at 53.34 84.582 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5211,7 +5094,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/tl071.pdf"
-			(at 187.706 79.502 0)
+			(at 55.88 87.122 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5220,7 +5103,7 @@
 			)
 		)
 		(property "Description" "Quad Low-Noise JFET-Input Operational Amplifiers, DIP-14/SOIC-14"
-			(at 186.436 74.422 0)
+			(at 54.61 82.042 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5485,7 +5368,7 @@
 	)
 	(symbol
 		(lib_id "Amplifier_Operational:TL074")
-		(at 253.492 76.962 0)
+		(at 55.372 114.3 0)
 		(mirror x)
 		(unit 4)
 		(exclude_from_sim no)
@@ -5495,7 +5378,7 @@
 		(fields_autoplaced yes)
 		(uuid "53ebb228-342f-42f4-ae9f-ee94b5599345")
 		(property "Reference" "U202"
-			(at 253.492 83.82 0)
+			(at 55.372 121.158 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5503,7 +5386,7 @@
 			)
 		)
 		(property "Value" "TL074"
-			(at 253.492 86.36 0)
+			(at 55.372 123.698 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5511,7 +5394,7 @@
 			)
 		)
 		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
-			(at 252.222 79.502 0)
+			(at 54.102 116.84 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5520,7 +5403,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/tl071.pdf"
-			(at 254.762 82.042 0)
+			(at 56.642 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5529,7 +5412,7 @@
 			)
 		)
 		(property "Description" "Quad Low-Noise JFET-Input Operational Amplifiers, DIP-14/SOIC-14"
-			(at 253.492 76.962 0)
+			(at 55.372 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5795,76 +5678,6 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 213.106 133.35 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "605c018f-3d0e-496d-8fc4-8c8deb19a2f9")
-		(property "Reference" "C208"
-			(at 210.058 132.0799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "100n"
-			(at 210.058 134.6199 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 214.0712 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 213.106 133.35 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor"
-			(at 213.106 133.35 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "cdbe14d4-5573-4b34-b4bd-9a5a5817c7fd")
-		)
-		(pin "1"
-			(uuid "00ce8796-cdb7-4f21-b631-57900558fd8f")
-		)
-		(instances
-			(project "GuitarProcessorBoard"
-				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
-					(reference "C208")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
 		(at 150.114 75.692 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -5928,76 +5741,6 @@
 			(project "GuitarProcessorBoard"
 				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
 					(reference "C212")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 234.696 133.096 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "609e9035-283f-43b2-99e3-2fabd7c5c3a6")
-		(property "Reference" "C213"
-			(at 231.648 131.8259 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "100n"
-			(at 231.648 134.3659 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 235.6612 136.906 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 234.696 133.096 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor"
-			(at 234.696 133.096 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "c8696b4f-8a3c-4b9d-9f51-f6a06e47c223")
-		)
-		(pin "1"
-			(uuid "32e3fa95-6143-4aa2-ad35-921071ae2fc4")
-		)
-		(instances
-			(project "GuitarProcessorBoard"
-				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
-					(reference "C213")
 					(unit 1)
 				)
 			)
@@ -6132,73 +5875,6 @@
 			(project ""
 				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
 					(reference "#PWR0209")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 213.106 137.922 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "6a579b9a-5884-4041-9a0f-18767e70e3f7")
-		(property "Reference" "#PWR0216"
-			(at 213.106 144.272 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 213.106 141.732 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 213.106 137.922 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 213.106 137.922 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 213.106 137.922 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "ada7c765-aab3-429e-b2ee-683142699f68")
-		)
-		(instances
-			(project "GuitarProcessorBoard"
-				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
-					(reference "#PWR0216")
 					(unit 1)
 				)
 			)
@@ -6613,7 +6289,7 @@
 	)
 	(symbol
 		(lib_id "Amplifier_Operational:TL074")
-		(at 55.372 114.3 0)
+		(at 186.436 74.422 0)
 		(mirror x)
 		(unit 2)
 		(exclude_from_sim no)
@@ -6623,7 +6299,7 @@
 		(fields_autoplaced yes)
 		(uuid "7c4a9333-d709-4cdb-8ee8-194e5b8cdb91")
 		(property "Reference" "U202"
-			(at 55.372 121.158 0)
+			(at 186.436 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6631,7 +6307,7 @@
 			)
 		)
 		(property "Value" "TL074"
-			(at 55.372 123.698 0)
+			(at 186.436 83.82 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6639,7 +6315,7 @@
 			)
 		)
 		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
-			(at 54.102 116.84 0)
+			(at 185.166 76.962 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6648,7 +6324,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/tl071.pdf"
-			(at 56.642 119.38 0)
+			(at 187.706 79.502 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6657,7 +6333,7 @@
 			)
 		)
 		(property "Description" "Quad Low-Noise JFET-Input Operational Amplifiers, DIP-14/SOIC-14"
-			(at 55.372 114.3 0)
+			(at 186.436 74.422 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7597,6 +7273,74 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R_US")
+		(at 103.632 35.052 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b5c53774-aa94-473b-9e4a-6c4e09262970")
+		(property "Reference" "R220"
+			(at 103.632 29.21 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "22"
+			(at 103.632 31.75 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 103.886 34.036 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 103.632 35.052 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor, US symbol"
+			(at 103.632 35.052 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "dd135979-fb60-4a27-92d8-854c4139ae5e")
+		)
+		(pin "2"
+			(uuid "8f0e0b90-32bf-44a2-b60d-b482b00d5971")
+		)
+		(instances
+			(project "GuitarProcessorBoard"
+				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
+					(reference "R220")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Amplifier_Operational:TL074")
 		(at 193.04 128.524 0)
 		(mirror y)
@@ -7998,7 +7742,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Potentiometer_THT:Potentiometer_Alpha_RV16AF_42_Single_Long"
+		(property "Footprint" "Potentiometer_THT:Potentiometer_Alpha_RD901F-40-00D_Single_Vertical_CircularHoles"
 			(at 217.678 81.788 0)
 			(effects
 				(font
@@ -8596,7 +8340,7 @@
 	)
 	(symbol
 		(lib_id "Amplifier_Operational:TL074")
-		(at 54.61 82.042 0)
+		(at 253.492 76.962 0)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -8606,7 +8350,7 @@
 		(fields_autoplaced yes)
 		(uuid "ef6520b1-dc31-4e79-abd2-c9c54fb3c6ed")
 		(property "Reference" "U202"
-			(at 54.61 88.9 0)
+			(at 253.492 83.82 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8614,7 +8358,7 @@
 			)
 		)
 		(property "Value" "TL074"
-			(at 54.61 91.44 0)
+			(at 253.492 86.36 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8622,7 +8366,7 @@
 			)
 		)
 		(property "Footprint" "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm"
-			(at 53.34 84.582 0)
+			(at 252.222 79.502 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8631,7 +8375,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/tl071.pdf"
-			(at 55.88 87.122 0)
+			(at 254.762 82.042 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8640,7 +8384,7 @@
 			)
 		)
 		(property "Description" "Quad Low-Noise JFET-Input Operational Amplifiers, DIP-14/SOIC-14"
-			(at 54.61 82.042 0)
+			(at 253.492 76.962 0)
 			(effects
 				(font
 					(size 1.27 1.27)

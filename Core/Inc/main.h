@@ -74,6 +74,8 @@ void Error_Handler(void);
 #define ADC_A_GPIO_Port GPIOA
 #define ADC_EXP_Pin GPIO_PIN_3
 #define ADC_EXP_GPIO_Port GPIOA
+#define CODEC_NRST_Pin GPIO_PIN_15
+#define CODEC_NRST_GPIO_Port GPIOE
 #define CODEC_SCL_Pin GPIO_PIN_10
 #define CODEC_SCL_GPIO_Port GPIOB
 #define CODEC_SDA_Pin GPIO_PIN_11
