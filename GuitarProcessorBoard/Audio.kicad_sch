@@ -3399,16 +3399,6 @@
 	)
 	(wire
 		(pts
-			(xy 55.118 134.112) (xy 55.118 135.89)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dfa90bd2-ceea-4435-a0e3-540bd8b30702")
-	)
-	(wire
-		(pts
 			(xy 177.292 71.882) (xy 178.816 71.882)
 		)
 		(stroke
@@ -3622,17 +3612,6 @@
 			(justify left bottom)
 		)
 		(uuid "56562d99-b76e-4fa5-a54a-564062f67d48")
-	)
-	(label "InputPos"
-		(at 55.118 135.89 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "67ae6763-24a2-4e1c-bbfd-2dac67971159")
 	)
 	(label "Wet"
 		(at 195.326 66.04 180)
@@ -8578,73 +8557,6 @@
 			(project "GuitarProcessorBoard"
 				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
 					(reference "R209")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 55.118 134.112 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "fa441ff8-2607-4bcf-9f0f-3c8b3a495fdf")
-		(property "Reference" "TP201"
-			(at 57.15 129.5399 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "IP"
-			(at 57.15 132.0799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm_VAL"
-			(at 60.198 134.112 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 60.198 134.112 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "test point"
-			(at 55.118 134.112 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "5ad251b2-48e5-4ce8-8796-4e1a0f4afb2c")
-		)
-		(instances
-			(project "GuitarProcessorBoard"
-				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
-					(reference "TP201")
 					(unit 1)
 				)
 			)

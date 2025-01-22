@@ -80,14 +80,6 @@ void Error_Handler(void);
 #define CODEC_SCL_GPIO_Port GPIOB
 #define CODEC_SDA_Pin GPIO_PIN_11
 #define CODEC_SDA_GPIO_Port GPIOB
-#define ENC_L_Pin GPIO_PIN_12
-#define ENC_L_GPIO_Port GPIOB
-#define ENC_R_Pin GPIO_PIN_13
-#define ENC_R_GPIO_Port GPIOB
-#define ENC_B_Pin GPIO_PIN_14
-#define ENC_B_GPIO_Port GPIOB
-#define BTN_BACK_Pin GPIO_PIN_8
-#define BTN_BACK_GPIO_Port GPIOA
 #define BYP_Pin GPIO_PIN_9
 #define BYP_GPIO_Port GPIOA
 #define MODE_Pin GPIO_PIN_10
