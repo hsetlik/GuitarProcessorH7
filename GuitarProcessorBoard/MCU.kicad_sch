@@ -15253,15 +15253,15 @@
 	(symbol
 		(lib_id "Device:Crystal_GND23")
 		(at 189.738 179.324 0)
+		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "33e218ee-baa7-461b-9041-dca79f6678ed")
 		(property "Reference" "Y302"
-			(at 199.39 175.1331 0)
+			(at 199.644 173.228 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15269,7 +15269,7 @@
 			)
 		)
 		(property "Value" "32.768kHZ"
-			(at 199.39 177.6731 0)
+			(at 199.644 175.768 0)
 			(effects
 				(font
 					(size 1.27 1.27)
