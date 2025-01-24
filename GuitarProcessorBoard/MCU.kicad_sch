@@ -8244,10 +8244,6 @@
 		(uuid "1d69e2cd-8a7e-4de2-a228-78758df7ef01")
 	)
 	(no_connect
-		(at 160.274 141.224)
-		(uuid "1eaf3cde-69cc-4fac-a9de-24903027837e")
-	)
-	(no_connect
 		(at 160.274 166.624)
 		(uuid "287e38a5-4337-4cca-8a5b-d7f49dec138b")
 	)
@@ -8266,6 +8262,10 @@
 	(no_connect
 		(at 160.274 176.784)
 		(uuid "332b572a-8f97-467a-84d2-d98f989eaacf")
+	)
+	(no_connect
+		(at 117.094 90.424)
+		(uuid "36f9b491-165a-4417-8770-c752971878e5")
 	)
 	(no_connect
 		(at 47.498 156.21)
@@ -8308,6 +8308,10 @@
 		(uuid "4e538945-d082-4af8-8b22-f1e6a7d1e312")
 	)
 	(no_connect
+		(at 117.094 98.044)
+		(uuid "58b5b4cc-0b3c-4a55-82ca-b2677362f3b6")
+	)
+	(no_connect
 		(at 117.094 110.744)
 		(uuid "603d7541-4961-402a-805f-49c00f690672")
 	)
@@ -8316,16 +8320,12 @@
 		(uuid "636f9af0-e39e-425d-96f0-129ec727b718")
 	)
 	(no_connect
-		(at 160.274 138.684)
-		(uuid "6e407385-4d67-4441-aca0-893a870db96c")
+		(at 117.094 95.504)
+		(uuid "74d0efc0-f0f4-481c-8399-94bae06704e4")
 	)
 	(no_connect
 		(at 117.094 113.284)
 		(uuid "774c6d87-f3ba-433d-92e8-f52de315cea6")
-	)
-	(no_connect
-		(at 160.274 136.144)
-		(uuid "7adb8ccf-85e3-4ece-a35c-de1285dd91b2")
 	)
 	(no_connect
 		(at 117.094 153.924)
@@ -8384,6 +8384,10 @@
 		(uuid "ba656de8-e9b9-4168-b660-96642af46ced")
 	)
 	(no_connect
+		(at 117.094 100.584)
+		(uuid "c1a9169f-0e8b-4b20-9142-e6630727961a")
+	)
+	(no_connect
 		(at 160.274 62.484)
 		(uuid "c5404af4-066d-472d-9758-44e79656010a")
 	)
@@ -8430,10 +8434,6 @@
 	(no_connect
 		(at 160.274 156.464)
 		(uuid "e739b1b1-b430-4afa-9708-c06cc77811ec")
-	)
-	(no_connect
-		(at 160.274 143.764)
-		(uuid "ef4c4425-f997-44bb-a9e1-9cb9b5da8ff0")
 	)
 	(no_connect
 		(at 117.094 133.604)
@@ -9645,7 +9645,7 @@
 	)
 	(wire
 		(pts
-			(xy 114.046 100.584) (xy 117.094 100.584)
+			(xy 163.322 143.764) (xy 160.274 143.764)
 		)
 		(stroke
 			(width 0)
@@ -11065,7 +11065,7 @@
 	)
 	(wire
 		(pts
-			(xy 114.046 95.504) (xy 117.094 95.504)
+			(xy 163.322 136.144) (xy 160.274 136.144)
 		)
 		(stroke
 			(width 0)
@@ -11155,7 +11155,7 @@
 	)
 	(wire
 		(pts
-			(xy 114.046 90.424) (xy 117.094 90.424)
+			(xy 163.322 138.684) (xy 160.274 138.684)
 		)
 		(stroke
 			(width 0)
@@ -11625,7 +11625,7 @@
 	)
 	(wire
 		(pts
-			(xy 114.046 98.044) (xy 117.094 98.044)
+			(xy 163.322 141.224) (xy 160.274 141.224)
 		)
 		(stroke
 			(width 0)
@@ -12355,22 +12355,22 @@
 	)
 	(global_label "LED_LATCH"
 		(shape output)
-		(at 114.046 95.504 180)
+		(at 163.322 136.144 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left)
 		)
 		(uuid "2687af25-e875-4084-a5b3-6340bdf942e2")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 100.9613 95.504 0)
+			(at 176.4067 136.144 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -12575,22 +12575,22 @@
 	)
 	(global_label "LED_NRST"
 		(shape output)
-		(at 114.046 98.044 180)
+		(at 163.322 141.224 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left)
 		)
 		(uuid "567f3855-f5b4-4ce1-80cf-3db9b33e755b")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.8685 98.044 0)
+			(at 175.4995 141.224 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -12707,22 +12707,22 @@
 	)
 	(global_label "LED_DATA"
 		(shape output)
-		(at 114.046 100.584 180)
+		(at 163.322 143.764 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left)
 		)
 		(uuid "84a9f526-ba99-4962-bf2e-117942c5bdfa")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 102.2313 100.584 0)
+			(at 175.1367 143.764 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -13279,22 +13279,22 @@
 	)
 	(global_label "LED_SCK"
 		(shape output)
-		(at 114.046 90.424 180)
+		(at 163.322 138.684 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left)
 		)
 		(uuid "f82f816b-49df-48c8-a227-19298a1a9d94")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 102.8966 90.424 0)
+			(at 174.4714 138.684 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 				(hide yes)
 			)
 		)
