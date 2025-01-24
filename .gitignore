@@ -2,6 +2,7 @@ bom
 *.ld
 Drivers/CMSIS
 Drivers/STM32*
+Enclosure/*.ai
 Datasheets
 Debug
 GuitarProcessorBoard/*backups

@@ -523,7 +523,7 @@
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
-      "svg": "",
+      "svg": "../Enclosure/SVGs/",
       "vrml": ""
     },
     "page_layout_descr_file": ""
