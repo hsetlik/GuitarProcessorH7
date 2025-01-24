@@ -5,6 +5,7 @@ Drivers/STM32*
 Datasheets
 Debug
 GuitarProcessorBoard/*backups
+GuitarProcessorBoard/gerber
 GuitarProcessorBoard/*cache
 GuitarProcessorBoard/*.lck
 
