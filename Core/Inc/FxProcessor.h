@@ -15,6 +15,7 @@ class FxProcessor{
 public:
 	FxProcessor();
 	void processChunk(uint16_t numSamples, float* input, float* output);
+	void controlMoved(uint8_t id, uint16_t value);
 
 };
 
@@ -31,8 +32,8 @@ public:
 typedef void* fx_processor_t;
 
 EXTERNC fx_processor_t create_fx_processor();
-EXTERNC void process_audio_chunk(fx_processor_t proc, uint16_t size, float* input, float* output);
 // main processing callback
+EXTERNC void process_fx(fx_processor_t proc, uint16_t size, float* input, float* output);
 
 
 #undef EXTERNC

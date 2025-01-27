@@ -21,7 +21,7 @@ fx_processor_t create_fx_processor(){
 	return new FxProcessor();
 }
 
-void process_audio_chunk(fx_processor_t proc, uint16_t size, float* input, float* output){
+void process_fx(fx_processor_t proc, uint16_t size, float* input, float* output){
 	FxProcessor* ptr = static_cast<FxProcessor*>(proc);
 	ptr->processChunk(size, input, output);
 }

@@ -18,7 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "FxProcessor.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -52,6 +52,7 @@ DMA_HandleTypeDef hdma_spi1_tx;
 SPI_HandleTypeDef hspi2;
 
 /* USER CODE BEGIN PV */
+fx_processor_t fx;
 
 /* USER CODE END PV */
 
@@ -79,13 +80,13 @@ static volatile float* adcPtr = &adcBuf[0];
 static volatile float* dacPtr = &dacBuf[0];
 uint8_t bufferReady = 0;
 
-void HAL_I2SEx_TxRxCpltCallback(I2S_HandleTypedef* i2s){
+void HAL_I2SEx_TxRxCpltCallback(I2S_HandleTypeDef* i2s){
 	adcPtr = &adcBuf[BUFFER_SIZE / 2];
 	dacPtr = &dacBuf[BUFFER_SIZE / 2];
 	bufferReady = 1;
 }
 
-void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypedef* i2s){
+void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef* i2s){
 	adcPtr = &adcBuf[0];
 	dacPtr = &dacBuf[0];
 	bufferReady = 1;
@@ -132,6 +133,8 @@ int main(void)
   MX_I2S1_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
+  // set up processor
+  fx = create_fx_processor();
   //TODO: init the Audio codec via I2C
   //Start DMA transmission
   // note: buffer size is *2 here bc our 32 bit codec will use 2 16 bit frames
@@ -148,8 +151,12 @@ int main(void)
   {
 	  // check if we have the next buffer to process
 	  if(bufferReady){
-		 //TODO: processing business goes here
+		 process_fx(fx, BUFFER_SIZE / 2, (float*)adcPtr, (float*)dacPtr);
+		 bufferReady = 0;
 	  }
+	  //TODO here:
+	  // check switches and pots
+	  // update display and LEDs as needed
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
