@@ -132,7 +132,9 @@ int main(void)
   MX_I2S1_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
+  //TODO: init the Audio codec via I2C
   //Start DMA transmission
+  // note: buffer size is *2 here bc our 32 bit codec will use 2 16 bit frames
   HAL_StatusTypeDef status = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacPtr, (uint16_t*)adcPtr, BUFFER_SIZE * 2);
   if(status != HAL_OK){
 	  Error_Handler();
@@ -144,6 +146,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  // check if we have the next buffer to process
+	  if(bufferReady){
+		 //TODO: processing business goes here
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
