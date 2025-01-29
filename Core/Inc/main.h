@@ -48,6 +48,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 
+
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
@@ -92,6 +93,9 @@ void Error_Handler(void);
 #define DISP_SDA_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
+extern I2C_HandleTypeDef hi2c2;
+
+extern I2S_HandleTypeDef hi2s1;
 
 /* USER CODE END Private defines */
 
