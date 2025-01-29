@@ -42,3 +42,21 @@ uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected){
 }
 
 
+HAL_StatusTypeDef TLV_initCodec(){
+	// step 1: cycle the NRST pin
+	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_RESET);
+	HAL_Delay(20);
+	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_SET);
+	HAL_Delay(20);
+	// step 2: perform hardware reset
+	HAL_StatusTypeDef resetStatus = TLV_writeRegister(TLV_softwareReset_pg, TLV_softwareReset_reg, 0x01);
+	if(resetStatus != HAL_OK){
+		return resetStatus;
+	}
+
+
+
+	return HAL_OK;
+}
+
+

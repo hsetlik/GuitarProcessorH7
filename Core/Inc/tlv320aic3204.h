@@ -17,15 +17,17 @@
 #define TLV_NRST_GPIO_Port CODEC_NRST_GPIO_Port
 #define TLV_NRST_Pin CODEC_NRST_Pin
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 // helpers for setting/reading registers
 HAL_StatusTypeDef TLV_writeRegister(uint8_t page, uint8_t addr, uint8_t data);
-HAL_StatusTypeDef TLV_readRegister(uint8_t page, uint8_t addr, uint8_t* data);
+HAL_StatusTypeDef TLV_readRegister(uint8_t page, uint8_t addr, uint8_t *data);
 uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected);
+
+// does the main work of setting up registers. Should be called after initializing I2C but before starting the DMA loop
+HAL_StatusTypeDef TLV_initCodec();
 
 // REGISTER ADDRESSES=================================================
 // these register & page definitions start on p 35 of the datasheet
@@ -385,16 +387,7 @@ uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected);
 #define TLV_dacAnalogGainControlFlag_pg 0x01
 #define TLV_dacAnalogGainControlFlag_reg 0x3F
 
-
-
-
 //======================================
-
-
-
-
-
-
 
 #ifdef __cplusplus
 }
