@@ -1,0 +1,34 @@
+/*
+ * tlv320aic3204.c
+ *
+ *  Created on: Jan 29, 2025
+ *      Author: hayden
+ */
+#include "tlv320aic3204.h"
+
+// little helper for the page scheme
+void TLV_selectPage(uint8_t page){
+	static uint8_t currentPage = 0xFF;
+	// check if we need to select the page
+	if(page != currentPage){
+		HAL_StatusTypeDef pgStatus = HAL_I2C_Mem_Write(&TLV_I2C, TLV_DEVICE_ADDR, 0x00, I2C_MEMADD_SIZE_8BIT, &page, 1, HAL_MAX_DELAY);
+		if(pgStatus != HAL_OK){
+			Error_Handler();
+		}
+		currentPage = page;
+	}
+}
+
+HAL_StatusTypeDef TLV_writeRegister(uint8_t page, uint8_t addr, uint8_t data){
+	TLV_selectPage(page);
+	return HAL_I2C_Mem_Write(&TLV_I2C, TLV_DEVICE_ADDR, addr, I2C_MEMADD_SIZE_8BIT, &data, 1, HAL_MAX_DELAY);
+
+
+}
+
+HAL_StatusTypeDef TLV_readRegister(uint8_t page, uint8_t addr, uint8_t* data){
+	TLV_selectPage(page);
+	return HAL_I2C_Mem_Read(&TLV_I2C, TLV_DEVICE_ADDR, addr, I2C_MEMADD_SIZE_8BIT, data, 1, HAL_MAX_DELAY);
+}
+
+
