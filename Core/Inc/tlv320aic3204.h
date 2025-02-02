@@ -17,6 +17,17 @@
 #define TLV_NRST_GPIO_Port CODEC_NRST_GPIO_Port
 #define TLV_NRST_Pin CODEC_NRST_Pin
 
+#define TLV_VERIFY_SETUP
+
+// c-friendly scheme for passing a set of non-default register settings
+// on initialization
+
+typedef struct {
+	uint8_t page;
+	uint8_t address;
+	uint8_t value;
+}tlv_register_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -27,7 +38,7 @@ HAL_StatusTypeDef TLV_readRegister(uint8_t page, uint8_t addr, uint8_t *data);
 uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected);
 
 // does the main work of setting up registers. Should be called after initializing I2C but before starting the DMA loop
-HAL_StatusTypeDef TLV_initCodec();
+HAL_StatusTypeDef TLV_initCodec(tlv_register_t* settings, uint16_t size);
 
 // REGISTER ADDRESSES=================================================
 // these register & page definitions start on p 35 of the datasheet
