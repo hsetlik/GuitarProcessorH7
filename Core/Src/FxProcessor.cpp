@@ -24,9 +24,7 @@ FxProcessor::FxProcessor() : state(getDefaultPedalState()){
 }
 
 void FxProcessor::processChunk(uint16_t numSamples, float* input, float* output){
-	for(uint16_t s = 0; s < numSamples; s++){
-		output[s] = algs[state.alg]->process(input[s]);
-	}
+	algs[state.alg]->processChunk(input, output, (uint32_t)numSamples);
 
 }
 

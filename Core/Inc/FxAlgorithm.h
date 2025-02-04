@@ -18,7 +18,7 @@ public:
 	FxAlgorithm();
 	virtual ~FxAlgorithm();
 	// main callback to be overridden, handles a single sample
-	virtual float process(float input)=0;
+	virtual void processChunk(float* input, float* output, uint32_t blockSize)=0;
 	// callback for a parameter value changing
 	virtual void paramChanged(uint8_t id, uint16_t value)=0;
 };
