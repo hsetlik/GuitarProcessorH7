@@ -128,12 +128,15 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef*){
 
 void checkLEDs(){
 	static uint32_t lastCheck = 0;
+	// this limits the LEDs to refreshing no more than ~25x a second
 	const uint32_t minUpdateMs = 40;
 	if(ledsReady && (SysTick->VAL - lastCheck) >= minUpdateMs){
 		lastCheck = SysTick->VAL;
 		uint8_t bits = fx_get_led_byte(fx);
 		if(bits != ledData){
 			ledData = bits;
+			// even with the prescaler at 128 this transmission only takes like 10.2 microseconds,
+			// but we have the hardware DMAs so why not optimize
 			HAL_SPI_Transmit_DMA(&hspi2, &ledData, 1);
 			ledsReady = 0;
 		}
@@ -187,16 +190,17 @@ int main(void)
   if(TLV_quickInit_monoGuitarPedal() != HAL_OK){
 	  Error_Handler();
   }
-  // calibrate and start DMA for the control knob ADC
-  HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)knobAdcData, 4);
-
   //Start DMA transmission
   // note: buffer size is *2 here bc our 32 bit codec will use 2 16 bit frames
   HAL_StatusTypeDef status = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacPtr, (uint16_t*)adcPtr, BUFFER_SIZE * 2);
   if(status != HAL_OK){
 	  Error_Handler();
   }
+
+  // calibrate and start DMA for the control knob ADC
+  HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)knobAdcData, 4);
+
 
   /* USER CODE END 2 */
 
@@ -534,7 +538,7 @@ static void MX_SPI2_Init(void)
   hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi2.Init.NSS = SPI_NSS_HARD_OUTPUT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
   hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

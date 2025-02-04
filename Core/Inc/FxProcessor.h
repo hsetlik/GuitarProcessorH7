@@ -13,6 +13,7 @@
 class FxProcessor{
 private:
 	pedal_state_t state;
+	alg_ptr_t algs[6];
 public:
 	FxProcessor();
 	void processChunk(uint16_t numSamples, float* input, float* output);

@@ -19,10 +19,14 @@ pedal_state_t getDefaultPedalState(){
 //============================
 
 FxProcessor::FxProcessor() : state(getDefaultPedalState()){
+	//TODO: initialize each algo here
 
 }
 
 void FxProcessor::processChunk(uint16_t numSamples, float* input, float* output){
+	for(uint16_t s = 0; s < numSamples; s++){
+		output[s] = algs[state.alg]->process(input[s]);
+	}
 
 }
 
@@ -43,7 +47,7 @@ void FxProcessor::controlMoved(uint8_t id, uint16_t value){
 	default:
 		break;
 	}
-	//TODO: pass updated parameters to the fx algo here
+	algs[state.alg]->paramChanged(id, value);
 }
 
 
