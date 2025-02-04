@@ -52,12 +52,15 @@ DMA_HandleTypeDef hdma_spi1_rx;
 DMA_HandleTypeDef hdma_spi1_tx;
 
 SPI_HandleTypeDef hspi2;
-
+DMA_HandleTypeDef hdma_spi2_tx;
 
 /* USER CODE BEGIN PV */
 fx_processor_t fx;
 
 uint16_t knobAdcData[4];
+
+volatile uint8_t ledsReady = 1;
+uint8_t ledData = 0x00;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -71,7 +74,8 @@ static void MX_I2C2_Init(void);
 static void MX_I2S1_Init(void);
 static void MX_SPI2_Init(void);
 /* USER CODE BEGIN PFP */
-// callback for knob ADC values
+// call this to update the LEDs
+void checkLEDs();
 
 
 /* USER CODE END PFP */
@@ -96,8 +100,13 @@ void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef* i2s){
 	adcPtr = &adcBuf[0];
 	dacPtr = &dacBuf[0];
 	bufferReady = 1;
-
 }
+
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef*){
+	ledsReady = 1;
+}
+
+
 
 // Knob ADC callback----------------------
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef*){
@@ -116,6 +125,21 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef*){
 	}
 
 }
+
+void checkLEDs(){
+	static uint32_t lastCheck = 0;
+	const uint32_t minUpdateMs = 40;
+	if(ledsReady && (SysTick->VAL - lastCheck) >= minUpdateMs){
+		lastCheck = SysTick->VAL;
+		uint8_t bits = fx_get_led_byte(fx);
+		if(bits != ledData){
+			ledData = bits;
+			HAL_SPI_Transmit_DMA(&hspi2, &ledData, 1);
+			ledsReady = 0;
+		}
+	}
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -164,7 +188,7 @@ int main(void)
 	  Error_Handler();
   }
   // calibrate and start DMA for the control knob ADC
-  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+  HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
   HAL_ADC_Start_DMA(&hadc1, (uint32_t*)knobAdcData, 4);
 
   //Start DMA transmission
@@ -185,9 +209,12 @@ int main(void)
 		 process_fx(fx, BUFFER_SIZE / 2, (float*)adcPtr, (float*)dacPtr);
 		 bufferReady = 0;
 	  }
+	  // check the LEDs
+	  checkLEDs();
 	  //TODO here:
+
 	  // check switches
-	  // update display and LEDs as needed
+	  // update display
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -503,11 +530,11 @@ static void MX_SPI2_Init(void)
   hspi2.Instance = SPI2;
   hspi2.Init.Mode = SPI_MODE_MASTER;
   hspi2.Init.Direction = SPI_DIRECTION_2LINES_TXONLY;
-  hspi2.Init.DataSize = SPI_DATASIZE_4BIT;
+  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi2.Init.NSS = SPI_NSS_HARD_OUTPUT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
   hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -551,6 +578,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
+  /* DMA1_Stream3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);
 
 }
 
