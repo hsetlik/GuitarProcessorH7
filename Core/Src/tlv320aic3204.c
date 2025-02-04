@@ -76,3 +76,22 @@ HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 	return HAL_OK;
 }
 
+//======================================================================
+
+
+HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
+	uint16_t idx = 0;
+	tlv_register_t settings[50];
+
+	// use the internal LDOs
+	settings[idx] = (tlv_register_t){TLV_ldoControl_pg, TLV_ldoControl_reg, 0x01};
+	idx++;
+
+
+
+	// run the init
+	return TLV_initCodec(settings, idx);
+
+
+
+}

@@ -36,6 +36,18 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+// represents the state of the pedal's controls at a given moment
+typedef struct {
+	uint8_t fxOn;
+	uint8_t alg;
+	uint16_t knobA;
+	uint16_t knobB;
+	uint16_t knobC;
+	uint16_t exp;
+}pedal_state_t;
+
+#define KNOB_MAX 65535
+#define KNOB_MID 32767
 
 /* USER CODE END ET */
 
@@ -94,7 +106,6 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 extern I2C_HandleTypeDef hi2c2;
-
 extern I2S_HandleTypeDef hi2s1;
 
 /* USER CODE END Private defines */

@@ -40,6 +40,8 @@ uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected);
 // does the main work of setting up registers. Should be called after initializing I2C but before starting the DMA loop
 HAL_StatusTypeDef TLV_initCodec(tlv_register_t* settings, uint16_t size);
 
+HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
+
 // REGISTER ADDRESSES=================================================
 // these register & page definitions start on p 35 of the datasheet
 #define TLV_softwareReset_pg 0x00
