@@ -226,6 +226,3 @@ const float CD_Kernel[CD_KERNEL_LENGTH] ={
 		  -0.005162958310249838,
 		  -0.0071208527855767855
 		};
-
-
-

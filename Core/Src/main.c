@@ -201,6 +201,8 @@ int main(void)
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
   HAL_ADC_Start_DMA(&hadc1, (uint32_t*)knobAdcData, 4);
 
+  // bring the NRST pin for the LEDs high
+  HAL_GPIO_WritePin(LED_NRST_GPIO_Port, LED_NRST_PIN, GPIO_PIN_SET);
 
   /* USER CODE END 2 */
 
