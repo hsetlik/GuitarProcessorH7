@@ -9,14 +9,27 @@
 #define INC_PEAKDETECTOR_H_
 #include "main.h"
 
+#define PEAK_BUFFER_SIZE 64
 
 #ifdef __cplusplus
 #include "RingBuffer.h"
+struct PeakData {
+	float value;
+	uint32_t duration;
+};
 
 class PeakDetector{
 private:
-	float prevPeakValue = 0.0f;
-	uint32_t timeSincePrevPeak = 0;
+	float currentPeakValue = 0.0f;
+	uint32_t currentPhaseDuration = 0;
+	uint8_t negativePhase = 0;
+	RingBuffer<PEAK_BUFFER_SIZE, PeakData> peakBuffer;
+
+public:
+	PeakDetector(){
+	}
+	void push(float input);
+
 
 };
 
