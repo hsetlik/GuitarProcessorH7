@@ -9,5 +9,6 @@ GuitarProcessorBoard/*backups
 GuitarProcessorBoard/gerber
 GuitarProcessorBoard/*cache
 GuitarProcessorBoard/*.lck
+DSPPapers/*.zip
 
 
