@@ -20,7 +20,7 @@
 #include <complex>
 
 
-namespace DSPMath {
+namespace DSP {
 // IIR math helpers
 const float doublePi	=3.1415926535897932384626433832795028841971;
 const float doublePi_2	=1.5707963267948966192313216916397514420986;
@@ -59,7 +59,7 @@ inline bool is_nan (Ty v)
 template <>
 inline bool is_nan<complex_t> (complex_t v)
 {
-  return DSPMath::is_nan (v.real()) || DSPMath::is_nan (v.imag());
+  return DSP::is_nan (v.real()) || DSP::is_nan (v.imag());
 }
 
 // Types for complex plane stuff
@@ -104,7 +104,7 @@ inline bool is_nan<complex_t> (complex_t v)
 
 		bool is_nan () const
 		{
-			return DSPMath::is_nan (first) || DSPMath::is_nan (second);
+			return DSP::is_nan (first) || DSP::is_nan (second);
 		}
 	};
 
