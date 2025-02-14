@@ -38,6 +38,13 @@ public:
 		b[1] = 0.0f;
 		b[2] = 0.0f;
 	}
+	// reset the feedback buffer but leave the coeffs
+	void fbReset(){
+		x[0] = 0.0f;
+		x[1] = 0.0f;
+		y[0] = 0.0f;
+		y[1] = 0.0f;
+	}
 
 	// get the complex response for the given normalized frequency
 	complex_t response(float normFrequency) const;
@@ -129,6 +136,133 @@ public:
 	     void setLayout(const LayoutBase& proto);
 
 	};
+
+/**
+ * Storage for Cascade: This holds a chain of 2nd order filters
+ * with its coefficients.
+ **/
+        template <uint16_t MaxStages>
+        class CascadeStages {
+
+	public:
+	CascadeStages() = default;
+
+
+        public:
+        /**
+         * Resets all biquads (i.e. the delay lines but not the coefficients)
+         **/
+        void reset ()
+        {
+                for (auto &stage: stages)
+                	stage.fbReset();
+        }
+
+        public:
+        /**
+         * Sets the coefficients of the whole chain of
+         * biquads.
+         * \param sosCoefficients 2D array in Python style sos ordering: 0-2: FIR, 3-5: IIR coeff.
+         **/
+        void setup (const double (&sosCoefficients)[MaxStages][6]) {
+                for (uint16_t i = 0; i < MaxStages; i++) {
+                        stages[i].setCoefficients(
+                                sosCoefficients[i][3],
+                                sosCoefficients[i][4],
+                                sosCoefficients[i][5],
+                                sosCoefficients[i][0],
+                                sosCoefficients[i][1],
+                                sosCoefficients[i][2]);
+                }
+        }
+
+        public:
+        /**
+         * Filters one sample through the whole chain of biquads and return the result
+         * \param in Sample to be filtered
+         * \return filtered sample
+         **/
+        inline float filter(float in)
+        {
+                float out = in;
+                for (const auto &stage: stages)
+                        out = stage.filter_DirectFormI(out);
+                return out;
+        }
+
+	/**
+	 * Returns the coefficients of the entire Biquad chain
+	 **/
+        const Cascade::Storage getCascadeStorage()
+        {
+	    const Cascade::Storage s(MaxStages, stages);
+	    return s;
+        }
+
+        private:
+        Biquad stages[MaxStages] = {};
+        };
+
+// Pole Filter--------------------------------------------------
+/***
+ * Base for filters designed via algorithmic placement of poles and zeros.
+ *
+ * Typically, the filter is first designed as a half-band low pass or
+ * low shelf analog filter (s-plane). Then, using a transformation such
+ * as the ones from Constantinides, the poles and zeros of the analog filter
+ * are calculated in the z-plane.
+ *
+ ***/
+
+/**
+ * Factored implementations to reduce template instantiations
+ **/
+	class PoleFilterBase2 : public Cascade
+	{
+	public:
+		// This gets the poles/zeros directly from the digital
+		// prototype. It is used to double check the correctness
+		// of the recovery of pole/zeros from biquad coefficients.
+		//
+		// It can also be used to accelerate the interpolation
+		// of pole/zeros for parameter modulation, since a pole
+		// filter already has them calculated
+
+		PoleFilterBase2() = default;
+
+		std::vector<PoleZeroPair> getPoleZeros () const
+		{
+			std::vector<PoleZeroPair> vpz;
+			const uint32_t pairs = (digitalProto.getNumPoles () + 1) / 2;
+			for (uint32_t i = 0; i < pairs; ++i)
+				vpz.push_back (digitalProto[i]);
+			return vpz;
+		}
+
+	protected:
+		LayoutBase digitalProto = {};
+	};
+
+
+/**
+ * Serves a container to hold the analog prototype
+ * and the digital pole/zero layout.
+ **/
+	template <class AnalogPrototype>
+	class PoleFilterBase : public PoleFilterBase2
+	{
+	protected:
+		void setPrototypeStorage (const LayoutBase& analogStorage,
+					  const LayoutBase& digitalStorage)
+		{
+			analogProto.setStorage (analogStorage);
+			digitalProto = digitalStorage;
+		}
+
+	protected:
+		AnalogPrototype analogProto = {};
+	};
+
 
 //======================================================
 } // namespace DSP
