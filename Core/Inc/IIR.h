@@ -9,13 +9,16 @@
 #define INC_IIR_H_
 #include "main.h"
 
-#define DEFAULT_IIR_ORDER 4
-
+/* The code in this file is based on the Biquad implementations
+ * in the IIR1 library: https://github.com/berndporr/iir1
+ *
+ * All the shared filtering stuff is in this translation unit,
+ * each filter topology will get its own .h/.cpp file
+ * */
 #ifdef __cplusplus
 
 #include "DSPMath.h"
 namespace DSP {
-// Biquad IIR class based on the IIR1 library: https://github.com/berndporr/iir1
 struct BiquadPoleState;
 class Biquad {
 	float a[3] = { 1.0f, 0.0f, 0.0f };
