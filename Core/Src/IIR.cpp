@@ -193,7 +193,7 @@ void Biquad::applyScale(float scale) {
 }
 
 // Cascade----------------------------------------
-void Cascade::setStorage(const Storage& storage){
+void Cascade::setStorage(const Storage &storage) {
 	numStages = storage.numStages;
 	maxStages = storage.maxStages;
 	stages = storage.stageArray;
@@ -263,50 +263,240 @@ void Cascade::setLayout(const LayoutBase &proto) {
 					/ std::abs(response(proto.getNormalW() / (2 * doublePi))));
 }
 
+//Pole Filters==============================================
+complex_t LowPassTransform::transform(complex_t c) {
+	if (c == infinity())
+		return complex_t(-1, 0);
+	// frequency transform
+	c = f * c;
+	// bilinear low pass transform
+	return (1.0f + c) / (1.0f - c);
 }
 
-//==============================================================================
+LowPassTransform::LowPassTransform(float fc, LayoutBase &digital,
+		LayoutBase const &analog) {
 
-IIRFilter::IIRFilter(uint16_t size, float *aBuf, float *bBuf) :
-		length(size) {
-	// put our 3 buffers on the heap
-	aCoeffs = new float[length];
-	bCoeffs = new float[length];
-	inBuf = new float[length];
-	outBuf = new float[length];
-	// copy the coeffs in and zero the feedback buffer
-	for (uint16_t i = 0; i < length; ++i) {
-		aCoeffs[i] = aBuf[i];
-		bCoeffs[i] = bBuf[i];
-		inBuf[i] = 0.0f;
-		outBuf[i] = 0.0f;
+	if (!(fc < 0.5))
+		Error_Handler();
+	if (fc < 0.0)
+		Error_Handler();
+
+	digital.reset();
+
+	// prewarp
+	f = tan(doublePi * fc);
+
+	const uint32_t numPoles = analog.getNumPoles();
+	const uint32_t pairs = numPoles / 2;
+	for (uint32_t i = 0; i < pairs; ++i) {
+		const PoleZeroPair &pair = analog[i];
+		digital.addPoleZeroConjugatePairs(transform(pair.poles.first),
+				transform(pair.zeros.first));
 	}
+
+	if (numPoles & 1) {
+		const PoleZeroPair &pair = analog[pairs];
+		digital.add(transform(pair.poles.first), transform(pair.zeros.first));
+	}
+
+	digital.setNormal(analog.getNormalW(), analog.getNormalGain());
+}
+//-------------------------------
+complex_t HighPassTransform::transform(complex_t c) {
+	if (c == infinity())
+		return complex_t(1, 0);
+	// frequency transform
+	c = f * c;
+	// bilinear high pass transform
+	return -(1.0f + c) / (1.0f - c);
 }
 
-IIRFilter::~IIRFilter() {
-	delete[] aCoeffs;
-	delete[] bCoeffs;
-	delete[] inBuf;
-	delete[] outBuf;
+HighPassTransform::HighPassTransform(float fc, LayoutBase &digital,
+		LayoutBase const &analog) {
+	if (!(fc < 0.5))
+		Error_Handler();
+	if (fc < 0.0)
+		Error_Handler();
+
+	digital.reset();
+
+	// prewarp
+	f = 1.0f / tan(doublePi * fc);
+
+	const uint32_t numPoles = analog.getNumPoles();
+	const uint32_t pairs = numPoles / 2;
+	for (uint32_t i = 0; i < pairs; ++i) {
+		const PoleZeroPair &pair = analog[i];
+		digital.addPoleZeroConjugatePairs(transform(pair.poles.first),
+				transform(pair.zeros.first));
+	}
+
+	if (numPoles & 1) {
+		const PoleZeroPair &pair = analog[pairs];
+		digital.add(transform(pair.poles.first), transform(pair.zeros.first));
+	}
+
+	digital.setNormal(doublePi - analog.getNormalW(), analog.getNormalGain());
+}
+//-------------------------------
+
+ComplexPair BandPassTransform::transform(complex_t c) {
+	if (c == infinity())
+		return ComplexPair(-1, 1);
+
+	c = (1.0f + c) / (1.0f - c); // bilinear
+
+	complex_t v = 0.0f;
+	v = addmul(v, 4 * (b2 * (a2 - 1) + 1), c);
+	v += 8 * (b2 * (a2 - 1) - 1);
+	v *= c;
+	v += 4 * (b2 * (a2 - 1) + 1);
+	v = std::sqrt(v);
+
+	complex_t u = -v;
+	u = addmul(u, ab_2, c);
+	u += ab_2;
+
+	v = addmul(v, ab_2, c);
+	v += ab_2;
+
+	complex_t d = 0;
+	d = addmul(d, 2 * (b - 1), c) + 2 * (1 + b);
+
+	return ComplexPair(u / d, v / d);
 }
 
-float IIRFilter::process(float input) {
-	static uint16_t pos = 0;
-	float output = 0.0f;
-	// add the input into the buffer
-	inBuf[pos] = input;
-	pos = (pos + 1) % length;
-	// calculate the input side
-	for (uint16_t i = 0; i < length; ++i) {
-		output += bCoeffs[i] * inBuf[pos];
+BandPassTransform::BandPassTransform(float fc, float fw, LayoutBase &digital,
+		LayoutBase const &analog) {
+	if (!(fc < 0.5f))
+		Error_Handler();
+	if (fc < 0.0f)
+		Error_Handler();
+
+	digital.reset();
+
+	const float ww = 2.0f * doublePi * fw;
+
+	// pre-calcs
+	wc2 = 2.0f * doublePi * fc - (ww / 2.0f);
+	wc = wc2 + ww;
+
+	// what is this crap?
+	if (wc2 < 1e-8)
+		wc2 = 1e-8;
+	if (wc > doublePi - 1e-8)
+		wc = doublePi - 1e-8;
+
+	a = cos((wc + wc2) * 0.5f) / cos((wc - wc2) * 0.5f);
+	b = 1.0f / tan((wc - wc2) * 0.5f);
+	a2 = a * a;
+	b2 = b * b;
+	ab = a * b;
+	ab_2 = 2.0f * ab;
+
+	const uint32_t numPoles = analog.getNumPoles();
+	const uint32_t pairs = numPoles / 2;
+	for (uint32_t i = 0; i < pairs; ++i) {
+		const PoleZeroPair &pair = analog[i];
+		ComplexPair p1 = transform(pair.poles.first);
+		ComplexPair z1 = transform(pair.zeros.first);
+
+		digital.addPoleZeroConjugatePairs(p1.first, z1.first);
+		digital.addPoleZeroConjugatePairs(p1.second, z1.second);
 	}
-	// calculate the output side
-	for (uint16_t i = 1; i < length; ++i) {
-		// subtract 1 from the index bc pos was already incremented above
-		output -= aCoeffs[i] * outBuf[(pos + i - 1) % length];
+
+	if (numPoles & 1) {
+		ComplexPair poles = transform(analog[pairs].poles.first);
+		ComplexPair zeros = transform(analog[pairs].zeros.first);
+
+		digital.add(poles, zeros);
 	}
-	// add back to the feedback buf
-	outBuf[pos] = output;
-	return output;
+
+	double wn = analog.getNormalW();
+	digital.setNormal(
+			2.0f * atan(sqrt(tan((wc + wn) * 0.5f) * tan((wc2 + wn) * 0.5f))),
+			analog.getNormalGain());
 }
+//-------------------------------
+ComplexPair BandStopTransform::transform(complex_t c) {
+	if (c == infinity())
+		c = -1;
+	else
+		c = (1.0f + c) / (1.0f - c); // bilinear
+
+	complex_t u(0);
+	u = addmul(u, 4 * (b2 + a2 - 1.0f), c);
+	u += 8.0f * (b2 - a2 + 1.0f);
+	u *= c;
+	u += 4.0f * (a2 + b2 - 1.0f);
+	u = std::sqrt(u);
+
+	complex_t v = u * -0.5f;
+	v += a;
+	v = addmul(v, -a, c);
+
+	u *= 0.5f;
+	u += a;
+	u = addmul(u, -a, c);
+
+	complex_t d(b + 1.0f);
+	d = addmul(d, b - 1.0f, c);
+
+	return ComplexPair(u / d, v / d);
+}
+
+BandStopTransform::BandStopTransform(float fc, float fw, LayoutBase &digital,
+		LayoutBase const &analog) {
+	if (!(fc < 0.5f))
+		Error_Handler();
+	if (fc < 0.0f)
+		Error_Handler();
+
+	digital.reset();
+
+	const float ww = 2.0f * doublePi * fw;
+
+	wc2 = 2.0f * doublePi * fc - (ww / 2.0f);
+	wc = wc2 + ww;
+
+	// this is crap
+	if (wc2 < 1e-8)
+		wc2 = 1e-8;
+	if (wc > doublePi - 1e-8)
+		wc = doublePi - 1e-8;
+
+	a = cos((wc + wc2) * 0.5f) / cos((wc - wc2) * 0.5f);
+	b = tan((wc - wc2) * 0.5f);
+	a2 = a * a;
+	b2 = b * b;
+
+	const uint32_t numPoles = analog.getNumPoles();
+	const uint32_t pairs = numPoles / 2;
+	for (uint32_t i = 0; i < pairs; ++i) {
+		const PoleZeroPair &pair = analog[i];
+		ComplexPair p = transform(pair.poles.first);
+		ComplexPair z = transform(pair.zeros.first);
+
+		// trick to get the conjugate
+		if (z.second == z.first)
+			z.second = std::conj(z.first);
+
+		digital.addPoleZeroConjugatePairs(p.first, z.first);
+		digital.addPoleZeroConjugatePairs(p.second, z.second);
+	}
+
+	if (numPoles & 1) {
+		ComplexPair poles = transform(analog[pairs].poles.first);
+		ComplexPair zeros = transform(analog[pairs].zeros.first);
+
+		digital.add(poles, zeros);
+	}
+
+	if (fc < 0.25)
+		digital.setNormal(doublePi, analog.getNormalGain());
+	else
+		digital.setNormal(0, analog.getNormalGain());
+}
+
+} // namespace DSP
 
