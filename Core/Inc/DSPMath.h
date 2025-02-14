@@ -125,96 +125,96 @@ struct PoleZeroPair {
 class LayoutBase {
 public:
 	LayoutBase() :
-			m_numPoles(0), m_maxPoles(0), m_pair(nullptr) {
+			numPoles(0), maxPoles(0), pair(nullptr) {
 	}
 
-	LayoutBase(int maxPoles, PoleZeroPair *pairs) :
-			m_numPoles(0), m_maxPoles(maxPoles), m_pair(pairs) {
+	LayoutBase(uint32_t maxPoles, PoleZeroPair *pairs) :
+			numPoles(0), maxPoles(maxPoles), pair(pairs) {
 	}
 
 	void setStorage(const LayoutBase &other) {
-		m_numPoles = 0;
-		m_maxPoles = other.m_maxPoles;
-		m_pair = other.m_pair;
+		numPoles = 0;
+		maxPoles = other.maxPoles;
+		pair = other.pair;
 	}
 
 	void reset() {
-		m_numPoles = 0;
+		numPoles = 0;
 	}
 
 	int getNumPoles() const {
-		return m_numPoles;
+		return numPoles;
 	}
 
 	int getMaxPoles() const {
-		return m_maxPoles;
+		return maxPoles;
 	}
 
 	void add(const complex_t &pole, const complex_t &zero) {
-		if (m_numPoles & 1)
+		if (numPoles & 1)
 			Error_Handler();
 		if (DSP::is_nan(pole))
 			Error_Handler();
 		if (DSP::is_nan(zero))
 			Error_Handler();
-		m_pair[m_numPoles / 2] = PoleZeroPair(pole, zero);
-		++m_numPoles;
+		pair[numPoles / 2] = PoleZeroPair(pole, zero);
+		++numPoles;
 	}
 
 	void addPoleZeroConjugatePairs(const complex_t &pole,
 			const complex_t &zero) {
-		if (m_numPoles & 1)
+		if (numPoles & 1)
 			Error_Handler();
 		if (DSP::is_nan(pole))
 			Error_Handler();
 		if (DSP::is_nan(zero))
 			Error_Handler();
-		m_pair[m_numPoles / 2] = PoleZeroPair(pole, zero, std::conj(pole),
+		pair[numPoles / 2] = PoleZeroPair(pole, zero, std::conj(pole),
 				std::conj(zero));
-		m_numPoles += 2;
+		numPoles += 2;
 	}
 
 	void add(const ComplexPair &poles, const ComplexPair &zeros) {
-		if (m_numPoles & 1)
+		if (numPoles & 1)
 			Error_Handler();
 		if (!poles.isMatchedPair())
 			Error_Handler();
 		if (!zeros.isMatchedPair())
 			Error_Handler();
-		m_pair[m_numPoles / 2] = PoleZeroPair(poles.first, zeros.first,
+		pair[numPoles / 2] = PoleZeroPair(poles.first, zeros.first,
 				poles.second, zeros.second);
-		m_numPoles += 2;
+		numPoles += 2;
 	}
 
-	const PoleZeroPair& getPair(int pairIndex) const {
-		if ((pairIndex < 0) || (pairIndex >= (m_numPoles + 1) / 2))
+	const PoleZeroPair& getPair(uint32_t pairIndex) const {
+		if ((pairIndex < 0) || (pairIndex >= (numPoles + 1) / 2))
 			Error_Handler();
-		return m_pair[pairIndex];
+		return pair[pairIndex];
 	}
 
-	const PoleZeroPair& operator[](int pairIndex) const {
+	const PoleZeroPair& operator[](uint32_t pairIndex) const {
 		return getPair(pairIndex);
 	}
 
-	double getNormalW() const {
-		return m_normalW;
+	float getNormalW() const {
+		return normalW;
 	}
 
-	double getNormalGain() const {
-		return m_normalGain;
+	float getNormalGain() const {
+		return normalGain;
 	}
 
-	void setNormal(double w, double g) {
-		m_normalW = w;
-		m_normalGain = g;
+	void setNormal(float w, float g) {
+		normalW = w;
+		normalGain = g;
 	}
 
 private:
-	int m_numPoles = 0;
-	int m_maxPoles = 0;
-	PoleZeroPair *m_pair = nullptr;
-	double m_normalW = 0;
-	double m_normalGain = 1;
+	uint32_t numPoles = 0;
+	uint32_t maxPoles = 0;
+	PoleZeroPair *pair = nullptr;
+	float normalW = 0;
+	float normalGain = 1;
 };
 
 /**

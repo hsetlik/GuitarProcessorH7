@@ -45,9 +45,9 @@ BiquadPoleState::BiquadPoleState(const Biquad &s) {
 	gain = b0 / a0;
 }
 //----------------------------
-float Biquad::filter_DirectFormI(float input){
-	const float output = b[0] * input + (b[1] * x[0]) + (b[2] * x[1]) -
-			(a[1] * y[0]) - (a[2] * y[1]);
+float Biquad::filter_DirectFormI(float input) {
+	const float output = b[0] * input + (b[1] * x[0]) + (b[2] * x[1])
+			- (a[1] * y[0]) - (a[2] * y[1]);
 	x[1] = x[0];
 	y[1] = y[0];
 	x[0] = input;
@@ -127,10 +127,11 @@ void Biquad::setCoeffs(float a0, float a1, float a2, float b0, float b1,
 	}
 }
 
-void Biquad::setOnePole (complex_t pole, complex_t zero)
-{
-	if (pole.imag() != 0) Error_Handler();
-	if (zero.imag() != 0) Error_Handler();
+void Biquad::setOnePole(complex_t pole, complex_t zero) {
+	if (pole.imag() != 0)
+		Error_Handler();
+	if (zero.imag() != 0)
+		Error_Handler();
 
 	const float a0 = 1;
 	const float a1 = -pole.real();
@@ -142,61 +143,124 @@ void Biquad::setOnePole (complex_t pole, complex_t zero)
 	setCoeffs(a0, a1, a2, b0, b1, b2);
 }
 
-void Biquad::setTwoPole (complex_t pole1, complex_t zero1,
-				     complex_t pole2, complex_t zero2)
-	{
-		const float a0 = 1;
-		float a1;
-		float a2;
+void Biquad::setTwoPole(complex_t pole1, complex_t zero1, complex_t pole2,
+		complex_t zero2) {
+	const float a0 = 1;
+	float a1;
+	float a2;
 
-		if (pole1.imag() != 0)
-		{
-			if (pole2 != std::conj (pole1))
-				Error_Handler();
-			a1 = -2 * pole1.real();
-			a2 = std::norm (pole1);
-		}
-		else
-		{
-			if (pole2.imag() != 0)
-				Error_Handler();
-			a1 = -(pole1.real() + pole2.real());
-			a2 =   pole1.real() * pole2.real();
-		}
-
-		const float b0 = 1;
-		float b1;
-		float b2;
-
-		if (zero1.imag() != 0)
-		{
-			if (zero2 != std::conj (zero1))
-				Error_Handler();
-			b1 = -2 * zero1.real();
-			b2 = std::norm (zero1);
-		}
-		else
-		{
-			if (zero2.imag() != 0)
-				Error_Handler();
-
-			b1 = -(zero1.real() + zero2.real());
-			b2 =   zero1.real() * zero2.real();
-		}
-
-		setCoeffs (a0, a1, a2, b0, b1, b2);
+	if (pole1.imag() != 0) {
+		if (pole2 != std::conj(pole1))
+			Error_Handler();
+		a1 = -2 * pole1.real();
+		a2 = std::norm(pole1);
+	} else {
+		if (pole2.imag() != 0)
+			Error_Handler();
+		a1 = -(pole1.real() + pole2.real());
+		a2 = pole1.real() * pole2.real();
 	}
 
+	const float b0 = 1;
+	float b1;
+	float b2;
 
-void Biquad::setPoleZeroForm (const BiquadPoleState& bps){
+	if (zero1.imag() != 0) {
+		if (zero2 != std::conj(zero1))
+			Error_Handler();
+		b1 = -2 * zero1.real();
+		b2 = std::norm(zero1);
+	} else {
+		if (zero2.imag() != 0)
+			Error_Handler();
+
+		b1 = -(zero1.real() + zero2.real());
+		b2 = zero1.real() * zero2.real();
+	}
+
+	setCoeffs(a0, a1, a2, b0, b1, b2);
+}
+
+void Biquad::setPoleZeroForm(const BiquadPoleState &bps) {
 	setPoleZeroPair(bps);
 	applyScale(bps.gain);
 }
 
-void Biquad::applyScale(float scale){
+void Biquad::applyScale(float scale) {
 	b[0] *= scale;
 	b[1] *= scale;
 	b[2] *= scale;
+}
+
+// Cascade----------------------------------------
+void Cascade::setStorage(const Storage& storage){
+	numStages = storage.numStages;
+	maxStages = storage.maxStages;
+	stages = storage.stageArray;
+}
+
+complex_t Cascade::response(float normalizedFrequency) const {
+	if (normalizedFrequency > 0.5)
+		Error_Handler();
+	if (normalizedFrequency < 0.0)
+		Error_Handler();
+	float w = 2 * doublePi * normalizedFrequency;
+	const complex_t czn1 = std::polar<float>(1.0f, -w);
+	const complex_t czn2 = std::polar<float>(1.0f, -2 * w);
+	complex_t ch(1);
+	complex_t cbot(1);
+
+	const Biquad *stage = stages;
+	for (uint16_t i = numStages; --i >= 0; ++stage) {
+		complex_t cb(1);
+		complex_t ct(stage->getB0() / stage->getA0());
+		ct = addmul(ct, stage->getB1() / stage->getA0(), czn1);
+		ct = addmul(ct, stage->getB2() / stage->getA0(), czn2);
+		cb = addmul(cb, stage->getA1() / stage->getA0(), czn1);
+		cb = addmul(cb, stage->getA2() / stage->getA0(), czn2);
+		ch *= ct;
+		cbot *= cb;
+	}
+
+	return ch / cbot;
+}
+
+std::vector<PoleZeroPair> Cascade::getPoleZeros() const {
+	std::vector < PoleZeroPair > vpz;
+	vpz.reserve((unsigned long) numStages);
+
+	const Biquad *stage = stages;
+	for (int i = numStages; --i >= 0;) {
+		BiquadPoleState bps(*stage++);
+		vpz.push_back(bps);
+	}
+
+	return vpz;
+}
+
+void Cascade::applyScale(float scale) {
+	if (numStages < 1)
+		return;
+	stages->applyScale(scale);
+}
+
+void Cascade::setLayout(const LayoutBase &proto) {
+	const int numPoles = proto.getNumPoles();
+	numStages = (numPoles + 1) / 2;
+	if (numStages > maxStages)
+		Error_Handler();
+
+	Biquad *stage = stages;
+	for (int i = 0; i < maxStages; ++i, ++stage)
+		stage->setDefaults();
+
+	stage = stages;
+	for (int i = 0; i < numStages; ++i, ++stage)
+		stage->setPoleZeroPair(proto[i]);
+
+	applyScale(
+			proto.getNormalGain()
+					/ std::abs(response(proto.getNormalW() / (2 * doublePi))));
 }
 
 }

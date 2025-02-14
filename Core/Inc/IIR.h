@@ -29,6 +29,15 @@ public:
 	}
 	// main filter callback(s)
 	float filter_DirectFormI(float input);
+	// return to defaults
+	void setDefaults(){
+		a[0] = 1.0f;
+		a[1] = 0.0f;
+		a[2] = 0.0f;
+		b[0] = 1.0f;
+		b[1] = 0.0f;
+		b[2] = 0.0f;
+	}
 
 	// get the complex response for the given normalized frequency
 	complex_t response(float normFrequency) const;
@@ -98,8 +107,9 @@ public:
 	     struct Storage
 	        {
 		    Storage() = delete;
-		    Storage(const uint16_t maxNumBiquads, Biquad* const biquadArray) : maxStages(maxNumBiquads), stageArray(biquadArray) {}
+		    Storage(const uint16_t maxNumBiquads, const uint16_t numBiquads, Biquad* const biquadArray) : maxStages(maxNumBiquads), numStages(numBiquads), stageArray(biquadArray) {}
 		    const uint16_t maxStages = 0;
+		    const uint16_t numStages = 0;
 		    Biquad* const stageArray = nullptr;
 	        };
 	     // store a set of Biquads
@@ -115,6 +125,8 @@ public:
 	     complex_t response(float normalizedFrequency) const;
 	     std::vector<PoleZeroPair> getPoleZeros() const;
 	     void setStorage(const Storage& storage);
+	     void applyScale(float scale);
+	     void setLayout(const LayoutBase& proto);
 
 	};
 
