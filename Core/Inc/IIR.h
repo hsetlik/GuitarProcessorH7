@@ -9,7 +9,18 @@
 #define INC_IIR_H_
 #include "main.h"
 
+#define DEFAULT_IIR_ORDER 4
+
+
+
 #ifdef __cplusplus
+
+#include "DSPMath.h"
+
+// Biquad IIR class based on the IIR1 library: https://github.com/berndporr/iir1
+
+
+
 class IIRFilter {
 private:
 	const uint16_t length;

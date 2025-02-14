@@ -41,7 +41,8 @@ float IIRFilter::process(float input){
 	}
 	// calculate the output side
 	for(uint16_t i = 1; i < length; ++i){
-		output -= aCoeffs[1] * outBuf[(pos + i - 1) % length];
+		// subtract 1 from the index bc pos was already incremented above
+		output -= aCoeffs[i] * outBuf[(pos + i - 1) % length];
 	}
 	// add back to the feedback buf
 	outBuf[pos] = output;
