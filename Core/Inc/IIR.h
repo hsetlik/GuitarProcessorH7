@@ -22,9 +22,14 @@ struct BiquadPoleState;
 class Biquad {
 	float a[3] = {1.0f, 0.0f, 0.0f};
 	float b[3] = {1.0f, 0.0f, 0.0f};
+	float x[2] = {0.0f, 0.0f};
+	float y[2] = {0.0f, 0.0f};
 public:
 	Biquad(){
 	}
+	// main filter callback(s)
+	float filter_DirectFormI(float input);
+
 	// get the complex response for the given normalized frequency
 	complex_t response(float normFrequency) const;
 	std::vector<PoleZeroPair> getPoleZeros() const;
@@ -67,6 +72,7 @@ public:
 
 	void setPoleZeroForm (const BiquadPoleState& bps);
 };
+//--------------------------------------
 /**
  * Expresses a biquad as a pair of pole/zeros, with gain
  * values so that the coefficients can be reconstructed precisely.
@@ -80,10 +86,42 @@ public:
 		float gain = 1.0;
 	};
 
+//--------------------------------------
+	// structure for storing and computing a series of biquads
+class Cascade {
+private:
+		uint16_t numStages = 0;
+		uint16_t maxStages = 0;
+		Biquad* stages = nullptr;
+public:
+		Cascade()=default;
+	     struct Storage
+	        {
+		    Storage() = delete;
+		    Storage(const uint16_t maxNumBiquads, Biquad* const biquadArray) : maxStages(maxNumBiquads), stageArray(biquadArray) {}
+		    const uint16_t maxStages = 0;
+		    Biquad* const stageArray = nullptr;
+	        };
+	     // store a set of Biquads
+	     // number of biquads stored
+	     uint16_t getNumStages() const {
+	    	 return numStages;
+	     }
+	     // get a specific Biquad
+	     Biquad& operator[] (uint16_t i){
+	    	 return stages[i];
+	     }
+	     //-------------
+	     complex_t response(float normalizedFrequency) const;
+	     std::vector<PoleZeroPair> getPoleZeros() const;
+	     void setStorage(const Storage& storage);
+
+	};
+
 //======================================================
+} // namespace DSP
 
 
-}
 
 class IIRFilter {
 private:

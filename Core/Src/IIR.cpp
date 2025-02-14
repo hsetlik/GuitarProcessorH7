@@ -44,6 +44,16 @@ BiquadPoleState::BiquadPoleState(const Biquad &s) {
 
 	gain = b0 / a0;
 }
+//----------------------------
+float Biquad::filter_DirectFormI(float input){
+	const float output = b[0] * input + (b[1] * x[0]) + (b[2] * x[1]) -
+			(a[1] * y[0]) - (a[2] * y[1]);
+	x[1] = x[0];
+	y[1] = y[0];
+	x[0] = input;
+	y[0] = output;
+	return output;
+}
 
 complex_t Biquad::response(float normFrequency) const {
 	const float a0 = getA0();
