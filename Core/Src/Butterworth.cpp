@@ -53,7 +53,7 @@ void AnalogLowShelf::design(int poles, float gain) {
 
 		const int pairs = numPoles / 2.0f;
 		for (int i = 1; i <= pairs; ++i) {
-			const float theta = doublePi * (0.5f - (float)(2 * i - 1) / n2);
+			const float theta = doublePi * (0.5f - (float) (2 * i - 1) / n2);
 			addPoleZeroConjugatePairs(std::polar(gp, theta),
 					std::polar(gz, theta));
 		}
@@ -63,7 +63,73 @@ void AnalogLowShelf::design(int poles, float gain) {
 	}
 }
 
-// Pole Filter types===================================================
-}// namespace butterworth
-} // namespace DSP
+// filter bases===================================================
+void LowPassBase::setup(int order, float cutoffFrequency) {
+	analogProto.design(order);
+
+	LowPassTransform(cutoffFrequency, digitalProto, analogProto);
+
+	Cascade::setLayout(digitalProto);
+}
+
+void HighPassBase::setup(int order, float cutoffFrequency) {
+	analogProto.design(order);
+
+	HighPassTransform(cutoffFrequency, digitalProto, analogProto);
+
+	Cascade::setLayout(digitalProto);
+}
+
+void BandPassBase::setup(int order, float centerFrequency,
+		float widthFrequency) {
+	analogProto.design(order);
+
+	BandPassTransform(centerFrequency, widthFrequency, digitalProto,
+			analogProto);
+
+	Cascade::setLayout(digitalProto);
+}
+
+void BandStopBase::setup(int order, float centerFrequency,
+		float widthFrequency) {
+	analogProto.design(order);
+
+	BandStopTransform(centerFrequency, widthFrequency, digitalProto,
+			analogProto);
+
+	Cascade::setLayout(digitalProto);
+}
+
+void LowShelfBase::setup(int order, float cutoffFrequency, float gainDb) {
+	analogProto.design(order, gainDb);
+
+	LowPassTransform(cutoffFrequency, digitalProto, analogProto);
+
+	Cascade::setLayout(digitalProto);
+}
+
+void HighShelfBase::setup(int order, float cutoffFrequency, float gainDb) {
+	analogProto.design(order, gainDb);
+
+	HighPassTransform(cutoffFrequency, digitalProto, analogProto);
+
+	Cascade::setLayout(digitalProto);
+}
+
+void BandShelfBase::setup(int order, float centerFrequency,
+		float widthFrequency, float gainDb) {
+	analogProto.design(order, gainDb);
+
+	BandPassTransform(centerFrequency, widthFrequency, digitalProto,
+			analogProto);
+
+	// HACK!
+	digitalProto.setNormal((centerFrequency < 0.25f) ? doublePi : 0, 1);
+
+	Cascade::setLayout(digitalProto);
+}
+
+}
+// namespace butterworth
+}// namespace DSP
 

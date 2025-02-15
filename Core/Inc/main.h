@@ -109,7 +109,7 @@ extern I2C_HandleTypeDef hi2c2;
 extern I2S_HandleTypeDef hi2s1;
 
 // handy access to the actual sample rate pre current clock settings
-#define AUDIO_SAMPLE_RATE 43402
+#define AUDIO_SAMPLE_RATE 43402.0f
 
 /* USER CODE END Private defines */
 

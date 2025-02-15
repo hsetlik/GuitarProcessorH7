@@ -16,6 +16,7 @@
  * each filter topology will get its own .h/.cpp file
  * */
 #ifdef __cplusplus
+#define DEFAULT_FILTER_ORDER 4
 
 #include "DSPMath.h"
 namespace DSP {
@@ -275,7 +276,7 @@ public:
 		// This glues together the factored base classes
 		// with the templatized storage classes.
 		BaseClass::setCascadeStorage(this->getCascadeStorage());
-		BaseClass::setPrototypeStorage(m_analogStorage, m_digitalStorage);
+		BaseClass::setPrototypeStorage(analogStorage, digitalStorage);
 		CascadeStages<(MaxDigitalPoles + 1) / 2>::reset();
 	}
 
@@ -288,8 +289,8 @@ public:
 	}
 
 private:
-	Layout<MaxAnalogPoles> m_analogStorage = { };
-	Layout<MaxDigitalPoles> m_digitalStorage = { };
+	Layout<MaxAnalogPoles> analogStorage = { };
+	Layout<MaxDigitalPoles> digitalStorage = { };
 };
 
 //------------------------------------------------------------------------------
