@@ -9,16 +9,31 @@
 #define INC_DELAYLINE_H_
 #include "main.h"
 
+enum {
+  TAP_MAIN = 0,
+  TAP_OUT1,
+  TAP_OUT2,
+  TAP_OUT3,
+  MAX_TAPS
+};
 #ifdef __cplusplus
 class DelayLine{
 private:
-	const uint16_t length;
-	uint16_t idx = 0;
-	float* data;
+	uint16_t maxDelay;
+	uint16_t length;
+	float* data = nullptr;
+	uint16_t mask = 0;
 public:
-	DelayLine(uint16_t size);
+	uint16_t offsets[MAX_TAPS];
+	DelayLine();
 	~DelayLine();
-	float process(float input);
+	void init(uint16_t delay);
+	// set the length of a delay tap
+	void setDelay(uint8_t tap, uint16_t delaySamples);
+	// read/write access
+	float process(uint16_t cycle, float input);
+	void write(uint16_t cycle, float input);
+	float read(uint8_t tap, uint16_t cycle);
 };
 
 
