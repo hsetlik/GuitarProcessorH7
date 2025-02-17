@@ -191,7 +191,7 @@ public:
 	 * \param in Sample to be filtered
 	 * \return filtered sample
 	 **/
-	inline float filter(float in) {
+	float filter(float in) {
 		float out = in;
 		for (const auto &stage : stages)
 			out = stage.filter_DirectFormI(out);
