@@ -46,7 +46,12 @@ public:
 	float decayAmt;
 	//=====================================================
 	Dattorro();
-	float process(float input);
+	float processMono(float input);
+private:
+	//
+	void processIn(float input);
+	float getLeft();
+	float getRight();
 };
 
 #endif
