@@ -193,8 +193,8 @@ void Biquad::applyScale(float scale) {
 }
 
 // Cascade----------------------------------------
-void Cascade::setStorage(const Storage &storage) {
-	numStages = storage.numStages;
+void Cascade::setCascadeStorage(const Storage &storage) {
+	numStages = storage.maxStages;
 	maxStages = storage.maxStages;
 	stages = storage.stageArray;
 }

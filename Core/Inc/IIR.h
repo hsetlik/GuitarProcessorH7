@@ -124,13 +124,12 @@ public:
 	Cascade() = default;
 	struct Storage {
 		Storage() = delete;
-		Storage(const uint16_t maxNumBiquads, const uint16_t numBiquads,
+		Storage(const uint16_t maxNumBiquads,
 				Biquad *const biquadArray) :
-				maxStages(maxNumBiquads), numStages(numBiquads), stageArray(
+				maxStages(maxNumBiquads), stageArray(
 						biquadArray) {
 		}
 		const uint16_t maxStages = 0;
-		const uint16_t numStages = 0;
 		Biquad *const stageArray = nullptr;
 	};
 	// store a set of Biquads
@@ -145,7 +144,7 @@ public:
 	//-------------
 	complex_t response(float normalizedFrequency) const;
 	std::vector<PoleZeroPair> getPoleZeros() const;
-	void setStorage(const Storage &storage);
+	void setCascadeStorage(const Storage &storage);
 	void applyScale(float scale);
 	void setLayout(const LayoutBase &proto);
 
@@ -193,7 +192,7 @@ public:
 	 **/
 	float filter(float in) {
 		float out = in;
-		for (const auto &stage : stages)
+		for (Biquad &stage : stages)
 			out = stage.filter_DirectFormI(out);
 		return out;
 	}
@@ -275,7 +274,7 @@ public:
 	PoleFilter() {
 		// This glues together the factored base classes
 		// with the templatized storage classes.
-		BaseClass::setCascadeStorage(this->getCascadeStorage());
+		BaseClass::setCascadeStorage(CascadeStages<(MaxDigitalPoles + 1) / 2>::getCascadeStorage());
 		BaseClass::setPrototypeStorage(analogStorage, digitalStorage);
 		CascadeStages<(MaxDigitalPoles + 1) / 2>::reset();
 	}

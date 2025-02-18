@@ -40,7 +40,7 @@ public:
 #endif
 
 #ifdef __cplusplus
-#define EXTERNC extern "c"
+#define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif

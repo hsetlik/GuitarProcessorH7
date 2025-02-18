@@ -6,6 +6,31 @@
  */
 #include "EnvelopeDetector.h"
 
+MovingAverage::MovingAverage(uint16_t s) : size(s), head(0){
+	data = new float[size];
+}
+
+MovingAverage::~MovingAverage(){
+	delete [] data;
+}
+
+
+float MovingAverage::process(float input){
+	// add the input to the ring buffer
+	data[head] = input;
+	head = (head + 1) % size;
+	// add the samples
+	float sum = 0.0f;
+	for(uint16_t i = 0; i < size; i++){
+		sum += data[i];
+	}
+	// return the average
+	return sum / (float)size;
+}
+
+
+//=================================================
+
 EnvelopeDetector::EnvelopeDetector(){
 	filter.setup(AUDIO_SAMPLE_RATE, 200.0f);
 }

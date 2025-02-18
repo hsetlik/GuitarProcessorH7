@@ -12,6 +12,20 @@
 #ifdef __cplusplus
 
 #include "Butterworth.h"
+
+// a simple moving average filter class
+class MovingAverage{
+private:
+	uint16_t size;
+	uint16_t head;
+	float* data;
+public:
+	MovingAverage(uint16_t size=5);
+	~MovingAverage();
+	float process(float input);
+
+};
+
 class EnvelopeDetector{
 private:
 	bool inPositivePhase = true;
