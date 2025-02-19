@@ -5,7 +5,11 @@
  *      Author: hayden
  */
 #include "FFTPhaser.h"
+//=============================================================================
+// forward declarations for our phase manipulation functions
 
+
+//=============================================================================
 FFTPhaser::FFTPhaser() {
 	// calculate the twiddle coefficients
 	for (uint16_t i = 0; i < FFT_SIZE; ++i) {
@@ -74,10 +78,10 @@ void FFTPhaser::process(float input) {
 	} else {
 		++bufferIdx;
 	}
-	// 2. add the input into the process buffer
+	// 2. add the input into the process buffer and zero the imaginary value
 	processPtr[bufferIdx * 2] = input;
-	// zero the imaginary value as well
 	processPtr[bufferIdx * 2 + 1] = 0.0f;
+	// 3. return the real value from our
 	return playbackPtr[bufferIdx * 2];
 }
 
@@ -96,7 +100,17 @@ playbackPtr = prevProcess;
 
 }
 
+//=============================================================================
+
+
+
+
+
+//=============================================================================
+
 void FFTPhaser::performEffect(float* buf){
 	//TODO
 }
+
+
 

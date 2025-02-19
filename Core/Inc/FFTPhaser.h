@@ -18,6 +18,7 @@
 #endif
 #ifdef __cplusplus
 #include "DSPMath.h"
+#include "SineLFO.h"
 // this will be a tradeoff between bandwidth and latency I think
 #define FFT_SIZE 256
 #define REV_INDEX_TABLE_LENGTH 440
