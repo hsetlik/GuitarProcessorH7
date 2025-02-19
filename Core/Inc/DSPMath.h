@@ -20,6 +20,11 @@
 #include <complex>
 
 namespace DSP {
+
+inline float flerp(float a, float b, float t){
+	return a + ((b - a) * t);
+}
+
 // IIR math helpers
 const float floatPi = 3.1415926535897932384626433832795028841971;
 const float twoPi = 2.0f * floatPi;

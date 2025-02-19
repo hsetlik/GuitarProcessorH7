@@ -30,7 +30,6 @@ private:
 	arm_cfft_instance_f32 fft;
 	// these arrays get initialized in the constructor
 	float twiddleCoef[FFT_SIZE * 2];
-	uint16_t revIndexTable[REV_INDEX_TABLE_LENGTH];
 
 
 
@@ -39,7 +38,9 @@ private:
 	uint16_t bufferIdx = 0;
 	float* processPtr;
 	float* playbackPtr;
+	SineLFO lfo;
 public:
+	float lfoHz = 2.5f;
 	FFTPhaser();
 	// main callback to load the next sample
 	float process(float input);

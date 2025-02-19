@@ -107,6 +107,7 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 extern I2C_HandleTypeDef hi2c2;
 extern I2S_HandleTypeDef hi2s1;
+extern RNG_HandleTypeDef hrng;
 
 // handy access to the actual sample rate pre current clock settings
 #define AUDIO_SAMPLE_RATE 43402.0f
