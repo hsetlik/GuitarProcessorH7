@@ -40,6 +40,14 @@ private:
 	float* playbackPtr;
 public:
 	FFTPhaser();
+	// main callback to load the next sample
+	float process(float input);
+private:
+	void bufferFull();
+	// helper for the actual effect-ing part here
+	// input is interleaved complex numbers with
+	// the imaginary parts at the odd array indeces
+	void performEffect(float* buf);
 
 };
 

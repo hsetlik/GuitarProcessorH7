@@ -60,5 +60,43 @@ FFTPhaser::FFTPhaser() {
 	fft.pTwiddle = twiddleCoef;
 	fft.pBitRevTable = revIndexTable;
 	fft.bitRevLength = REV_INDEX_TABLE_LENGTH;
+
+	// assign the process and playback pointers
+	processPtr = aBuf;
+	playbackPtr = bBuf;
+}
+
+void FFTPhaser::process(float input) {
+	// 1. check if it's time to perform the next FFT
+	if (bufferIdx >= FFT_SIZE) {
+		bufferFull();
+		bufferIdx = 0;
+	} else {
+		++bufferIdx;
+	}
+	// 2. add the input into the process buffer
+	processPtr[bufferIdx * 2] = input;
+	// zero the imaginary value as well
+	processPtr[bufferIdx * 2 + 1] = 0.0f;
+	return playbackPtr[bufferIdx * 2];
+}
+
+// this guy does the heavy lifing really
+void FFTPhaser::bufferFull() {
+// Do a forward FFT on the newest buffer of audio data
+arm_cfft_f32(&fft, processPtr, 0, 1);
+// Do something interesting to the imaginary parts here
+performEffect(processPtr);
+// Do a reverse FFT to get back to the time domain
+arm_cfft_f32(&fft, processPtr, 1, 1);
+// swap the process and playback pointers
+float* prevProcess = processPtr;
+processPtr = playbackPtr;
+playbackPtr = prevProcess;
+
+}
+
+void FFTPhaser::performEffect(float* buf){
+	//TODO
 }
 
