@@ -63,7 +63,7 @@ complex_t Biquad::response(float normFrequency) const {
 	const float b1 = getB1();
 	const float b2 = getB2();
 
-	const float w = 2 * doublePi * normFrequency;
+	const float w = 2 * floatPi * normFrequency;
 	const complex_t czn1 = std::polar<float>(1.0f, -w);
 	const complex_t czn2 = std::polar<float>(1., -2.0f * w);
 	complex_t ch(1);
@@ -204,7 +204,7 @@ complex_t Cascade::response(float normalizedFrequency) const {
 		Error_Handler();
 	if (normalizedFrequency < 0.0)
 		Error_Handler();
-	float w = 2 * doublePi * normalizedFrequency;
+	float w = 2 * floatPi * normalizedFrequency;
 	const complex_t czn1 = std::polar<float>(1.0f, -w);
 	const complex_t czn2 = std::polar<float>(1.0f, -2 * w);
 	complex_t ch(1);
@@ -260,7 +260,7 @@ void Cascade::setLayout(const LayoutBase &proto) {
 
 	applyScale(
 			proto.getNormalGain()
-					/ std::abs(response(proto.getNormalW() / (2 * doublePi))));
+					/ std::abs(response(proto.getNormalW() / (2 * floatPi))));
 }
 
 //Pole Filters==============================================
@@ -284,7 +284,7 @@ LowPassTransform::LowPassTransform(float fc, LayoutBase &digital,
 	digital.reset();
 
 	// prewarp
-	f = tan(doublePi * fc);
+	f = tan(floatPi * fc);
 
 	const uint32_t numPoles = analog.getNumPoles();
 	const uint32_t pairs = numPoles / 2;
@@ -321,7 +321,7 @@ HighPassTransform::HighPassTransform(float fc, LayoutBase &digital,
 	digital.reset();
 
 	// prewarp
-	f = 1.0f / tan(doublePi * fc);
+	f = 1.0f / tan(floatPi * fc);
 
 	const uint32_t numPoles = analog.getNumPoles();
 	const uint32_t pairs = numPoles / 2;
@@ -336,7 +336,7 @@ HighPassTransform::HighPassTransform(float fc, LayoutBase &digital,
 		digital.add(transform(pair.poles.first), transform(pair.zeros.first));
 	}
 
-	digital.setNormal(doublePi - analog.getNormalW(), analog.getNormalGain());
+	digital.setNormal(floatPi - analog.getNormalW(), analog.getNormalGain());
 }
 //-------------------------------
 
@@ -375,17 +375,17 @@ BandPassTransform::BandPassTransform(float fc, float fw, LayoutBase &digital,
 
 	digital.reset();
 
-	const float ww = 2.0f * doublePi * fw;
+	const float ww = 2.0f * floatPi * fw;
 
 	// pre-calcs
-	wc2 = 2.0f * doublePi * fc - (ww / 2.0f);
+	wc2 = 2.0f * floatPi * fc - (ww / 2.0f);
 	wc = wc2 + ww;
 
 	// what is this crap?
 	if (wc2 < 1e-8)
 		wc2 = 1e-8;
-	if (wc > doublePi - 1e-8)
-		wc = doublePi - 1e-8;
+	if (wc > floatPi - 1e-8)
+		wc = floatPi - 1e-8;
 
 	a = cos((wc + wc2) * 0.5f) / cos((wc - wc2) * 0.5f);
 	b = 1.0f / tan((wc - wc2) * 0.5f);
@@ -454,16 +454,16 @@ BandStopTransform::BandStopTransform(float fc, float fw, LayoutBase &digital,
 
 	digital.reset();
 
-	const float ww = 2.0f * doublePi * fw;
+	const float ww = 2.0f * floatPi * fw;
 
-	wc2 = 2.0f * doublePi * fc - (ww / 2.0f);
+	wc2 = 2.0f * floatPi * fc - (ww / 2.0f);
 	wc = wc2 + ww;
 
 	// this is crap
 	if (wc2 < 1e-8)
 		wc2 = 1e-8;
-	if (wc > doublePi - 1e-8)
-		wc = doublePi - 1e-8;
+	if (wc > floatPi - 1e-8)
+		wc = floatPi - 1e-8;
 
 	a = cos((wc + wc2) * 0.5f) / cos((wc - wc2) * 0.5f);
 	b = tan((wc - wc2) * 0.5f);
@@ -493,7 +493,7 @@ BandStopTransform::BandStopTransform(float fc, float fw, LayoutBase &digital,
 	}
 
 	if (fc < 0.25)
-		digital.setNormal(doublePi, analog.getNormalGain());
+		digital.setNormal(floatPi, analog.getNormalGain());
 	else
 		digital.setNormal(0, analog.getNormalGain());
 }

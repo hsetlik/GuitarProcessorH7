@@ -24,7 +24,7 @@ void AnalogLowPass::design(const int poles) {
 		const int pairs = numPoles / 2;
 		for (int i = 0; i < pairs; ++i) {
 			complex_t c = std::polar<float>(1.0f,
-					doublePi_2 + (2.0f * i + 1.0f) * doublePi / n2);
+					doublePi_2 + (2.0f * i + 1.0f) * floatPi / n2);
 			addPoleZeroConjugatePairs(c, infinity());
 		}
 
@@ -36,7 +36,7 @@ void AnalogLowPass::design(const int poles) {
 //-----------
 AnalogLowShelf::AnalogLowShelf() :
 		numPoles(-1) {
-	setNormal(doublePi, 1);
+	setNormal(floatPi, 1);
 }
 
 void AnalogLowShelf::design(int poles, float gain) {
@@ -53,7 +53,7 @@ void AnalogLowShelf::design(int poles, float gain) {
 
 		const int pairs = numPoles / 2.0f;
 		for (int i = 1; i <= pairs; ++i) {
-			const float theta = doublePi * (0.5f - (float) (2 * i - 1) / n2);
+			const float theta = floatPi * (0.5f - (float) (2 * i - 1) / n2);
 			addPoleZeroConjugatePairs(std::polar(gp, theta),
 					std::polar(gz, theta));
 		}
@@ -124,7 +124,7 @@ void BandShelfBase::setup(int order, float centerFrequency,
 			analogProto);
 
 	// HACK!
-	digitalProto.setNormal((centerFrequency < 0.25f) ? doublePi : 0, 1);
+	digitalProto.setNormal((centerFrequency < 0.25f) ? floatPi : 0, 1);
 
 	Cascade::setLayout(digitalProto);
 }
