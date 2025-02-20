@@ -74,6 +74,25 @@ FFTPhaser::FFTPhaser() {
 	playbackPtr = bBuf;
 }
 
+void FFTPhaser::setType_u16(uint16_t value) {
+	constexpr uint16_t dType = KNOB_MAX / NUM_PHASING_TYPES;
+	mode = (PhasingType)value / dType;
+}
+
+void FFTPhaser::setSpeed_u16(uint16_t value) {
+	constexpr float minHz = 0.05f;
+	constexpr float maxHz = 18.0f;
+	constexpr float increment = (maxHz - minHz) / (float)KNOB_MAX;
+	lfoHz = minHz + (increment * (float)value);
+}
+
+void FFTPhaser::setDepth_u16(uint16_t value) {
+	constexpr float minDepth = 0.02f;
+	constexpr float maxDepth = 1.0f;
+	constexpr float increment = (maxDepth - minDepth) / (float)KNOB_MAX;
+	lfoDepth = minDepth + (increment * (float)value);
+}
+
 float FFTPhaser::process(float input) {
 	// 1. check if it's time to perform the next FFT
 	if (bufferIdx >= FFT_SIZE) {
@@ -91,13 +110,13 @@ float FFTPhaser::process(float input) {
 
 // this guy does the heavy lifting really
 void FFTPhaser::bufferFull() {
-// Do a forward FFT on the newest buffer of audio data
+// 1. Do a forward FFT on the newest buffer of audio data
 	arm_cfft_f32(&fft, processPtr, 0, 1);
-// Do something interesting to the imaginary parts here
+// 2. Do something interesting to the imaginary parts here
 	performEffect(processPtr);
-// Do a reverse FFT to get back to the time domain
+// 3. Do a reverse FFT to get back to the time domain
 	arm_cfft_f32(&fft, processPtr, 1, 1);
-// swap the process and playback pointers
+// 4. swap the process and playback pointers
 	float *prevProcess = processPtr;
 	processPtr = playbackPtr;
 	playbackPtr = prevProcess;
@@ -120,16 +139,16 @@ std::array<float, FFT_SIZE> getRandomPhases() {
 // this just returns all the bin indices in a random order
 std::array<uint16_t, FFT_SIZE> getRandomBins() {
 	std::vector<uint16_t> indices;
-	for(uint16_t i = 0; i < FFT_SIZE; i++){
+	for (uint16_t i = 0; i < FFT_SIZE; i++) {
 		indices.push_back(i);
 	}
 
 	std::array<uint16_t, FFT_SIZE> arr;
 	uint32_t randVal;
 	uint16_t idx = 0;
-	while(!indices.empty() && idx < FFT_SIZE){
+	while (!indices.empty() && idx < FFT_SIZE) {
 		HAL_RNG_GenerateRandomNumber(&hrng, &randVal);
-		uint16_t arrIdx = (uint16_t)(randVal % indices.size());
+		uint16_t arrIdx = (uint16_t) (randVal % indices.size());
 		arr[idx] = indices[arrIdx];
 		++idx;
 		indices.erase(indices.begin() + arrIdx);
@@ -146,12 +165,13 @@ static std::array<uint16_t, FFT_SIZE> randBins = getRandomBins();
 /*This uses the value of the LFO to interpolate between two random
  * values for each bin's imaginary component (phase). The original phase information is discarded.
  * */
-static void setRandomPhasesLFO(float *buf, SineLFO *lfo, float speed) {
+static void setRandomPhasesLFO(float *buf, SineLFO *lfo, float speed,
+		float depth) {
 	float lfoVal;
 	for (uint16_t i = 0; i < FFT_SIZE; i++) {
 		lfoVal = lfo->update(speed);
 		buf[i * 2 + 1] = DSP::flerp(randPhases1[(size_t) i],
-				randPhases2[(size_t) i], lfoVal);
+				randPhases2[(size_t) i], lfoVal * depth);
 	}
 }
 
@@ -159,27 +179,41 @@ static void setRandomPhasesLFO(float *buf, SineLFO *lfo, float speed) {
  * */
 static void invertPhases(float *buf, uint16_t *bins, uint16_t numBins) {
 	for (uint16_t i = 0; i < numBins; i++) {
-		uint16_t& idx = bins[i];
+		uint16_t &idx = bins[i];
 		buf[2 * idx + 1] *= -1.0f;
 	}
 }
 
-static void invertPhasesLFO(float* buf, SineLFO* lfo, float lfoSpeed){
+static void invertPhasesLFO(float *buf, SineLFO *lfo, float lfoSpeed,
+		float depth) {
 	// increment the LFO for all the samples at once
-	const float lfoVal = lfo->update(lfoSpeed * (float)FFT_SIZE);
-	uint16_t binsToFlip = (uint16_t)(lfoVal * (float)FFT_SIZE);
+	const float lfoVal = lfo->update(lfoSpeed * (float) FFT_SIZE);
+	uint16_t binsToFlip = (uint16_t) (lfoVal * depth * (float) FFT_SIZE);
 	invertPhases(buf, randBins.data(), binsToFlip);
+}
+
+static void lerpInvertAllLFO(float *buf, SineLFO *lfo, float speed,
+		float depth) {
+	const float lerpValue = lfo->update(speed * (float) FFT_SIZE) * depth;
+	for (uint16_t i = 0; i < FFT_SIZE; i++) {
+		float *phase = &buf[2 * i + 1];
+		*phase = DSP::flerp(*phase, *phase * -1.0f, lerpValue);
+	}
+
 }
 //
 //=============================================================================
 
 void FFTPhaser::performEffect(float *buf) {
-	switch(mode){
+	switch (mode) {
 	case RandomInterpolation:
-		setRandomPhasesLFO(buf, &lfo, lfoHz);
+		setRandomPhasesLFO(buf, &lfo, lfoHz, lfoDepth);
 		break;
-	case InvertBins:
-		invertPhasesLFO(buf, &lfo, lfoHz);
+	case InvertRandom:
+		invertPhasesLFO(buf, &lfo, lfoHz, lfoDepth);
+		break;
+	case LFOFlip:
+		lerpInvertAllLFO(buf, &lfo, lfoHz, lfoDepth);
 		break;
 	default:
 		break;

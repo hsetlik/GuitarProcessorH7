@@ -25,9 +25,11 @@
 
 enum PhasingType{
 	RandomInterpolation,
-	InvertBins,
+	InvertRandom,
+	LFOFlip
 };
 
+#define NUM_PHASING_TYPES 3
 
 class FFTPhaser {
 private:
@@ -44,12 +46,17 @@ private:
 	float* processPtr;
 	float* playbackPtr;
 	SineLFO lfo;
-public:
 	PhasingType mode = RandomInterpolation;
 	float lfoHz = 2.5f;
+	float lfoDepth = 0.5f;
+public:
 	FFTPhaser();
 	// main callback to load the next sample
 	float process(float input);
+	// callbacks for the control knobs
+	void setType_u16(uint16_t value);
+	void setSpeed_u16(uint16_t value);
+	void setDepth_u16(uint16_t value);
 private:
 	void bufferFull();
 	// helper for the actual effect-ing part here

@@ -11,6 +11,8 @@
 
 #ifdef __cplusplus
 #include <memory>
+#include "Dattorro.h"
+#include "FFTPhaser.h"
 // Yes im using inheritance here i promise it makes sense
 // this is a base class from which all effects will derive
 class FxAlgorithm {
@@ -23,10 +25,20 @@ public:
 	virtual void paramChanged(uint8_t id, uint16_t value)=0;
 };
 
-//=================================================================
-
-
+// handy smart pointer alias
 typedef std::unique_ptr<FxAlgorithm> alg_ptr_t;
+
+//Child Classes for each effect===============================================
+class FFTPhaserAlgo : public FxAlgorithm {
+private:
+	FFTPhaser phaser;
+public:
+	FFTPhaserAlgo();
+	void processChunk(float* in, float* out, uint32_t size) override;
+	void paramChanged(uint8_t id, uint16_t value) override;
+};
+
+
 
 #endif
 
