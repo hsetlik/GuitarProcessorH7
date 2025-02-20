@@ -6,6 +6,7 @@
  */
 #include "FFTPhaser.h"
 #include <array>
+#include <vector>
 //=============================================================================
 // forward declarations for our phase manipulation functions
 static uint16_t revIndexTable[REV_INDEX_TABLE_LENGTH] = 	// hard code these
@@ -116,29 +117,24 @@ std::array<float, FFT_SIZE> getRandomPhases() {
 	return arr;
 }
 
-// helper for randomizing
-bool existsAlready(uint16_t *buf, uint16_t size, uint16_t value) {
-	for (uint16_t i = 0; i < size; i++) {
-		if (buf[i] == value)
-			return true;
-	}
-	return false;
-}
-
 // this just returns all the bin indices in a random order
 std::array<uint16_t, FFT_SIZE> getRandomBins() {
-	std::array<uint16_t, FFT_SIZE> arr;
-	arr.fill(9999);
-	for (uint16_t i = 0; i < FFT_SIZE; i++) {
-		uint32_t intRand;
-		HAL_RNG_GenerateRandomNumber(&hrng, &intRand);
-		uint16_t value = intRand % FFT_SIZE;
-		while (existsAlready(arr.data(), i, value)) {
-			HAL_RNG_GenerateRandomNumber(&hrng, &intRand);
-			value = intRand % FFT_SIZE;
-		}
-		arr[i] = value;
+	std::vector<uint16_t> indices;
+	for(uint16_t i = 0; i < FFT_SIZE; i++){
+		indices.push_back(i);
 	}
+
+	std::array<uint16_t, FFT_SIZE> arr;
+	uint32_t randVal;
+	uint16_t idx = 0;
+	while(!indices.empty() && idx < FFT_SIZE){
+		HAL_RNG_GenerateRandomNumber(&hrng, &randVal);
+		uint16_t arrIdx = (uint16_t)(randVal % indices.size());
+		arr[idx] = indices[arrIdx];
+		++idx;
+		indices.erase(indices.begin() + arrIdx);
+	}
+
 	return arr;
 }
 // two arrays of random phases to lerp between
