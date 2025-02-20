@@ -25,6 +25,10 @@ inline float flerp(float a, float b, float t){
 	return a + ((b - a) * t);
 }
 
+inline float dBDifference(float l1, float l2){
+	return 10.0f * std::log10(l2 / l1);
+}
+
 // IIR math helpers
 const float floatPi = 3.1415926535897932384626433832795028841971;
 const float twoPi = 2.0f * floatPi;

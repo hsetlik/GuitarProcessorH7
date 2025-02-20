@@ -50,3 +50,18 @@ float EnvelopeDetector::process(float input){
 	prevInput = input;
 	return filter.filter(lastPeakMagnitude);
 }
+
+//=================================================
+
+float RMSDetector::process(float input){
+	squareSum += (input * input);
+	++sampleIdx;
+	//we're at the end of a window
+	if(sampleIdx >= windowSize){
+		output = fastSqrt(squareSum / (float)sampleIdx);
+		sampleIdx = 0;
+		squareSum = 0.0f;
+	}
+	return output;
+
+}

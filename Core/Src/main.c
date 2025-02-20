@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "FxProcessor.h"
 #include "tlv320aic3204.h"
+#include "ssd1306.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -130,6 +131,11 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef*){
 
 }
 
+// Display I2C callback------------------------------
+void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef*){
+	ssd1306_TxFinished();
+}
+
 void checkLEDs(){
 	static uint32_t lastCheck = 0;
 	// this limits the LEDs to refreshing no more than ~25x a second
@@ -208,6 +214,9 @@ int main(void)
 
   // bring the NRST pin for the LEDs high
   HAL_GPIO_WritePin(LED_NRST_GPIO_Port, LED_NRST_Pin, GPIO_PIN_SET);
+
+  // initialize the OLED display
+  ssd1306_Init();
 
   /* USER CODE END 2 */
 

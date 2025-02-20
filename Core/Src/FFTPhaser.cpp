@@ -76,7 +76,7 @@ FFTPhaser::FFTPhaser() {
 
 void FFTPhaser::setType_u16(uint16_t value) {
 	constexpr uint16_t dType = KNOB_MAX / NUM_PHASING_TYPES;
-	mode = (PhasingType)value / dType;
+	mode = (PhasingType)(value / dType);
 }
 
 void FFTPhaser::setSpeed_u16(uint16_t value) {
