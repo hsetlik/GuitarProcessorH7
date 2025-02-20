@@ -110,7 +110,7 @@ extern I2S_HandleTypeDef hi2s1;
 extern RNG_HandleTypeDef hrng;
 
 // handy access to the actual sample rate pre current clock settings
-#define AUDIO_SAMPLE_RATE 43402.0f
+#define AUDIO_SAMPLE_RATE 48828.0f
 
 /* USER CODE END Private defines */
 
