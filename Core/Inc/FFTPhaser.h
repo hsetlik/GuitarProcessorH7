@@ -23,6 +23,11 @@
 #define FFT_SIZE 256
 #define REV_INDEX_TABLE_LENGTH 440
 
+enum PhasingType{
+	RandomInterpolation,
+	InvertBins,
+};
+
 
 class FFTPhaser {
 private:
@@ -40,6 +45,7 @@ private:
 	float* playbackPtr;
 	SineLFO lfo;
 public:
+	PhasingType mode = RandomInterpolation;
 	float lfoHz = 2.5f;
 	FFTPhaser();
 	// main callback to load the next sample
@@ -48,7 +54,7 @@ private:
 	void bufferFull();
 	// helper for the actual effect-ing part here
 	// input is interleaved complex numbers with
-	// the imaginary parts at the odd array indeces
+	// the imaginary parts at the odd array indices
 	void performEffect(float* buf);
 
 };

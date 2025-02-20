@@ -84,11 +84,11 @@ float FFTPhaser::process(float input) {
 	// 2. add the input into the process buffer and zero the imaginary value
 	processPtr[bufferIdx * 2] = input;
 	processPtr[bufferIdx * 2 + 1] = 0.0f;
-	// 3. return the real value from our
+	// 3. return the real value from the previously processed buffer
 	return playbackPtr[bufferIdx * 2];
 }
 
-// this guy does the heavy lifing really
+// this guy does the heavy lifting really
 void FFTPhaser::bufferFull() {
 // Do a forward FFT on the newest buffer of audio data
 	arm_cfft_f32(&fft, processPtr, 0, 1);
@@ -125,7 +125,7 @@ bool existsAlready(uint16_t *buf, uint16_t size, uint16_t value) {
 	return false;
 }
 
-// this just returns all the bin indeces in a random order
+// this just returns all the bin indices in a random order
 std::array<uint16_t, FFT_SIZE> getRandomBins() {
 	std::array<uint16_t, FFT_SIZE> arr;
 	arr.fill(9999);
@@ -147,7 +147,7 @@ static std::array<float, FFT_SIZE> randPhases2 = getRandomPhases();
 // random bins
 static std::array<uint16_t, FFT_SIZE> randBins = getRandomBins();
 
-/*This uses the value of the LFO to interpolate between to random
+/*This uses the value of the LFO to interpolate between two random
  * values for each bin's imaginary component (phase). The original phase information is discarded.
  * */
 static void setRandomPhasesLFO(float *buf, SineLFO *lfo, float speed) {
@@ -159,7 +159,7 @@ static void setRandomPhasesLFO(float *buf, SineLFO *lfo, float speed) {
 	}
 }
 
-/*This inverts the phase of the bins whose indeces are given in the array
+/*This inverts the phase of the bins whose indexes are given in the array
  * */
 static void invertPhases(float *buf, uint16_t *bins, uint16_t numBins) {
 	for (uint16_t i = 0; i < numBins; i++) {
@@ -178,6 +178,15 @@ static void invertPhasesLFO(float* buf, SineLFO* lfo, float lfoSpeed){
 //=============================================================================
 
 void FFTPhaser::performEffect(float *buf) {
-	setRandomPhasesLFO(buf, &lfo, lfoHz);
+	switch(mode){
+	case RandomInterpolation:
+		setRandomPhasesLFO(buf, &lfo, lfoHz);
+		break;
+	case InvertBins:
+		invertPhasesLFO(buf, &lfo, lfoHz);
+		break;
+	default:
+		break;
+	}
 }
 
