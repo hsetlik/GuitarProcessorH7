@@ -128,8 +128,8 @@ std::array<float, FFT_SIZE> getRandomPhases() {
 	static const uint32_t max32 = 0xFFFF;
 	std::array<float, FFT_SIZE> arr;
 	for (uint16_t i = 0; i < FFT_SIZE; i++) {
-		uint32_t intRand;
-		HAL_RNG_GenerateRandomNumber(&hrng, &intRand);
+		uint32_t intRand = (uint32_t)(rand() % 0xFFFF);
+		//HAL_RNG_GenerateRandomNumber(&hrng, &intRand);
 		float fPhase = (float) (max32 / intRand);
 		arr[i] = fPhase * DSP::twoPi;
 	}
@@ -147,7 +147,7 @@ std::array<uint16_t, FFT_SIZE> getRandomBins() {
 	uint32_t randVal;
 	uint16_t idx = 0;
 	while (!indices.empty() && idx < FFT_SIZE) {
-		HAL_RNG_GenerateRandomNumber(&hrng, &randVal);
+		randVal = (uint32_t)rand();
 		uint16_t arrIdx = (uint16_t) (randVal % indices.size());
 		arr[idx] = indices[arrIdx];
 		++idx;
