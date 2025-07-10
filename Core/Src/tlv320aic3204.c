@@ -21,13 +21,13 @@ void TLV_selectPage(uint8_t page) {
 	}
 }
 
-HAL_StatusTypeDef TLV_writeRegister(uint8_t page, uint8_t addr, uint8_t data) {
+ static HAL_StatusTypeDef TLV_writeRegister(uint8_t page, uint8_t addr, uint8_t data) {
 	TLV_selectPage(page);
 	return HAL_I2C_Mem_Write(&TLV_I2C, TLV_DEVICE_ADDR, addr,
 			I2C_MEMADD_SIZE_8BIT, &data, 1, HAL_MAX_DELAY);
 }
 
-HAL_StatusTypeDef TLV_readRegister(uint8_t page, uint8_t addr, uint8_t *data) {
+static HAL_StatusTypeDef TLV_readRegister(uint8_t page, uint8_t addr, uint8_t *data) {
 	TLV_selectPage(page);
 	return HAL_I2C_Mem_Read(&TLV_I2C, TLV_DEVICE_ADDR, addr,
 			I2C_MEMADD_SIZE_8BIT, data, 1, HAL_MAX_DELAY);
@@ -81,12 +81,50 @@ HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 
 HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	uint16_t idx = 0;
-	tlv_register_t settings[50];
+	tlv_register_t settings[100];
+	// setup based on TI's application note SLA557: https://www.ti.com/lit/ml/slaa557/slaa557.pdf?ts=1752009023928
+	// and the register map from p. 35-39 of the datasheet: https://www.ti.com/lit/ds/symlink/tlv320aic3204.pdf?ts=1752054663881&ref_url=https%253A%252F%252Fwww.mouser.fr%252F
+
+	// software reset in register 1:
+	settings[idx] = (tlv_register_t){TLV_softwareReset_pg, TLV_softwareReset_reg, 0x01};
+	++idx;
+	// set NADC divider to 1
+	settings[idx] = (tlv_register_t){TLV_NADC_pg, TLV_NADC_reg, 0x81};
+	++idx;
+	// set MADC divider to 2
+	settings[idx] = (tlv_register_t){TLV_MADC_pg, TLV_MADC_reg, 0x82};
+	++idx;
+	// set 32 bit word length
+	settings[idx] = (tlv_register_t){TLV_audioIntSetting1_pg, TLV_audioIntSetting1_reg, 0x30};
+	++idx;
+	// set ADC oversampling to 128
+	settings[idx] = (tlv_register_t){TLV_adcOversampling_pg, TLV_adcOversampling_reg, 0x80};
+	++idx;
 
 	// use the internal LDOs
 	settings[idx] = (tlv_register_t){TLV_ldoControl_pg, TLV_ldoControl_reg, 0x01};
 	idx++;
+	// set the analog quick charge time to 3.1ms
+	settings[idx] = (tlv_register_t){TLV_analogQuickCharge_pg, TLV_analogQuickCharge_reg, 0x31};
+	idx++;
 
+	// ADC setup stuff-----------------------------------------
+
+	// our differential input circuit will use the right MICPGA, with IN1_R routed to the
+	// positive input and IN1_L to the negative
+
+	// IN1_R gets routed to the pos. input with 20k input impedance
+	settings[idx] = (tlv_register_t){TLV_rightMICPGAPosRouting_pg, TLV_rightMICPGAPosRouting_reg, 0x80};
+	idx++;
+	// IN1_L gets routed to the neg. input also via 20k input impedance
+	settings[idx] = (tlv_register_t){TLV_rightMICPGANegRouting_pg, TLV_rightMICPGANegRouting_reg, 0x20};
+	idx++;
+	// unmute right MICPGA and set unity gain
+	settings[idx] = (tlv_register_t){TLV_rightMICPGAGain_pg, TLV_rightMICPGAGain_reg, 0x0C};
+	idx++;
+	// power on right ADC channel
+	settings[idx] = (tlv_register_t){TLV_adcChannelSetup_pg, TLV_adcChannelSetup_reg, 0x40};
+	idx++;
 
 
 	// run the init

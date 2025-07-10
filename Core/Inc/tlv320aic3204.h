@@ -32,10 +32,7 @@ typedef struct {
 extern "C" {
 #endif
 
-// helpers for setting/reading registers
-HAL_StatusTypeDef TLV_writeRegister(uint8_t page, uint8_t addr, uint8_t data);
-HAL_StatusTypeDef TLV_readRegister(uint8_t page, uint8_t addr, uint8_t *data);
-uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected);
+
 
 // does the main work of setting up registers. Should be called after initializing I2C but before starting the DMA loop
 HAL_StatusTypeDef TLV_initCodec(tlv_register_t* settings, uint16_t size);
@@ -74,11 +71,11 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
 #define TLV_DACOSR2_pg 0x00
 #define TLV_DACOSR2_reg 0x0E
 
-#define TLV_clockSetting8_pg 0x00
-#define TLV_clockSetting8_reg 0x12
+#define TLV_NADC_pg 0x00
+#define TLV_NADC_reg 0x12
 
-#define TLV_clockSetting9_pg 0x00
-#define TLV_clockSetting9_reg 0x13
+#define TLV_MADC_pg 0x00
+#define TLV_MADC_reg 0x13
 
 #define TLV_adcOversampling_pg 0x00
 #define TLV_adcOversampling_reg 0x14
@@ -370,17 +367,17 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
 #define TLV_micBiasConfig_pg 0x01
 #define TLV_micBiasConfig_reg 0x33
 
-#define TLV_leftMICPGAPositiveInputRouting_pg 0x01
-#define TLV_leftMICPGAPositiveInputRouting_reg 0x34
+#define TLV_leftMICPGAPosRouting_pg 0x01
+#define TLV_leftMICPGAPosRouting_reg 0x34
 
-#define TLV_leftMICPGANegativeInputRouting_pg 0x01
-#define TLV_leftMICPGANegativeInputRouting_reg 0x36
+#define TLV_leftMICPGANegRouting_pg 0x01
+#define TLV_leftMICPGANegRouting_reg 0x36
 
-#define TLV_rightMICPGAPositiveInputRouting_pg 0x01
-#define TLV_rightMICPGAPositiveInputRouting_reg 0x37
+#define TLV_rightMICPGAPosRouting_pg 0x01
+#define TLV_rightMICPGAPosRouting_reg 0x37
 
-#define TLV_rightMICPGANegativeInputRouting_pg 0x01
-#define TLV_rightMICPGANegativeInputRouting_reg 0x39
+#define TLV_rightMICPGANegRouting_pg 0x01
+#define TLV_rightMICPGANegRouting_reg 0x39
 
 #define TLV_floatingInputConfig_pg 0x01
 #define TLV_floatingInputConfig_reg 0x3A
@@ -388,8 +385,8 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
 #define TLV_leftMICPGAVolumeControl_pg 0x01
 #define TLV_leftMICPGAVolumeControl_reg 0x3B
 
-#define TLV_rightMICPGAVolumeControl_pg 0x01
-#define TLV_rightMICPGAVolumeControl_reg 0x3C
+#define TLV_rightMICPGAGain_pg 0x01
+#define TLV_rightMICPGAGain_reg 0x3C
 
 #define TLV_adcPowerTuneConfig_pg 0x01
 #define TLV_adcPowerTuneConfig_reg 0x3D
@@ -399,6 +396,9 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
 
 #define TLV_dacAnalogGainControlFlag_pg 0x01
 #define TLV_dacAnalogGainControlFlag_reg 0x3F
+
+#define TLV_analogQuickCharge_pg 0x01
+#define TLV_analogQuickCharge_reg 0x47
 
 //======================================
 
