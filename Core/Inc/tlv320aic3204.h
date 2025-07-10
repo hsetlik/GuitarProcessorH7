@@ -11,13 +11,13 @@
 
 // define the relevant pins and handles
 
-#define TLV_DEVICE_ADDR 0x30
+#define TLV_DEVICE_ADDR (0x30 << 1)
 #define TLV_I2C hi2c2
 #define TLV_I2S hi2s1
 #define TLV_NRST_GPIO_Port CODEC_NRST_GPIO_Port
 #define TLV_NRST_Pin CODEC_NRST_Pin
 
-#define TLV_VERIFY_SETUP
+//#define TLV_VERIFY_SETUP
 
 // c-friendly scheme for passing a set of non-default register settings
 // on initialization

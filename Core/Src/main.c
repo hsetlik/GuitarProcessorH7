@@ -191,8 +191,6 @@ int main(void)
   MX_I2S1_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  // set up processor
-  fx = create_fx_processor();
   // configure codec over I2C
   if(TLV_quickInit_monoGuitarPedal() != HAL_OK){
 	  Error_Handler();
@@ -203,6 +201,10 @@ int main(void)
   if(status != HAL_OK){
 	  Error_Handler();
   }
+  // set up processor
+  fx = create_fx_processor();
+
+
 
   // calibrate and start DMA for the control knob ADC
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);

@@ -7,24 +7,25 @@
 #include "tlv320aic3204.h"
 
 // little helper for the page scheme
-void TLV_selectPage(uint8_t page) {
+static HAL_StatusTypeDef TLV_selectPage(uint8_t page) {
 	static uint8_t currentPage = 0xFF;
 	// check if we need to select the page
 	if (page != currentPage) {
-		HAL_StatusTypeDef pgStatus = HAL_I2C_Mem_Write(&TLV_I2C,
-				TLV_DEVICE_ADDR, 0x00, I2C_MEMADD_SIZE_8BIT, &page, 1,
-				HAL_MAX_DELAY);
+		HAL_StatusTypeDef pgStatus = HAL_I2C_Mem_Write(&TLV_I2C, TLV_DEVICE_ADDR, 0x00, 1, &page, 1, HAL_MAX_DELAY);
 		if (pgStatus != HAL_OK) {
-			Error_Handler();
+			return pgStatus;
 		}
 		currentPage = page;
 	}
+	return HAL_OK;
 }
 
  static HAL_StatusTypeDef TLV_writeRegister(uint8_t page, uint8_t addr, uint8_t data) {
-	TLV_selectPage(page);
-	return HAL_I2C_Mem_Write(&TLV_I2C, TLV_DEVICE_ADDR, addr,
-			I2C_MEMADD_SIZE_8BIT, &data, 1, HAL_MAX_DELAY);
+	HAL_StatusTypeDef pgStatus = TLV_selectPage(page);
+	if(pgStatus != HAL_OK)
+		return pgStatus;
+	uint8_t bytes[2] = {addr, data};
+	return HAL_I2C_Master_Transmit(&TLV_I2C, TLV_DEVICE_ADDR, bytes, 2, HAL_MAX_DELAY);
 }
 
 static HAL_StatusTypeDef TLV_readRegister(uint8_t page, uint8_t addr, uint8_t *data) {
@@ -47,9 +48,8 @@ uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected) {
 HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 	// step 1: cycle the NRST pin
 	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_RESET);
-	HAL_Delay(20);
+	HAL_Delay(5);
 	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_SET);
-	HAL_Delay(20);
 	// step 2: perform hardware reset
 	HAL_StatusTypeDef resetStatus = TLV_writeRegister(TLV_softwareReset_pg,
 			TLV_softwareReset_reg, 0x01);
