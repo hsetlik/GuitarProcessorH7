@@ -11,7 +11,7 @@
 
 // define the relevant pins and handles
 
-#define TLV_DEVICE_ADDR (0x30 << 1)
+#define TLV_DEVICE_ADDR (uint16_t)(0x18 << 1)
 #define TLV_I2C hi2c2
 #define TLV_I2S hi2s1
 #define TLV_NRST_GPIO_Port CODEC_NRST_GPIO_Port

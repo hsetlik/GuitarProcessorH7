@@ -13,7 +13,11 @@ static HAL_StatusTypeDef TLV_selectPage(uint8_t page) {
 	if (page != currentPage) {
 		HAL_StatusTypeDef pgStatus = HAL_I2C_Mem_Write(&TLV_I2C, TLV_DEVICE_ADDR, 0x00, 1, &page, 1, HAL_MAX_DELAY);
 		if (pgStatus != HAL_OK) {
-			return pgStatus;
+			uint8_t bytes[2] = {0x00, page};
+			HAL_StatusTypeDef transmitStatus = HAL_I2C_Master_Transmit(&TLV_I2C, TLV_DEVICE_ADDR, bytes, 2, HAL_MAX_DELAY);
+			if(transmitStatus != HAL_OK){
+				return transmitStatus;
+			}
 		}
 		currentPage = page;
 	}
@@ -48,8 +52,9 @@ uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected) {
 HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 	// step 1: cycle the NRST pin
 	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_RESET);
-	HAL_Delay(5);
+	HAL_Delay(2);
 	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_SET);
+	HAL_Delay(2);
 	// step 2: perform hardware reset
 	HAL_StatusTypeDef resetStatus = TLV_writeRegister(TLV_softwareReset_pg,
 			TLV_softwareReset_reg, 0x01);
