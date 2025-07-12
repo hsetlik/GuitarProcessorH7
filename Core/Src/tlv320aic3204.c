@@ -98,6 +98,9 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	// software reset in register 1:
 	settings[idx] = (tlv_register_t){TLV_softwareReset_pg, TLV_softwareReset_reg, 0b00000001};
 	++idx;
+
+
+	// ADC setup stuff-----------------------------------------
 	// set NADC divider to 1
 	settings[idx] = (tlv_register_t){TLV_NADC_pg, TLV_NADC_reg, 0b10000001};
 	++idx;
@@ -121,7 +124,6 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	settings[idx] = (tlv_register_t){TLV_refBootTime_pg, TLV_refBootTime_reg, 0x01};
 	idx++;
 
-	// ADC setup stuff-----------------------------------------
 
 	// our differential input circuit will use the right MICPGA, with IN1_R routed to the
 	// positive input and IN1_L to the negative
@@ -142,6 +144,36 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	settings[idx] = (tlv_register_t){TLV_adcFineGainAdjust_pg, TLV_adcFineGainAdjust_reg, 0b10000000};
 	idx++;
 
+	// DAC setup stuff------------------------------------------------------
+	// set NDAC divider to 1
+	settings[idx] = (tlv_register_t){TLV_NDAC_pg, TLV_NDAC_reg, 0b10000001};
+	++idx;
+	// set MDAC divider to 2
+	settings[idx] = (tlv_register_t){TLV_MDAC_pg, TLV_MDAC_reg, 0b10000010};
+	++idx;
+	// set the DAC OSR to 128
+	settings[idx] = (tlv_register_t){TLV_DACOSR1_pg, TLV_DACOSR1_reg, 0x00};
+	++idx;
+	settings[idx] = (tlv_register_t){TLV_DACOSR2_pg, TLV_DACOSR2_reg, 0x80};
+	++idx;
+	// select PRB_R5
+	settings[idx] = (tlv_register_t){TLV_dacSignalProcessingBlock_pg, TLV_dacSignalProcessingBlock_reg, 0x05};
+	++idx;
+	// route left DAC to left line out
+	settings[idx] = (tlv_register_t){TLV_lolRouting_pg, TLV_lolRouting_reg, 0b00001000};
+	++idx;
+	// unmute LOL driver and set gain to 0db
+	settings[idx] = (tlv_register_t){TLV_lolDriverGain_pg, TLV_lolDriverGain_reg, 0x00};
+	++idx;
+	// power up the left line out driver
+	settings[idx] = (tlv_register_t){TLV_outputDriverPower_pg, TLV_outputDriverPower_reg, 0b00001000};
+	++idx;
+	// route & power up the left DAC
+	settings[idx] = (tlv_register_t){TLV_dacChannelSetup1_pg, TLV_dacChannelSetup1_reg, 0b10100000};
+	++idx;
+	// unmute the DAC
+	settings[idx] = (tlv_register_t){TLV_dacChannelSetup2_pg, TLV_dacChannelSetup2_reg, 0b00000100};
+	++idx;
 	// run the init
 	return TLV_initCodec(settings, idx);
 

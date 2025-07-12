@@ -59,12 +59,12 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
 // pll D values (LSB)
 #define TLV_clockSetting5_pg 0x00
 #define TLV_clockSetting5_reg 0x08
-// NADC values
-#define TLV_clockSetting6_pg 0x00
-#define TLV_clockSetting6_reg 0x0B
-// MADC values
-#define TLV_clockSetting7_pg 0x00
-#define TLV_clockSetting7_reg 0x0C
+// NDAC values
+#define TLV_NDAC_pg 0x00
+#define TLV_NDAC_reg 0x0B
+// MDAC values
+#define TLV_MDAC_pg 0x00
+#define TLV_MDAC_reg 0x0C
 
 #define TLV_DACOSR1_pg 0x00
 #define TLV_DACOSR1_reg 0x0D
@@ -317,8 +317,8 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
 #define TLV_playbackConfig2_pg 0x01
 #define TLV_playbackConfig2_reg 0x04
 
-#define TLV_outputDriverPowerControl_pg 0x01
-#define TLV_outputDriverPowerControl_reg 0x09
+#define TLV_outputDriverPower_pg 0x01
+#define TLV_outputDriverPower_reg 0x09
 
 #define TLV_commonModeControl_pg 0x01
 #define TLV_commonModeControl_reg 0x0A
@@ -332,11 +332,11 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
 #define TLV_hprRoutingSelection_pg 0x01
 #define TLV_hprRoutingSelection_reg 0x0D
 
-#define TLV_lolRoutingSelection_pg 0x01
-#define TLV_lolRoutingSelection_reg 0x0E
+#define TLV_lolRouting_pg 0x01
+#define TLV_lolRouting_reg 0x0E
 
-#define TLV_lorRoutingSelection_pg 0x01
-#define TLV_lorRoutingSelection_reg 0x0F
+#define TLV_lorRouting_pg 0x01
+#define TLV_lorRouting_reg 0x0F
 
 #define TLV_hplDriverGainSetting_pg 0x01
 #define TLV_hplDriverGainSetting_reg 0x10
@@ -344,14 +344,14 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
 #define TLV_hprDriverGainSetting_pg 0x01
 #define TLV_hprDriverGainSetting_reg 0x11
 
-#define TLV_lolDriverGainSetting_pg 0x01
-#define TLV_lolDriverGainSetting_reg 0x12
+#define TLV_lolDriverGain_pg 0x01
+#define TLV_lolDriverGain_reg 0x12
 
-#define TLV_lorDriverGainSetting_pg 0x01
-#define TLV_lorDriverGainSetting_reg 0x13
+#define TLV_lorDriverGain_pg 0x01
+#define TLV_lorDriverGain_reg 0x13
 
-#define TLV_headphoneDriverStartupControl_pg 0x01
-#define TLV_headphoneDriverStartupControl_reg 0x14
+#define TLV_headphoneStartupControl_pg 0x01
+#define TLV_headphoneStartupControl_reg 0x14
 
 #define TLV_in1LtoHPLVolume_pg 0x01
 #define TLV_in1LtoHPLVolume_reg 0x16
