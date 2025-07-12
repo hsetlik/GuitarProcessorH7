@@ -3549,6 +3549,7 @@
 	)
 	(label "InputNeg"
 		(at 62.738 82.042 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3559,6 +3560,7 @@
 	)
 	(label "Wet"
 		(at 55.372 151.638 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3569,6 +3571,7 @@
 	)
 	(label "Bias2"
 		(at 241.046 128.27 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3579,6 +3582,7 @@
 	)
 	(label "Bias2"
 		(at 245.11 79.502 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3589,6 +3593,7 @@
 	)
 	(label "InputPos"
 		(at 70.104 94.742 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3599,6 +3604,7 @@
 	)
 	(label "DAC_OUT"
 		(at 141.732 64.008 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3609,6 +3615,7 @@
 	)
 	(label "Wet"
 		(at 195.326 66.04 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3619,6 +3626,7 @@
 	)
 	(label "Bias1"
 		(at 43.434 84.582 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3629,6 +3637,7 @@
 	)
 	(label "Bias2"
 		(at 178.054 76.962 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3639,6 +3648,7 @@
 	)
 	(label "Bias1"
 		(at 219.456 128.524 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3649,6 +3659,7 @@
 	)
 	(label "DAC_OUT"
 		(at 55.372 144.78 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3659,6 +3670,7 @@
 	)
 	(label "Bias1"
 		(at 43.942 116.84 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4904,7 +4916,7 @@
 				)
 			)
 		)
-		(property "Value" "470k"
+		(property "Value" "51k"
 			(at 38.354 107.95 90)
 			(effects
 				(font
@@ -6130,15 +6142,15 @@
 		(fields_autoplaced yes)
 		(uuid "776791f7-d31b-4b98-bd56-847ccca514a1")
 		(property "Reference" "R205"
-			(at 50.8 98.806 90)
+			(at 50.8 99.06 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "470k"
-			(at 50.8 101.346 90)
+		(property "Value" "100k"
+			(at 50.8 101.6 90)
 			(effects
 				(font
 					(size 1.27 1.27)
