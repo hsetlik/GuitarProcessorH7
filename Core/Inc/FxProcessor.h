@@ -10,6 +10,8 @@
 #include "FxAlgorithm.h"
 #ifdef __cplusplus
 
+#define CODEC_TEST
+
 class FxProcessor{
 private:
 	pedal_state_t state;

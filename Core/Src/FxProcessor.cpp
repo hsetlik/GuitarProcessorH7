@@ -24,7 +24,17 @@ FxProcessor::FxProcessor() : state(getDefaultPedalState()){
 }
 
 void FxProcessor::processChunk(uint16_t numSamples, float* input, float* output){
+#ifdef CODEC_TEST
+	float sum = 0.0f;
+	for(uint16_t i = 0; i < numSamples; ++i){
+		sum += std::fabs(input[i]);
+		output[i] = input[i];
+	}
+	float mean = sum / (float)numSamples;
+
+#else
 	algs[state.alg]->processChunk(input, output, (uint32_t)numSamples);
+#endif
 
 }
 

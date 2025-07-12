@@ -16,8 +16,9 @@
 #define TLV_I2S hi2s1
 #define TLV_NRST_GPIO_Port CODEC_NRST_GPIO_Port
 #define TLV_NRST_Pin CODEC_NRST_Pin
+//#define I2C_USE_MEM_WRITE
 
-//#define TLV_VERIFY_SETUP
+#define TLV_VERIFY_SETUP
 
 // c-friendly scheme for passing a set of non-default register settings
 // on initialization
@@ -399,6 +400,9 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
 
 #define TLV_analogQuickCharge_pg 0x01
 #define TLV_analogQuickCharge_reg 0x47
+
+#define TLV_refBootTime_pg 0x01
+#define TLV_refBootTime_reg 0x01
 
 //======================================
 

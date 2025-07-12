@@ -197,7 +197,7 @@ int main(void)
   }
   //Start DMA transmission
   // note: buffer size is *2 here bc our 32 bit codec will use 2 16 bit frames
-  HAL_StatusTypeDef status = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacPtr, (uint16_t*)adcPtr, BUFFER_SIZE * 2);
+  HAL_StatusTypeDef status = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacPtr, (uint16_t*)adcPtr, BUFFER_SIZE);
   if(status != HAL_OK){
 	  Error_Handler();
   }
