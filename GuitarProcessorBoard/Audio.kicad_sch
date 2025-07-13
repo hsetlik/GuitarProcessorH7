@@ -4538,7 +4538,7 @@
 				)
 			)
 		)
-		(property "Value" "51k"
+		(property "Value" "100k"
 			(at 173.99 63.5 90)
 			(effects
 				(font
@@ -5189,7 +5189,7 @@
 				)
 			)
 		)
-		(property "Value" "1u"
+		(property "Value" "100n"
 			(at 202.692 54.61 90)
 			(effects
 				(font
@@ -6820,7 +6820,7 @@
 		(fields_autoplaced yes)
 		(uuid "d7a738bf-c5e3-4374-9ddf-5c6de4f7126a")
 		(property "Reference" "R216"
-			(at 181.864 71.8819 0)
+			(at 181.61 71.8819 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6828,8 +6828,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "470k"
-			(at 181.864 74.4219 0)
+		(property "Value" "51k"
+			(at 181.61 74.4219 0)
 			(effects
 				(font
 					(size 1.27 1.27)
