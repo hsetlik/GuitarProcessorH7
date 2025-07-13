@@ -4463,15 +4463,15 @@
 		(fields_autoplaced yes)
 		(uuid "4719c4ac-067c-4031-9ae6-d6f091e283ba")
 		(property "Reference" "C209"
-			(at 28.448 104.648 90)
+			(at 28.448 104.14 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "1u"
-			(at 28.448 107.188 90)
+		(property "Value" "100n"
+			(at 28.448 106.68 90)
 			(effects
 				(font
 					(size 1.27 1.27)
