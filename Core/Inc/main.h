@@ -54,7 +54,7 @@ typedef struct {
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 #define BUFFER_SIZE 128
-
+#define BUFFER_FLOAT_SIZE 64
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -67,7 +67,9 @@ typedef struct {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+// conversion between float and uint32 for the codec
+//float u32_to_float(uint32_t val);
+//uint32_t float_to_u32(float val);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

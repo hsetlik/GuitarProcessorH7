@@ -28,7 +28,7 @@ void FxProcessor::processChunk(uint16_t numSamples, float* input, float* output)
 	float sum = 0.0f;
 	for(uint16_t i = 0; i < numSamples; ++i){
 		sum += std::fabs(input[i]);
-		output[i] = input[i];
+		output[i] = reverb.processMono(input[i]);
 	}
 	float mean = sum / (float)numSamples;
 

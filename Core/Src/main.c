@@ -86,11 +86,24 @@ void checkLEDs();
 /* USER CODE BEGIN 0 */
 
 //I2S stuff-----------------
-float adcBuf[BUFFER_SIZE];
-float dacBuf[BUFFER_SIZE];
-static volatile float* adcPtr = &adcBuf[0];
-static volatile float* dacPtr = &dacBuf[0];
+uint32_t adcBuf[BUFFER_SIZE];
+uint32_t dacBuf[BUFFER_SIZE];
+static volatile uint32_t* adcPtr = &adcBuf[0];
+static volatile uint32_t* dacPtr = &dacBuf[0];
+float inputFloatBuf[BUFFER_FLOAT_SIZE];
+float outputFloatBuf[BUFFER_FLOAT_SIZE];
+
 uint8_t bufferReady = 0;
+
+//float u32_to_float(uint32_t val) {
+//
+//}
+//
+//uint32_t float_to_u32(float val) {
+//	static const uint32_t max32 = 0xFFFFFFFF;
+//
+//}
+
 
 void HAL_I2SEx_TxRxCpltCallback(I2S_HandleTypeDef* i2s){
 	adcPtr = &adcBuf[BUFFER_SIZE / 2];
@@ -197,7 +210,7 @@ int main(void)
   }
   //Start DMA transmission
   // note: buffer size is *2 here bc our 32 bit codec will use 2 16 bit frames
-  HAL_StatusTypeDef status = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacPtr, (uint16_t*)adcPtr, BUFFER_SIZE);
+  HAL_StatusTypeDef status = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacPtr, (uint16_t*)adcPtr, 2 * BUFFER_SIZE);
   if(status != HAL_OK){
 	  Error_Handler();
   }
