@@ -90,8 +90,8 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
 #define TLV_audioIntSetting1_pg 0x00
 #define TLV_audioIntSetting1_reg 0x1B
 
-#define TLV_audioIntSetting2_pg 0x00
-#define TLV_audioIntSetting2_reg 0x1C
+#define TLV_audioBitOffset_pg 0x00
+#define TLV_audioBitOffset_reg 0x1C
 
 #define TLV_audioIntSetting3_pg 0x00
 #define TLV_audioIntSetting3_reg 0x1D

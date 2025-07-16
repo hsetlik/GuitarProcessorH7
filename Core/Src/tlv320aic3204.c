@@ -110,6 +110,9 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	// set 32 bit word length
 	settings[idx] = (tlv_register_t){TLV_audioIntSetting1_pg, TLV_audioIntSetting1_reg, 0b00110000};
 	++idx;
+	// bit clock offset
+//	settings[idx] = (tlv_register_t){TLV_audioBitOffset_pg, TLV_audioBitOffset_reg, 5};
+//	++idx;
 	// set ADC oversampling to 128
 	settings[idx] = (tlv_register_t){TLV_adcOversampling_pg, TLV_adcOversampling_reg, 0x80};
 	++idx;

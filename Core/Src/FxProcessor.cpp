@@ -27,8 +27,9 @@ void FxProcessor::processChunk(uint16_t numSamples, float* input, float* output)
 #ifdef CODEC_TEST
 	float sum = 0.0f;
 	for(uint16_t i = 0; i < numSamples; ++i){
-		sum += std::fabs(input[i]);
-		output[i] = reverb.processMono(input[i]);
+		uint16_t j = numSamples - (i + 1);
+		sum += std::fabs(input[j]);
+		output[i] = input[i];
 	}
 	float mean = sum / (float)numSamples;
 

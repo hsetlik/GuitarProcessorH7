@@ -210,7 +210,7 @@ int main(void)
   }
   //Start DMA transmission
   // note: buffer size is *2 here bc our 32 bit codec will use 2 16 bit frames
-  HAL_StatusTypeDef status = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacPtr, (uint16_t*)adcPtr, 2 * BUFFER_SIZE);
+  HAL_StatusTypeDef status = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacPtr, (uint16_t*)adcPtr, BUFFER_SIZE);
   if(status != HAL_OK){
 	  Error_Handler();
   }
@@ -237,7 +237,7 @@ int main(void)
   {
 	  // check if we have the next buffer to process
 	  if(bufferReady){
-		 process_fx(fx, BUFFER_SIZE / 2, (float*)adcPtr, (float*)dacPtr);
+		 process_fx(fx, BUFFER_SIZE << 1, (float*)adcPtr, (float*)dacPtr);
 		 bufferReady = 0;
 	  }
 	  // check the LEDs
@@ -474,7 +474,7 @@ static void MX_I2C2_Init(void)
 
   /* USER CODE END I2C2_Init 1 */
   hi2c2.Instance = I2C2;
-  hi2c2.Init.Timing = 0x00C0F4F4;
+  hi2c2.Init.Timing = 0x00C0EAFF;
   hi2c2.Init.OwnAddress1 = 48;
   hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -530,7 +530,7 @@ static void MX_I2S1_Init(void)
   hi2s1.Init.CPOL = I2S_CPOL_LOW;
   hi2s1.Init.FirstBit = I2S_FIRSTBIT_MSB;
   hi2s1.Init.WSInversion = I2S_WS_INVERSION_DISABLE;
-  hi2s1.Init.Data24BitAlignment = I2S_DATA_24BIT_ALIGNMENT_RIGHT;
+  hi2s1.Init.Data24BitAlignment = I2S_DATA_24BIT_ALIGNMENT_LEFT;
   hi2s1.Init.MasterKeepIOState = I2S_MASTER_KEEP_IO_STATE_DISABLE;
   if (HAL_I2S_Init(&hi2s1) != HAL_OK)
   {
