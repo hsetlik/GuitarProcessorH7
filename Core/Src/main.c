@@ -146,13 +146,17 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef*) {
 }
 
 // Knob ADC callback----------------------
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef*) {
+
+void HAL_ADC_ErrorCallback(ADC_HandleTypeDef* adc){
+	Error_Handler();
+}
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc) {
 	static uint16_t prevValues[4] = { 0, 0, 0, 0 };
 	/*NOTE: the channels are ordered:
 	 * Knob A
 	 * Knob B
 	 * Knob C
-	 * Exp. Input
+	 * Exp. input
 	 * */
 	for (uint8_t i = 0; i < 4; i++) {
 		if (knobAdcData[i] != prevValues[i]) {
@@ -162,6 +166,21 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef*) {
 	}
 
 }
+
+//void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* adc) {
+//	static uint16_t prevValues[2] = { 0, 0 };
+//	/*NOTE: the channels are ordered:
+//	 * Knob C
+//	 * Exp. Input
+//	 * */
+//	for (uint8_t i = 0; i < 2; i++) {
+//		if (knobAdcData[i + 2] != prevValues[i]) {
+//			prevValues[i] = knobAdcData[i + 2];
+//			fx_control_moved(fx, i + 2, knobAdcData[i + 2]);
+//		}
+//	}
+//
+//}
 
 // Display I2C callback------------------------------
 void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef*) {
@@ -261,14 +280,18 @@ int main(void)
 	fx = create_fx_processor();
 
 	// calibrate and start DMA for the control knob ADC
-	HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t*) knobAdcData, 4);
+	if(HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED) != HAL_OK){
+		Error_Handler();
+	}
+	if(	HAL_ADCEx_MultiModeStart_DMA(&hadc1, (uint32_t*)knobAdcData, sizeof(knobAdcData)) != HAL_OK){
+		Error_Handler();
+	}
 
 	// bring the NRST pin for the LEDs high
 	HAL_GPIO_WritePin(LED_NRST_GPIO_Port, LED_NRST_Pin, GPIO_PIN_SET);
 
 	// initialize the OLED display
-	ssd1306_Init();
+	//ssd1306_Init();
 
   /* USER CODE END 2 */
 
@@ -378,18 +401,18 @@ static void MX_ADC1_Init(void)
   /** Common config
   */
   hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV64;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV6;
   hadc1.Init.Resolution = ADC_RESOLUTION_16B;
   hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
-  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.ContinuousConvMode = ENABLE;
   hadc1.Init.NbrOfConversion = 4;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc1.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DR;
-  hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+  hadc1.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DMA_CIRCULAR;
+  hadc1.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
   hadc1.Init.LeftBitShift = ADC_LEFTBITSHIFT_NONE;
   hadc1.Init.OversamplingMode = DISABLE;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
@@ -409,7 +432,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_14;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_8CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -421,7 +444,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_11;
+  sConfig.Channel = ADC_CHANNEL_10;
   sConfig.Rank = ADC_REGULAR_RANK_2;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -430,7 +453,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_10;
+  sConfig.Channel = ADC_CHANNEL_11;
   sConfig.Rank = ADC_REGULAR_RANK_3;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -639,6 +662,7 @@ static void MX_DMA_Init(void)
 
   /* DMA controller clock enable */
   __HAL_RCC_DMA1_CLK_ENABLE();
+  __HAL_RCC_DMA2_CLK_ENABLE();
 
   /* DMA interrupt init */
   /* DMA1_Stream0_IRQn interrupt configuration */
@@ -647,15 +671,15 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
-  /* DMA1_Stream2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
   /* DMA1_Stream3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);
   /* DMA1_Stream4_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
+  /* DMA2_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
 
 }
 

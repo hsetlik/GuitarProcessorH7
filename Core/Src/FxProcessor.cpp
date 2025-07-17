@@ -56,7 +56,7 @@ void FxProcessor::controlMoved(uint8_t id, uint16_t value){
 	default:
 		break;
 	}
-	algs[state.alg]->paramChanged(id, value);
+	//algs[state.alg]->paramChanged(id, value);
 }
 
 
