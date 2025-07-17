@@ -73,6 +73,9 @@ Dattorro::Dattorro() {
 // the main algorithm
 void Dattorro::processIn(float input) {
 	// modulate decayDiffusion1 for both tanks
+	if(std::isnan(input)){
+		Error_Handler();
+	}
 	if ((t & 0x07ff) == 0) {
 		if (t < (1 << 15)) {
 			decayDiffusion1[0].offsets[0]--;

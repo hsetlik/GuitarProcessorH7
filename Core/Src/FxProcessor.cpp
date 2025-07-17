@@ -26,9 +26,9 @@ FxProcessor::FxProcessor() : state(getDefaultPedalState()){
 void FxProcessor::processChunk(uint16_t numSamples, float* input, float* output){
 #ifdef CODEC_TEST
 	float sum = 0.0f;
+	int32_t intInput;
 	for(uint16_t i = 0; i < numSamples; ++i){
-		uint16_t j = numSamples - (i + 1);
-		sum += std::fabs(input[j]);
+		sum += std::fabs(input[i]);
 		output[i] = input[i];
 	}
 	float mean = sum / (float)numSamples;
@@ -57,6 +57,11 @@ void FxProcessor::controlMoved(uint8_t id, uint16_t value){
 		break;
 	}
 	algs[state.alg]->paramChanged(id, value);
+}
+
+
+void FxProcessor::advanceAlg(){
+	state.alg = (state.alg + 1) % 6;
 }
 
 
@@ -101,6 +106,12 @@ void fx_control_moved(fx_processor_t proc, uint8_t id, uint16_t value){
 uint8_t fx_get_led_byte(fx_processor_t proc){
 	FxProcessor* ptr = static_cast<FxProcessor*>(proc);
 	return ptr->getLEDByte();
+}
+
+
+void fx_advance_alg(fx_processor_t proc){
+	FxProcessor* ptr = static_cast<FxProcessor*>(proc);
+	ptr->advanceAlg();
 }
 
 

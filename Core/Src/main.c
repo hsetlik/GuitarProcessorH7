@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2025 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2025 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -79,61 +79,83 @@ static void MX_SPI2_Init(void);
 // call this to update the LEDs
 void checkLEDs();
 
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
 //I2S stuff-----------------
-uint32_t adcBuf[BUFFER_SIZE];
-uint32_t dacBuf[BUFFER_SIZE];
-static volatile uint32_t* adcPtr = &adcBuf[0];
-static volatile uint32_t* dacPtr = &dacBuf[0];
+int32_t adcBuf[BUFFER_SIZE];
+int32_t dacBuf[BUFFER_SIZE];
+static volatile int32_t *adcPtr = &adcBuf[0];
+static volatile int32_t *dacPtr = &dacBuf[0];
 float inputFloatBuf[BUFFER_FLOAT_SIZE];
 float outputFloatBuf[BUFFER_FLOAT_SIZE];
 
 uint8_t bufferReady = 0;
 
+//static const uint32_t max32 = 0xFFFFFFFF;
 //float u32_to_float(uint32_t val) {
-//
+//	float norm = (float)val / (float)max32;
+//	return (norm * 2.0f) - 1.0f;
 //}
 //
 //uint32_t float_to_u32(float val) {
-//	static const uint32_t max32 = 0xFFFFFFFF;
-//
+//	float norm = (val + 1.0f) / 2.0f;
+//	return (uint32_t)(norm * (float)max32);
 //}
 
+static const int32_t int32Max = 2147483648;
+float i32_to_float(int32_t val) {
+	return (float) val / (float) int32Max;
+}
+int32_t float_to_i32(float val) {
+	return (int32_t) (val * (float) int32Max);
+}
 
-void HAL_I2SEx_TxRxCpltCallback(I2S_HandleTypeDef* i2s){
+void convertInputBuffer() {
+	for (uint16_t i = 0; i < BUFFER_FLOAT_SIZE; ++i) {
+		// convert ADC to the input buf
+		inputFloatBuf[i] = i32_to_float(adcPtr[(2 * i) + 1]);
+
+	}
+}
+void convertOutputBuffer() {
+	for (uint16_t i = 0; i < BUFFER_FLOAT_SIZE; ++i) {
+		// convert output buf to DAC
+		dacPtr[(2 * i) + 1] = float_to_i32(outputFloatBuf[i]);
+		// for differential out on the left channel
+		dacPtr[2 * i] = dacPtr[(2 * i) + 1] * -1;
+	}
+}
+
+void HAL_I2SEx_TxRxCpltCallback(I2S_HandleTypeDef *i2s) {
 	adcPtr = &adcBuf[BUFFER_SIZE / 2];
 	dacPtr = &dacBuf[BUFFER_SIZE / 2];
 	bufferReady = 1;
 }
 
-void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef* i2s){
+void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef *i2s) {
 	adcPtr = &adcBuf[0];
 	dacPtr = &dacBuf[0];
 	bufferReady = 1;
 }
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef*){
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef*) {
 	ledsReady = 1;
 }
 
-
-
 // Knob ADC callback----------------------
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef*){
-	static uint16_t prevValues[4] = {0, 0, 0, 0};
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef*) {
+	static uint16_t prevValues[4] = { 0, 0, 0, 0 };
 	/*NOTE: the channels are ordered:
 	 * Knob A
 	 * Knob B
 	 * Knob C
 	 * Exp. Input
 	 * */
-	for(uint8_t i = 0; i < 4; i++){
-		if(knobAdcData[i] != prevValues[i]){
+	for (uint8_t i = 0; i < 4; i++) {
+		if (knobAdcData[i] != prevValues[i]) {
 			prevValues[i] = knobAdcData[i];
 			fx_control_moved(fx, i, knobAdcData[i]);
 		}
@@ -142,18 +164,18 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef*){
 }
 
 // Display I2C callback------------------------------
-void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef*){
+void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef*) {
 	ssd1306_TxFinished();
 }
 
-void checkLEDs(){
+void checkLEDs() {
 	static uint32_t lastCheck = 0;
 	// this limits the LEDs to refreshing no more than ~25x a second
 	const uint32_t minUpdateMs = 40;
-	if(ledsReady && (SysTick->VAL - lastCheck) >= minUpdateMs){
+	if (ledsReady && (SysTick->VAL - lastCheck) >= minUpdateMs) {
 		lastCheck = SysTick->VAL;
 		uint8_t bits = fx_get_led_byte(fx);
-		if(bits != ledData){
+		if (bits != ledData) {
 			ledData = bits;
 			// even with the prescaler at 128 this transmission only takes like 10.2 microseconds,
 			// but we have the hardware DMAs so why not optimize
@@ -161,6 +183,26 @@ void checkLEDs(){
 			ledsReady = 0;
 		}
 	}
+}
+
+const uint32_t switchUpdateMs = 10;
+
+uint8_t switchDebounce(){
+	static uint16_t switchStates = 0;
+	switchStates = (switchStates << 1)| HAL_GPIO_ReadPin(MODE_GPIO_Port, MODE_Pin);
+	return switchStates == 0x000F;
+}
+
+void checkSwitch() {
+	static uint32_t lastSwitchCheck = 0;
+	uint32_t now = SysTick->VAL;
+	if (now - lastSwitchCheck >= switchUpdateMs) {
+		lastSwitchCheck = now;
+		if(switchDebounce()){
+			fx_advance_alg(fx);
+		}
+	}
+
 }
 
 /* USER CODE END 0 */
@@ -204,52 +246,51 @@ int main(void)
   MX_I2S1_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  // configure codec over I2C
-  if(TLV_quickInit_monoGuitarPedal() != HAL_OK){
-	  Error_Handler();
-  }
-  //Start DMA transmission
-  // note: buffer size is *2 here bc our 32 bit codec will use 2 16 bit frames
-  HAL_StatusTypeDef status = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacPtr, (uint16_t*)adcPtr, BUFFER_SIZE);
-  if(status != HAL_OK){
-	  Error_Handler();
-  }
-  // set up processor
-  fx = create_fx_processor();
+	// configure codec over I2C
+	if (TLV_quickInit_monoGuitarPedal() != HAL_OK) {
+		Error_Handler();
+	}
+	//Start DMA transmission
+	// note: buffer size is *2 here bc our 32 bit codec will use 2 16 bit frames
+	HAL_StatusTypeDef status = HAL_I2SEx_TransmitReceive_DMA(&hi2s1,
+			(uint16_t*) dacPtr, (uint16_t*) adcPtr, BUFFER_SIZE);
+	if (status != HAL_OK) {
+		Error_Handler();
+	}
+	// set up processor
+	fx = create_fx_processor();
 
+	// calibrate and start DMA for the control knob ADC
+	HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*) knobAdcData, 4);
 
+	// bring the NRST pin for the LEDs high
+	HAL_GPIO_WritePin(LED_NRST_GPIO_Port, LED_NRST_Pin, GPIO_PIN_SET);
 
-  // calibrate and start DMA for the control knob ADC
-  HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)knobAdcData, 4);
-
-  // bring the NRST pin for the LEDs high
-  HAL_GPIO_WritePin(LED_NRST_GPIO_Port, LED_NRST_Pin, GPIO_PIN_SET);
-
-  // initialize the OLED display
-  ssd1306_Init();
+	// initialize the OLED display
+	ssd1306_Init();
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	  // check if we have the next buffer to process
-	  if(bufferReady){
-		 process_fx(fx, BUFFER_SIZE << 1, (float*)adcPtr, (float*)dacPtr);
-		 bufferReady = 0;
-	  }
-	  // check the LEDs
-	  checkLEDs();
-	  //TODO here:
-
-	  // check switches
-	  // update display
+	while (1) {
+		// check if we have the next buffer to process
+		if (bufferReady) {
+			convertInputBuffer();
+			process_fx(fx, BUFFER_FLOAT_SIZE, inputFloatBuf, outputFloatBuf);
+			convertOutputBuffer();
+			bufferReady = 0;
+		}
+		// check the LEDs
+		checkLEDs();
+		//TODO here:
+		checkSwitch();
+		// update display
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+	}
   /* USER CODE END 3 */
 }
 
@@ -656,17 +697,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_NRST_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : BYP_Pin */
-  GPIO_InitStruct.Pin = BYP_Pin;
+  /*Configure GPIO pins : BYP_Pin MODE_Pin */
+  GPIO_InitStruct.Pin = BYP_Pin|MODE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(BYP_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : MODE_Pin TAP_Pin */
-  GPIO_InitStruct.Pin = MODE_Pin|TAP_Pin;
+  /*Configure GPIO pin : TAP_Pin */
+  GPIO_InitStruct.Pin = TAP_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(TAP_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
   /* USER CODE END MX_GPIO_Init_2 */
@@ -712,11 +753,10 @@ void MPU_Config(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1) {
+	}
   /* USER CODE END Error_Handler_Debug */
 }
 #ifdef USE_FULL_ASSERT
