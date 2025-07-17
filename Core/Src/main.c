@@ -56,6 +56,8 @@ DMA_HandleTypeDef hdma_spi1_tx;
 SPI_HandleTypeDef hspi2;
 DMA_HandleTypeDef hdma_spi2_tx;
 
+TIM_HandleTypeDef htim4;
+
 /* USER CODE BEGIN PV */
 fx_processor_t fx;
 
@@ -75,6 +77,7 @@ static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_I2S1_Init(void);
 static void MX_SPI2_Init(void);
+static void MX_TIM4_Init(void);
 /* USER CODE BEGIN PFP */
 // call this to update the LEDs
 void checkLEDs();
@@ -224,6 +227,13 @@ void checkSwitch() {
 
 }
 
+// timer stuff
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* tim){
+	if(	HAL_ADCEx_MultiModeStart_DMA(&hadc1, (uint32_t*)knobAdcData, sizeof(knobAdcData)) != HAL_OK){
+		Error_Handler();
+	}
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -264,6 +274,7 @@ int main(void)
   MX_I2C2_Init();
   MX_I2S1_Init();
   MX_SPI2_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
 	// configure codec over I2C
 	if (TLV_quickInit_monoGuitarPedal() != HAL_OK) {
@@ -283,7 +294,9 @@ int main(void)
 	if(HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED) != HAL_OK){
 		Error_Handler();
 	}
-	if(	HAL_ADCEx_MultiModeStart_DMA(&hadc1, (uint32_t*)knobAdcData, sizeof(knobAdcData)) != HAL_OK){
+
+
+	if(HAL_TIM_Base_Start(&htim4) != HAL_OK){
 		Error_Handler();
 	}
 
@@ -411,7 +424,7 @@ static void MX_ADC1_Init(void)
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc1.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DMA_CIRCULAR;
+  hadc1.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DMA_ONESHOT;
   hadc1.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
   hadc1.Init.LeftBitShift = ADC_LEFTBITSHIFT_NONE;
   hadc1.Init.OversamplingMode = DISABLE;
@@ -651,6 +664,51 @@ static void MX_SPI2_Init(void)
   /* USER CODE BEGIN SPI2_Init 2 */
 
   /* USER CODE END SPI2_Init 2 */
+
+}
+
+/**
+  * @brief TIM4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM4_Init(void)
+{
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 199;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 49999;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
 
 }
 
