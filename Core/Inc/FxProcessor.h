@@ -22,6 +22,7 @@ public:
 	void processChunk(uint16_t numSamples, float* input, float* output);
 	void controlMoved(uint8_t id, uint16_t value);
 	void advanceAlg();
+	void setBypass(bool effectOn);
 	// this returns a bitfield of which LEDs should be lit up
 	uint8_t getLEDByte();
 
@@ -45,6 +46,7 @@ EXTERNC void process_fx(fx_processor_t proc, uint16_t size, float* input, float*
 EXTERNC void fx_control_moved(fx_processor_t proc, uint8_t id, uint16_t value);
 EXTERNC uint8_t fx_get_led_byte(fx_processor_t proc);
 EXTERNC void fx_advance_alg(fx_processor_t proc);
+EXTERNC void fx_set_bypass(fx_processor_t proc, uint8_t bypass);
 
 #undef EXTERNC
 

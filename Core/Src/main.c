@@ -209,19 +209,25 @@ void checkLEDs() {
 
 const uint32_t switchUpdateMs = 10;
 
-uint8_t switchDebounce(){
+uint8_t algSwitchDebounce(){
 	static uint16_t switchStates = 0;
 	switchStates = (switchStates << 1)| HAL_GPIO_ReadPin(MODE_GPIO_Port, MODE_Pin);
 	return switchStates == 0x000F;
 }
 
-void checkSwitch() {
+void checkSwitches() {
 	static uint32_t lastSwitchCheck = 0;
 	uint32_t now = SysTick->VAL;
+	static GPIO_PinState fxActive = GPIO_PIN_SET;
 	if (now - lastSwitchCheck >= switchUpdateMs) {
 		lastSwitchCheck = now;
-		if(switchDebounce()){
+		if(algSwitchDebounce()){
 			fx_advance_alg(fx);
+		}
+		GPIO_PinState bypState = HAL_GPIO_ReadPin(BYP_GPIO_Port, BYP_Pin);
+		if(bypState != fxActive){
+			fxActive = bypState;
+			fx_set_bypass(fx, (uint8_t)bypState);
 		}
 	}
 
@@ -321,7 +327,7 @@ int main(void)
 		// check the LEDs
 		checkLEDs();
 		//TODO here:
-		checkSwitch();
+		checkSwitches();
 		// update display
     /* USER CODE END WHILE */
 

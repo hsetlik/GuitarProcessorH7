@@ -87,6 +87,11 @@ uint8_t FxProcessor::getLEDByte(){
 }
 
 
+void FxProcessor::setBypass(bool effectOn){
+	state.fxOn = effectOn ? 1 : 0;
+}
+
+
 //================================================================================
 
 fx_processor_t create_fx_processor(){
@@ -114,6 +119,11 @@ void fx_advance_alg(fx_processor_t proc){
 	ptr->advanceAlg();
 }
 
+void fx_set_bypass(fx_processor_t proc, uint8_t bypass){
+
+	FxProcessor* ptr = static_cast<FxProcessor*>(proc);
+	ptr->setBypass(bypass > 0);
+}
 
 
 
