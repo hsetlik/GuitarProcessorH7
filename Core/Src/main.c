@@ -66,6 +66,9 @@ uint16_t knobAdcData[4];
 
 volatile uint8_t ledsReady = 1;
 uint8_t ledData = 0x00;
+
+volatile uint8_t displayReady = 1;
+volatile uint8_t displayUpdateNeeded = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -190,6 +193,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *adc) {
 // Display I2C callback------------------------------
 void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef*) {
 	ssd1306_TxFinished();
+	displayReady = 1;
 }
 
 void checkLEDs() {
@@ -243,9 +247,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *tim) {
 				sizeof(knobAdcData)) != HAL_OK) {
 			Error_Handler();
 		}
-	} else if (tim == &htim3) {
-		fx_update_display(fx);
-		ssd1306_UpdateScren();
+	} else if (tim == &htim3 && displayReady) {
+		displayUpdateNeeded = 1;
 	}
 }
 
@@ -341,6 +344,13 @@ int main(void)
 		// check the LEDs
 		checkLEDs();
 		checkSwitches();
+		// do any display work
+		if(displayUpdateNeeded){
+			fx_update_display(fx);
+			ssd1306_UpdateScreen();
+			displayReady = 0;
+			displayUpdateNeeded = 0;
+		}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
