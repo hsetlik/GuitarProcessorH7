@@ -8,6 +8,7 @@
 #ifndef INC_FXPROCESSOR_H_
 #define INC_FXPROCESSOR_H_
 #include "FxAlgorithm.h"
+#include "RollingRMS.h"
 #ifdef __cplusplus
 
 #define CODEC_TEST
@@ -17,6 +18,8 @@ private:
 	pedal_state_t state;
 	alg_ptr_t algs[6];
 	Dattorro reverb;
+	RollingRMS meter;
+
 public:
 	FxProcessor();
 	void processChunk(uint16_t numSamples, float* input, float* output);
@@ -24,7 +27,7 @@ public:
 	void advanceAlg();
 	void setBypass(bool effectOn);
 	// this updates the OLED contents
-
+	void updateDisplay();
 	// this returns a bitfield of which LEDs should be lit up
 	uint8_t getLEDByte();
 
@@ -49,6 +52,7 @@ EXTERNC void fx_control_moved(fx_processor_t proc, uint8_t id, uint16_t value);
 EXTERNC uint8_t fx_get_led_byte(fx_processor_t proc);
 EXTERNC void fx_advance_alg(fx_processor_t proc);
 EXTERNC void fx_set_bypass(fx_processor_t proc, uint8_t bypass);
+EXTERNC void fx_update_display(fx_processor_t proc);
 
 #undef EXTERNC
 

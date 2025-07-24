@@ -56,6 +56,7 @@ DMA_HandleTypeDef hdma_spi1_tx;
 SPI_HandleTypeDef hspi2;
 DMA_HandleTypeDef hdma_spi2_tx;
 
+TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
@@ -78,6 +79,7 @@ static void MX_I2C2_Init(void);
 static void MX_I2S1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_TIM4_Init(void);
+static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
 // call this to update the LEDs
 void checkLEDs();
@@ -150,10 +152,10 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef*) {
 
 // Knob ADC callback----------------------
 
-void HAL_ADC_ErrorCallback(ADC_HandleTypeDef* adc){
+void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *adc) {
 	Error_Handler();
 }
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* adc) {
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *adc) {
 	static uint16_t prevValues[4] = { 0, 0, 0, 0 };
 	/*NOTE: the channels are ordered:
 	 * Knob A
@@ -209,9 +211,10 @@ void checkLEDs() {
 
 const uint32_t switchUpdateMs = 10;
 
-uint8_t algSwitchDebounce(){
+uint8_t algSwitchDebounce() {
 	static uint16_t switchStates = 0;
-	switchStates = (switchStates << 1)| HAL_GPIO_ReadPin(MODE_GPIO_Port, MODE_Pin);
+	switchStates = (switchStates << 1)
+			| HAL_GPIO_ReadPin(MODE_GPIO_Port, MODE_Pin);
 	return switchStates == 0x000F;
 }
 
@@ -221,22 +224,28 @@ void checkSwitches() {
 	static GPIO_PinState fxActive = GPIO_PIN_SET;
 	if (now - lastSwitchCheck >= switchUpdateMs) {
 		lastSwitchCheck = now;
-		if(algSwitchDebounce()){
+		if (algSwitchDebounce()) {
 			fx_advance_alg(fx);
 		}
 		GPIO_PinState bypState = HAL_GPIO_ReadPin(BYP_GPIO_Port, BYP_Pin);
-		if(bypState != fxActive){
+		if (bypState != fxActive) {
 			fxActive = bypState;
-			fx_set_bypass(fx, (uint8_t)bypState);
+			fx_set_bypass(fx, (uint8_t) bypState);
 		}
 	}
 
 }
 
 // timer stuff
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* tim){
-	if(	HAL_ADCEx_MultiModeStart_DMA(&hadc1, (uint32_t*)knobAdcData, sizeof(knobAdcData)) != HAL_OK){
-		Error_Handler();
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *tim) {
+	if (tim == &htim4) {
+		if (HAL_ADCEx_MultiModeStart_DMA(&hadc1, (uint32_t*) knobAdcData,
+				sizeof(knobAdcData)) != HAL_OK) {
+			Error_Handler();
+		}
+	} else if (tim == &htim3) {
+		fx_update_display(fx);
+		ssd1306_UpdateScren();
 	}
 }
 
@@ -281,6 +290,7 @@ int main(void)
   MX_I2S1_Init();
   MX_SPI2_Init();
   MX_TIM4_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 	// configure codec over I2C
 	if (TLV_quickInit_monoGuitarPedal() != HAL_OK) {
@@ -297,12 +307,16 @@ int main(void)
 	fx = create_fx_processor();
 
 	// calibrate and start DMA for the control knob ADC
-	if(HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED) != HAL_OK){
+	if (HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED)
+			!= HAL_OK) {
 		Error_Handler();
 	}
 
+	if (HAL_TIM_Base_Start(&htim4) != HAL_OK) {
+		Error_Handler();
+	}
 
-	if(HAL_TIM_Base_Start(&htim4) != HAL_OK){
+	if (HAL_TIM_Base_Start(&htim3) != HAL_OK) {
 		Error_Handler();
 	}
 
@@ -310,7 +324,7 @@ int main(void)
 	HAL_GPIO_WritePin(LED_NRST_GPIO_Port, LED_NRST_Pin, GPIO_PIN_SET);
 
 	// initialize the OLED display
-	//ssd1306_Init();
+	ssd1306_Init();
 
   /* USER CODE END 2 */
 
@@ -326,9 +340,7 @@ int main(void)
 		}
 		// check the LEDs
 		checkLEDs();
-		//TODO here:
 		checkSwitches();
-		// update display
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -670,6 +682,51 @@ static void MX_SPI2_Init(void)
   /* USER CODE BEGIN SPI2_Init 2 */
 
   /* USER CODE END SPI2_Init 2 */
+
+}
+
+/**
+  * @brief TIM3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM3_Init(void)
+{
+
+  /* USER CODE BEGIN TIM3_Init 0 */
+
+  /* USER CODE END TIM3_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM3_Init 1 */
+
+  /* USER CODE END TIM3_Init 1 */
+  htim3.Instance = TIM3;
+  htim3.Init.Prescaler = 99;
+  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim3.Init.Period = 41999;
+  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM3_Init 2 */
+
+  /* USER CODE END TIM3_Init 2 */
 
 }
 

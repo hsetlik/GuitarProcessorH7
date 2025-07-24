@@ -5,6 +5,8 @@
  *      Author: hayden
  */
 #include "FxProcessor.h"
+#include "ssd1306.h"
+#include "ssd1306_fonts.h"
 
 pedal_state_t getDefaultPedalState(){
 	pedal_state_t s;
@@ -25,13 +27,10 @@ FxProcessor::FxProcessor() : state(getDefaultPedalState()){
 
 void FxProcessor::processChunk(uint16_t numSamples, float* input, float* output){
 #ifdef CODEC_TEST
-	float sum = 0.0f;
-	int32_t intInput;
 	for(uint16_t i = 0; i < numSamples; ++i){
-		sum += std::fabs(input[i]);
+		meter.tick(input[i]);
 		output[i] = input[i];
 	}
-	float mean = sum / (float)numSamples;
 
 #else
 	algs[state.alg]->processChunk(input, output, (uint32_t)numSamples);
@@ -86,6 +85,21 @@ uint8_t FxProcessor::getLEDByte(){
 	return byte;
 }
 
+void FxProcessor::updateDisplay(){
+	// 1. clear the display
+	ssd1306_Fill(Black);
+	// 2. draw the RMS label text
+	ssd1306_SetCursor(1, 0);
+	const char* rmsTitle = "RMS Level: ";
+	ssd1306_WriteString((char*)rmsTitle, Font_7x10, White);
+
+	// 3. draw the numerical RMS level
+	auto rmsStr = std::to_string(meter.getRMSLevel());
+	ssd1306_SetCursor(1, 11);
+	ssd1306_WriteString((char*)rmsStr.c_str(), Font_16x24, White);
+
+}
+
 
 void FxProcessor::setBypass(bool effectOn){
 	state.fxOn = effectOn ? 1 : 0;
@@ -126,4 +140,8 @@ void fx_set_bypass(fx_processor_t proc, uint8_t bypass){
 }
 
 
+void fx_update_display(fx_processor_t proc) {
+	FxProcessor* ptr = static_cast<FxProcessor*>(proc);
+	ptr->updateDisplay();
+}
 

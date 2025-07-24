@@ -7,7 +7,7 @@
 
 #ifndef INC_ROLLINGRMS_H_
 #define INC_ROLLINGRMS_H_
-#define ROLLING_RMS_SIZE 128
+#define ROLLING_RMS_SIZE 512
 
 #ifdef __cplusplus
 #include "stm32h7xx_hal.h"
