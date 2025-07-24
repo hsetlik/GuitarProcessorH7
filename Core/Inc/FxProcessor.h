@@ -23,6 +23,8 @@ public:
 	void controlMoved(uint8_t id, uint16_t value);
 	void advanceAlg();
 	void setBypass(bool effectOn);
+	// this updates the OLED contents
+
 	// this returns a bitfield of which LEDs should be lit up
 	uint8_t getLEDByte();
 
