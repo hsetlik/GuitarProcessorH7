@@ -6,6 +6,14 @@
  */
 #include "RollingRMS.h"
 
+RollingRMS::RollingRMS(){
+	meanSum = 0.0f;
+	rmsSum = 0.0f;
+	for(uint16_t i = 0; i < ROLLING_RMS_SIZE; ++i){
+		ringBuf[i] = 0.0f;
+	}
+}
+
 void RollingRMS::tick(float value) {
  // 1. subtract the oldest sample from the sums
 	auto& oldest = ringBuf[head];

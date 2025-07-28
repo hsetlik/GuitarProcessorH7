@@ -7,6 +7,7 @@
 #include "FxProcessor.h"
 #include "ssd1306.h"
 #include "ssd1306_fonts.h"
+#include <stdio.h>
 
 pedal_state_t getDefaultPedalState(){
 	pedal_state_t s;
@@ -28,7 +29,7 @@ FxProcessor::FxProcessor() : state(getDefaultPedalState()){
 void FxProcessor::processChunk(uint16_t numSamples, float* input, float* output){
 #ifdef CODEC_TEST
 	for(uint16_t i = 0; i < numSamples; ++i){
-		//meter.tick(input[i]);
+		meter.tick(input[i]);
 		output[i] = input[i];
 	}
 
@@ -85,6 +86,21 @@ uint8_t FxProcessor::getLEDByte(){
 	return byte;
 }
 
+//static std::string escapeZeroes(const std::string& input){
+//	std::string out = "";
+//	for(auto& c : input){
+//		if(c == '0'){
+//			out += "\0";
+//		} else {
+//			out += c;
+//		}
+//	}
+//	return out;
+//}
+//
+
+
+
 void FxProcessor::updateDisplay(){
 	// 1. clear the display
 	ssd1306_Fill(Black);
@@ -94,10 +110,22 @@ void FxProcessor::updateDisplay(){
 	ssd1306_WriteString((char*)rmsTitle, Font_7x10, White);
 
 	// 3. draw the numerical RMS level
-	auto rmsStr = std::to_string(meter.getRMSLevel());
-	ssd1306_SetCursor(1, 11);
-	ssd1306_WriteString((char*)rmsStr.c_str(), Font_16x24, White);
+	float lvl = meter.getRMSLevel();
+	float bias = meter.getDCBias();
 
+	char lvlBuf[8];
+	snprintf(lvlBuf, sizeof(lvlBuf), "%.5f", lvl);
+	char biasBuf[8];
+	snprintf(biasBuf, sizeof(biasBuf), "%.5f", bias);
+
+	ssd1306_SetCursor(1, 11);
+	ssd1306_WriteString(lvlBuf, Font_11x18, White);
+
+	// 4. draw the DC bias label
+	ssd1306_SetCursor(1, 30);
+	ssd1306_WriteString((char*)"DC bias:", Font_7x10, White);
+	ssd1306_SetCursor(1, 41);
+	ssd1306_WriteString(biasBuf, Font_11x18, White);
 }
 
 

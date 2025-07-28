@@ -19,7 +19,7 @@ private:
 	float meanSum;
 	float rmsSum;
 public:
-	RollingRMS()=default;
+	RollingRMS();
 	void tick(float value);
 	float getRMSLevel() const;
 	float getDCBias() const;
