@@ -349,9 +349,9 @@ int main(void)
 		checkSwitches();
 		// do any display work
 		if (displayUpdateNeeded) {
+			displayUpdateNeeded = 0;
 			fx_update_display(fx);
 			ssd1306_UpdateScreen();
-			displayUpdateNeeded = 0;
 		}
     /* USER CODE END WHILE */
 
@@ -533,7 +533,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x00C0EAFF;
+  hi2c1.Init.Timing = 0x004019BF;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -718,7 +718,7 @@ static void MX_TIM3_Init(void)
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 99;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 41999;
+  htim3.Init.Period = 54999;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)

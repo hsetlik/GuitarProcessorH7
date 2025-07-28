@@ -9,7 +9,7 @@ void ssd1306_Reset(void) {
 	/* for I2C - do nothing */
 }
 
-static void ssd1306_ErrorHandle(){
+static void ssd1306_ErrorHandle() {
 
 }
 
@@ -24,8 +24,8 @@ void ssd1306_WriteCommand(uint8_t byte) {
 
 // Send data
 void ssd1306_WriteData(uint8_t *buffer, size_t buff_size) {
-	if(HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x40, 1, buffer,
-			buff_size, HAL_MAX_DELAY) != HAL_OK){
+	if (HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x40, 1, buffer,
+			buff_size, HAL_MAX_DELAY) != HAL_OK) {
 		ssd1306_ErrorHandle();
 	}
 }
@@ -33,6 +33,19 @@ void ssd1306_WriteData(uint8_t *buffer, size_t buff_size) {
 // DMA versions of the above
 
 #ifdef SSD1306_USE_DMA
+/*I2C Timing Math:
+ * - The three command bytes at the beginning
+ *   each get their own address byte & acknowledge bit = 51 clock cycles
+ * - Each page contains 128 registers of 8 bits each (1024 bits), with an address byte
+ *  every 64 bits (16 total address bytes) = (16 * 9) + 1024 = 1168 clock cycles
+ * - for each frame we need = (51 + 1168) * 8 = 9752 clock cycles
+ *  Max frame rate is only 10 at 100kHz clock
+ *  or as high as 40 @ 400kHz
+ *
+ *
+ *
+ *
+ * */
 // Send a byte to the command register
 void ssd1306_WriteCommand_DMA(uint8_t byte) {
 	HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &byte,
@@ -41,8 +54,8 @@ void ssd1306_WriteCommand_DMA(uint8_t byte) {
 
 // Send data
 void ssd1306_WriteData_DMA(uint8_t *buffer, size_t buff_size, uint16_t addrSize) {
-	if(HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, addrSize, 1, buffer,
-			buff_size) != HAL_OK){
+	if (HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, addrSize, 1,
+			buffer, buff_size) != HAL_OK) {
 		ssd1306_ErrorHandle();
 	}
 }
@@ -89,9 +102,9 @@ static uint8_t SSD1306_Buffer[SSD1306_BUFFER_SIZE];
 static SSD1306_t SSD1306;
 
 // keep track of DMA state
-static uint8_t dmaRunning = 0;
-static uint8_t commandsSent = 0;
-static uint8_t nextPageToSend = 0;
+volatile uint8_t dmaRunning = 0;
+volatile uint8_t commandsSent = 0;
+volatile uint8_t nextPageToSend = 0;
 
 /* Fills the Screenbuffer with values from a given buffer of a fixed length */
 SSD1306_Error_t ssd1306_FillBuffer(uint8_t *buf, uint32_t len) {
@@ -213,6 +226,8 @@ void ssd1306_Fill(SSD1306_COLOR color) {
 
 /* Write the screenbuffer with changed to the screen */
 void ssd1306_UpdateScreen(void) {
+	SSD1306.CurrentX = 0;
+	SSD1306.CurrentY = 0;
 	// Write data to each page of RAM. Number of pages
 	// depends on the screen height:
 	//
@@ -220,11 +235,13 @@ void ssd1306_UpdateScreen(void) {
 	//  * 64px   ==  8 pages
 	//  * 128px  ==  16 pages
 #ifdef SSD1306_USE_DMA
-	dmaRunning = 1;
-	nextPageToSend = 0;
-	ssd1306_TxFinished();
+	if (dmaRunning < 1) {
+		dmaRunning = 1;
+		nextPageToSend = 0;
+		ssd1306_TxFinished();
+	}
 #else
-		for (uint8_t i = 0; i < SSD1306_HEIGHT / 8; i++) {
+	for (uint8_t i = 0; i < SSD1306_HEIGHT / 8; i++) {
 		ssd1306_WriteCommand(0xB0 + i);
 		ssd1306_WriteCommand(0x00 + SSD1306_X_OFFSET_LOWER);
 		ssd1306_WriteCommand(0x10 + SSD1306_X_OFFSET_UPPER);
@@ -233,24 +250,25 @@ void ssd1306_UpdateScreen(void) {
 #endif
 }
 
-uint8_t ssd1306_DMAReady(){
+uint8_t ssd1306_DMAReady() {
 	return (dmaRunning > 0) ? 0x00 : 0x0F;
 }
 
 #ifdef SSD1306_USE_DMA
 //helpers for below
 void ssd1306_sendPageCommandsDMA(uint8_t i) {
-	uint8_t buf[3] = {0xB0 + i, 0x00 + SSD1306_X_OFFSET_UPPER, 0x10 + SSD1306_X_OFFSET_UPPER};
+	uint8_t buf[3] = { 0xB0 + i, 0x00 + SSD1306_X_OFFSET_UPPER, 0x10
+			+ SSD1306_X_OFFSET_UPPER };
 	ssd1306_WriteData_DMA(buf, 3, 0x00);
 }
 void ssd1306_sendPageBufferDMA(uint8_t i) {
-	ssd1306_WriteData_DMA(&SSD1306_Buffer[SSD1306_WIDTH * i], SSD1306_WIDTH, 0x40);
+	ssd1306_WriteData_DMA(&SSD1306_Buffer[SSD1306_WIDTH * i], SSD1306_WIDTH,
+			0x40);
 }
-
 
 void ssd1306_TxFinished() {
 	if (nextPageToSend < SSD1306_HEIGHT / 8) {
-		if(commandsSent < 1){
+		if (commandsSent < 1) {
 			ssd1306_sendPageCommandsDMA(nextPageToSend);
 			commandsSent = 1;
 		} else {
@@ -261,6 +279,7 @@ void ssd1306_TxFinished() {
 	} else {
 		dmaRunning = 0;
 		nextPageToSend = 0;
+		commandsSent = 0;
 	}
 }
 #endif
