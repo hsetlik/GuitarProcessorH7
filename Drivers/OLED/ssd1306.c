@@ -40,8 +40,8 @@ void ssd1306_WriteCommand_DMA(uint8_t byte) {
 }
 
 // Send data
-void ssd1306_WriteData_DMA(uint8_t *buffer, size_t buff_size) {
-	if(HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x40, 1, buffer,
+void ssd1306_WriteData_DMA(uint8_t *buffer, size_t buff_size, uint16_t addrSize) {
+	if(HAL_I2C_Mem_Write_DMA(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, addrSize, 1, buffer,
 			buff_size) != HAL_OK){
 		ssd1306_ErrorHandle();
 	}
@@ -90,6 +90,7 @@ static SSD1306_t SSD1306;
 
 // keep track of DMA state
 static uint8_t dmaRunning = 0;
+static uint8_t commandsSent = 0;
 static uint8_t nextPageToSend = 0;
 
 /* Fills the Screenbuffer with values from a given buffer of a fixed length */
@@ -237,18 +238,26 @@ uint8_t ssd1306_DMAReady(){
 }
 
 #ifdef SSD1306_USE_DMA
-//helper for below
-void ssd1306_sendPageDMA(uint8_t i) {
-	ssd1306_WriteCommand(0xB0 + i); // Set the current RAM page address.
-	ssd1306_WriteCommand(0x00 + SSD1306_X_OFFSET_LOWER);
-	ssd1306_WriteCommand(0x10 + SSD1306_X_OFFSET_UPPER);
-	ssd1306_WriteData_DMA(&SSD1306_Buffer[SSD1306_WIDTH * i], SSD1306_WIDTH);
+//helpers for below
+void ssd1306_sendPageCommandsDMA(uint8_t i) {
+	uint8_t buf[3] = {0xB0 + i, 0x00 + SSD1306_X_OFFSET_UPPER, 0x10 + SSD1306_X_OFFSET_UPPER};
+	ssd1306_WriteData_DMA(buf, 3, 0x00);
 }
+void ssd1306_sendPageBufferDMA(uint8_t i) {
+	ssd1306_WriteData_DMA(&SSD1306_Buffer[SSD1306_WIDTH * i], SSD1306_WIDTH, 0x40);
+}
+
 
 void ssd1306_TxFinished() {
 	if (nextPageToSend < SSD1306_HEIGHT / 8) {
-		ssd1306_sendPageDMA(nextPageToSend);
-		++nextPageToSend;
+		if(commandsSent < 1){
+			ssd1306_sendPageCommandsDMA(nextPageToSend);
+			commandsSent = 1;
+		} else {
+			ssd1306_sendPageBufferDMA(nextPageToSend);
+			++nextPageToSend;
+			commandsSent = 0;
+		}
 	} else {
 		dmaRunning = 0;
 		nextPageToSend = 0;

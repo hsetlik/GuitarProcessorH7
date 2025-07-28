@@ -53,8 +53,8 @@ typedef struct {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-#define BUFFER_SIZE 128
-#define BUFFER_FLOAT_SIZE 32
+#define BUFFER_SIZE 256
+#define BUFFER_FLOAT_SIZE 64
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
