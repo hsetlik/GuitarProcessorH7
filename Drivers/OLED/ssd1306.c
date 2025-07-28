@@ -9,16 +9,25 @@ void ssd1306_Reset(void) {
 	/* for I2C - do nothing */
 }
 
+static void ssd1306_ErrorHandle(){
+
+}
+
 // Send a byte to the command register
 void ssd1306_WriteCommand(uint8_t byte) {
-	HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &byte, 1,
-	HAL_MAX_DELAY);
+	if (HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x00, 1, &byte,
+			1,
+			HAL_MAX_DELAY) != HAL_OK) {
+		ssd1306_ErrorHandle();
+	}
 }
 
 // Send data
 void ssd1306_WriteData(uint8_t *buffer, size_t buff_size) {
-	HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x40, 1, buffer,
-			buff_size, HAL_MAX_DELAY);
+	if(HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x40, 1, buffer,
+			buff_size, HAL_MAX_DELAY) != HAL_OK){
+		ssd1306_ErrorHandle();
+	}
 }
 
 // DMA versions of the above
@@ -78,8 +87,8 @@ static uint8_t SSD1306_Buffer[SSD1306_BUFFER_SIZE];
 static SSD1306_t SSD1306;
 
 // keep track of DMA state
-static uint8_t dmaRunning = 0;
-static uint8_t nextPageToSend = 0;
+//static uint8_t dmaRunning = 0;
+//static uint8_t nextPageToSend = 0;
 
 /* Fills the Screenbuffer with values from a given buffer of a fixed length */
 SSD1306_Error_t ssd1306_FillBuffer(uint8_t *buf, uint32_t len) {

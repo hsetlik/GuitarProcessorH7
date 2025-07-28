@@ -28,7 +28,7 @@ FxProcessor::FxProcessor() : state(getDefaultPedalState()){
 void FxProcessor::processChunk(uint16_t numSamples, float* input, float* output){
 #ifdef CODEC_TEST
 	for(uint16_t i = 0; i < numSamples; ++i){
-		meter.tick(input[i]);
+		//meter.tick(input[i]);
 		output[i] = input[i];
 	}
 

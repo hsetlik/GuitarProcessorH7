@@ -47,7 +47,6 @@ DMA_HandleTypeDef hdma_adc1;
 
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
-DMA_HandleTypeDef hdma_i2c1_tx;
 
 I2S_HandleTypeDef hi2s1;
 DMA_HandleTypeDef hdma_spi1_rx;
@@ -67,8 +66,6 @@ uint16_t knobAdcData[4];
 volatile uint8_t ledsReady = 1;
 uint8_t ledData = 0x00;
 
-volatile uint8_t displayReady = 1;
-volatile uint8_t displayUpdateNeeded = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -102,6 +99,8 @@ float outputFloatBuf[BUFFER_FLOAT_SIZE];
 
 uint8_t bufferReady = 0;
 
+volatile uint8_t displayReady = 1;
+volatile uint8_t displayUpdateNeeded = 0;
 //static const uint32_t max32 = 0xFFFFFFFF;
 //float u32_to_float(uint32_t val) {
 //	float norm = (float)val / (float)max32;
@@ -191,11 +190,11 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *adc) {
 //}
 
 // Display I2C callback------------------------------
-void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef*) {
-	ssd1306_TxFinished();
-	displayReady = 1;
-}
-
+//void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef*) {
+//	ssd1306_TxFinished();
+//	displayReady = 1;
+//}
+//
 void checkLEDs() {
 	static uint32_t lastCheck = 0;
 	// this limits the LEDs to refreshing no more than ~25x a second
@@ -243,11 +242,12 @@ void checkSwitches() {
 // timer stuff
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *tim) {
 	if (tim == &htim4) {
-		if (HAL_ADCEx_MultiModeStart_DMA(&hadc1, (uint32_t*) knobAdcData,
-				sizeof(knobAdcData)) != HAL_OK) {
+		HAL_StatusTypeDef adcStatus = HAL_ADCEx_MultiModeStart_DMA(&hadc1, (uint32_t*) knobAdcData,
+				sizeof(knobAdcData));
+		if (adcStatus != HAL_OK && adcStatus != HAL_BUSY) {
 			Error_Handler();
 		}
-	} else if (tim == &htim3 && displayReady) {
+	} else if (displayReady > 0) {
 		displayUpdateNeeded = 1;
 	}
 }
@@ -315,11 +315,7 @@ int main(void)
 		Error_Handler();
 	}
 
-	if (HAL_TIM_Base_Start(&htim4) != HAL_OK) {
-		Error_Handler();
-	}
-
-	if (HAL_TIM_Base_Start(&htim3) != HAL_OK) {
+	if (HAL_TIM_Base_Start_IT(&htim4) != HAL_OK) {
 		Error_Handler();
 	}
 
@@ -328,6 +324,11 @@ int main(void)
 
 	// initialize the OLED display
 	ssd1306_Init();
+	displayReady = 1;
+
+	if (HAL_TIM_Base_Start_IT(&htim3) != HAL_OK) {
+		Error_Handler();
+	}
 
   /* USER CODE END 2 */
 
@@ -345,10 +346,11 @@ int main(void)
 		checkLEDs();
 		checkSwitches();
 		// do any display work
-		if(displayUpdateNeeded){
+		if (displayUpdateNeeded) {
+			displayReady = 0;
 			fx_update_display(fx);
 			ssd1306_UpdateScreen();
-			displayReady = 0;
+			displayReady = 1;
 			displayUpdateNeeded = 0;
 		}
     /* USER CODE END WHILE */
@@ -805,9 +807,6 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);
-  /* DMA1_Stream4_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
   /* DMA2_Stream0_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
