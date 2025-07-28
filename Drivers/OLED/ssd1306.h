@@ -158,6 +158,7 @@ void ssd1306_Fill(SSD1306_COLOR color);
 #ifdef SSD1306_USE_DMA
 // call this in the HAL_I2C_MemTxCpltCallback() callback
 void ssd1306_TxFinished();
+uint8_t ssd1306_DMAReady();
 #endif
 void ssd1306_UpdateScreen(void);
 void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color);

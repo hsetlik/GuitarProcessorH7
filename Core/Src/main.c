@@ -47,6 +47,7 @@ DMA_HandleTypeDef hdma_adc1;
 
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
+DMA_HandleTypeDef hdma_i2c1_tx;
 
 I2S_HandleTypeDef hi2s1;
 DMA_HandleTypeDef hdma_spi1_rx;
@@ -99,7 +100,6 @@ float outputFloatBuf[BUFFER_FLOAT_SIZE];
 
 uint8_t bufferReady = 0;
 
-volatile uint8_t displayReady = 1;
 volatile uint8_t displayUpdateNeeded = 0;
 //static const uint32_t max32 = 0xFFFFFFFF;
 //float u32_to_float(uint32_t val) {
@@ -190,10 +190,13 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *adc) {
 //}
 
 // Display I2C callback------------------------------
-//void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef*) {
-//	ssd1306_TxFinished();
-//	displayReady = 1;
-//}
+void HAL_I2C_MemTxCpltCallback(I2C_HandleTypeDef*) {
+	ssd1306_TxFinished();
+}
+
+void HAL_I2C_ErrorCallback(I2C_HandleTypeDef* i2c){
+	Error_Handler();
+}
 //
 void checkLEDs() {
 	static uint32_t lastCheck = 0;
@@ -247,7 +250,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *tim) {
 		if (adcStatus != HAL_OK && adcStatus != HAL_BUSY) {
 			Error_Handler();
 		}
-	} else if (displayReady > 0) {
+	} else if (ssd1306_DMAReady() > 0) {
 		displayUpdateNeeded = 1;
 	}
 }
@@ -324,7 +327,6 @@ int main(void)
 
 	// initialize the OLED display
 	ssd1306_Init();
-	displayReady = 1;
 
 	if (HAL_TIM_Base_Start_IT(&htim3) != HAL_OK) {
 		Error_Handler();
@@ -347,10 +349,8 @@ int main(void)
 		checkSwitches();
 		// do any display work
 		if (displayUpdateNeeded) {
-			displayReady = 0;
 			fx_update_display(fx);
 			ssd1306_UpdateScreen();
-			displayReady = 1;
 			displayUpdateNeeded = 0;
 		}
     /* USER CODE END WHILE */
@@ -804,6 +804,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
+  /* DMA1_Stream2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
   /* DMA1_Stream3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);

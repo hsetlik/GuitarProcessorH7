@@ -40,7 +40,7 @@
 // #define SSD1306_MIRROR_HORIZ
 
 // Optionally use DMA
-//#define SSD1306_USE_DMA
+#define SSD1306_USE_DMA
 
 // Set inverse color if needed
 // # define SSD1306_INVERSE_COLOR
