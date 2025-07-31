@@ -101,6 +101,8 @@ static uint8_t SSD1306_Buffer[SSD1306_BUFFER_SIZE];
 // Screen object
 static SSD1306_t SSD1306;
 
+//static uint32_t frameUpdateMs = 0;
+
 // keep track of DMA state
 volatile uint8_t dmaRunning = 0;
 volatile uint8_t commandsSent = 0;
@@ -209,7 +211,7 @@ void ssd1306_Init(void) {
 	ssd1306_Fill(Black);
 
 	// Flush buffer to screen
-	ssd1306_UpdateScreen();
+	ssd1306_UpdateScreenBlocking();
 
 	// Set default values for screen object
 	SSD1306.CurrentX = 0;
@@ -236,6 +238,7 @@ void ssd1306_UpdateScreen(void) {
 	//  * 128px  ==  16 pages
 #ifdef SSD1306_USE_DMA
 	if (dmaRunning < 1) {
+		//frameUpdateMs = HAL_GetTick();
 		dmaRunning = 1;
 		nextPageToSend = 0;
 		ssd1306_TxFinished();
@@ -248,6 +251,17 @@ void ssd1306_UpdateScreen(void) {
 		ssd1306_WriteData(&SSD1306_Buffer[SSD1306_WIDTH * i], SSD1306_WIDTH);
 	}
 #endif
+}
+
+void ssd1306_UpdateScreenBlocking() {
+	SSD1306.CurrentX = 0;
+	SSD1306.CurrentY = 0;
+	for (uint8_t i = 0; i < SSD1306_HEIGHT / 8; i++) {
+		ssd1306_WriteCommand(0xB0 + i);
+		ssd1306_WriteCommand(0x00 + SSD1306_X_OFFSET_LOWER);
+		ssd1306_WriteCommand(0x10 + SSD1306_X_OFFSET_UPPER);
+		ssd1306_WriteData(&SSD1306_Buffer[SSD1306_WIDTH * i], SSD1306_WIDTH);
+	}
 }
 
 uint8_t ssd1306_DMAReady() {
@@ -277,6 +291,8 @@ void ssd1306_TxFinished() {
 			commandsSent = 0;
 		}
 	} else {
+//		uint32_t now = HAL_GetTick();
+//		uint32_t transmitTime = now - frameUpdateMs;
 		dmaRunning = 0;
 		nextPageToSend = 0;
 		commandsSent = 0;

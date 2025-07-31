@@ -202,8 +202,8 @@ void checkLEDs() {
 	static uint32_t lastCheck = 0;
 	// this limits the LEDs to refreshing no more than ~25x a second
 	const uint32_t minUpdateMs = 40;
-	if (ledsReady && (SysTick->VAL - lastCheck) >= minUpdateMs) {
-		lastCheck = SysTick->VAL;
+	if (ledsReady && (HAL_GetTick() - lastCheck) >= minUpdateMs) {
+		lastCheck = HAL_GetTick();
 		uint8_t bits = fx_get_led_byte(fx);
 		if (bits != ledData) {
 			ledData = bits;
@@ -226,7 +226,7 @@ uint8_t algSwitchDebounce() {
 
 void checkSwitches() {
 	static uint32_t lastSwitchCheck = 0;
-	uint32_t now = SysTick->VAL;
+	uint32_t now = HAL_GetTick();
 	static GPIO_PinState fxActive = GPIO_PIN_SET;
 	if (now - lastSwitchCheck >= switchUpdateMs) {
 		lastSwitchCheck = now;
@@ -339,20 +339,30 @@ int main(void)
 	while (1) {
 		// check if we have the next buffer to process
 		if (bufferReady) {
+			HAL_NVIC_DisableIRQ(I2C1_EV_IRQn);
+			HAL_NVIC_DisableIRQ(TIM3_IRQn);
+			HAL_NVIC_DisableIRQ(TIM4_IRQn);
+			HAL_NVIC_DisableIRQ(DMA1_Stream2_IRQn);
 			convertInputBuffer();
 			process_fx(fx, BUFFER_FLOAT_SIZE, inputFloatBuf, outputFloatBuf);
 			convertOutputBuffer();
 			bufferReady = 0;
+			HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
+			HAL_NVIC_EnableIRQ(TIM3_IRQn);
+			HAL_NVIC_EnableIRQ(TIM4_IRQn);
+			HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
 		}
-		// check the LEDs
-		checkLEDs();
-		checkSwitches();
-		// do any display work
 		if (displayUpdateNeeded) {
 			displayUpdateNeeded = 0;
 			fx_update_display(fx);
 			ssd1306_UpdateScreen();
 		}
+		// check the LEDs
+		HAL_NVIC_DisableIRQ(I2C1_EV_IRQn);
+		checkLEDs();
+		checkSwitches();
+		HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -533,7 +543,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x004019BF;
+  hi2c1.Init.Timing = 0x004020EB;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
