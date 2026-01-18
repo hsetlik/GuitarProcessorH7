@@ -7,6 +7,7 @@ Datasheets
 Debug
 GuitarProcessorBoard/*backups
 GuitarProcessorBoard/gerber
+GuitarProcessorBoard/*.zip
 GuitarProcessorBoard/*cache
 GuitarProcessorBoard/*.lck
 DSPPapers/*.zip
