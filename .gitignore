@@ -5,6 +5,7 @@ Drivers/STM32*
 Enclosure/*.ai
 Datasheets
 Debug
+Release
 GuitarProcessorBoard/*backups
 GuitarProcessorBoard/gerber
 GuitarProcessorBoard/*.zip
