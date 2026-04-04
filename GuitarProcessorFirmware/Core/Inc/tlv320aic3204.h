@@ -16,7 +16,7 @@
 #define TLV_I2S hi2s1
 #define TLV_NRST_GPIO_Port CODEC_NRST_GPIO_Port
 #define TLV_NRST_Pin CODEC_NRST_Pin
-//#define I2C_USE_MEM_WRITE
+#define I2C_USE_MEM_WRITE
 
 #define TLV_VERIFY_SETUP
 

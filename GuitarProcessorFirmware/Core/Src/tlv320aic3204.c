@@ -5,6 +5,7 @@
  *      Author: hayden
  */
 #include "tlv320aic3204.h"
+#include "main.h"
 
 // little helper for the page scheme
 static HAL_StatusTypeDef TLV_selectPage(uint8_t page) {
@@ -49,6 +50,7 @@ uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected) {
 		Error_Handler();
 	}
 	if (expected != memory) {
+		Error_Handler();
 		return 0;
 	}
 	return 1;
@@ -72,6 +74,7 @@ HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 		HAL_StatusTypeDef regStatus = TLV_writeRegister(settings[i].page,
 				settings[i].address, settings[i].value);
 		if (regStatus != HAL_OK) {
+			Error_Handler();
 			return regStatus;
 		}
 	}
@@ -170,6 +173,9 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	++idx;
 	// power up the left line out driver
 	settings[idx] = (tlv_register_t){TLV_outputDriverPower_pg, TLV_outputDriverPower_reg, 0b00001000};
+	++idx;
+	// set up common mode voltages
+	settings[idx] = (tlv_register_t){TLV_commonModeControl_pg, TLV_commonModeControl_reg, 0b00000011};
 	++idx;
 	// route & power up the left DAC
 	settings[idx] = (tlv_register_t){TLV_dacChannelSetup1_pg, TLV_dacChannelSetup1_reg, 0b10100000};

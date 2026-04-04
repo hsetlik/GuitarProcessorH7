@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "tlv320aic3204.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -78,7 +78,12 @@ static void MX_TIM3_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+// buffers for the input & output audio streams
+int32_t adcBuf[AUDIO_BUF_SIZE * 2];
+int32_t dacBuf[AUDIO_BUF_SIZE * 2];
+int32_t* adcPtr = adcBuf;
+int32_t* dacPtr = dacBuf;
+volatile bool chunkReady = false;
 /* USER CODE END 0 */
 
 /**
@@ -122,13 +127,29 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  // initialize the audio codec
+  HAL_StatusTypeDef tlvStatus = TLV_quickInit_monoGuitarPedal();
+  if(tlvStatus != HAL_OK){
+    Error_Handler();
+  }
 
+  HAL_StatusTypeDef dmaStatus = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacBuf, (uint16_t*)adcBuf, AUDIO_BUF_SIZE * 2);
+  if(dmaStatus != HAL_OK){
+    Error_Handler();
+  }
+
+  //HAL_I2S_StateTypeDef i2sState = HAL_I2S_GetState(&hi2s1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    if(chunkReady){
+      //do processing here
+
+      chunkReady = false;
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -646,6 +667,23 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+// I2S callbacks===================================
+void HAL_I2SEx_TxRxCpltCallback(I2S_HandleTypeDef *i2s) {
+	adcPtr = &adcBuf[AUDIO_BUF_SIZE];
+	dacPtr = &dacBuf[AUDIO_BUF_SIZE];
+  chunkReady = true;
+}
+
+void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef *i2s) {
+	adcPtr = &adcBuf[0];
+	dacPtr = &dacBuf[0];
+  chunkReady = true;
+}
+
+// void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s){
+//   uint32_t errCode = HAL_I2S_GetError(hi2s);
+// }
 
 /* USER CODE END 4 */
 
