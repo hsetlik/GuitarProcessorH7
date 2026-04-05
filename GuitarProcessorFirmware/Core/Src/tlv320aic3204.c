@@ -59,15 +59,16 @@ uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected) {
 HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 	// step 1: cycle the NRST pin
 	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_RESET);
-	HAL_Delay(2);
+	HAL_Delay(25);
 	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_SET);
-	HAL_Delay(2);
+	HAL_Delay(25);
 	// step 2: perform hardware reset
 	HAL_StatusTypeDef resetStatus = TLV_writeRegister(TLV_softwareReset_pg,
 			TLV_softwareReset_reg, 0x01);
 	if (resetStatus != HAL_OK) {
 		return resetStatus;
 	}
+	HAL_Delay(10);
 
 	// step 3: set up each register value passed in
 	for (uint16_t i = 0; i < size; i++) {
@@ -80,7 +81,7 @@ HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 	}
 #ifdef TLV_VERIFY_SETUP
 	// step 4: verify that the correct value was written to each register
-	for (uint16_t i = 1; i < size; i++) {
+	for (uint16_t i = 0; i < size; i++) {
 		if(TLV_verifyRegister(settings[i].page, settings[i].address, settings[i].value) < 1){
 			return HAL_ERROR;
 		}
@@ -98,11 +99,6 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	// setup based on TI's application note SLA557: https://www.ti.com/lit/ml/slaa557/slaa557.pdf?ts=1752009023928
 	// and the register map from p. 35-39 of the datasheet: https://www.ti.com/lit/ds/symlink/tlv320aic3204.pdf?ts=1752054663881&ref_url=https%253A%252F%252Fwww.mouser.fr%252F
 
-	// software reset in register 1:
-	settings[idx] = (tlv_register_t){TLV_softwareReset_pg, TLV_softwareReset_reg, 0b00000001};
-	++idx;
-
-
 	// ADC setup stuff-----------------------------------------
 	// set NADC divider to 1
 	settings[idx] = (tlv_register_t){TLV_NADC_pg, TLV_NADC_reg, 0b10000001};
@@ -111,7 +107,7 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	settings[idx] = (tlv_register_t){TLV_MADC_pg, TLV_MADC_reg, 0b10000010};
 	++idx;
 	// set 32 bit word length
-	settings[idx] = (tlv_register_t){TLV_audioIntSetting1_pg, TLV_audioIntSetting1_reg, 0b00110000};
+	settings[idx] = (tlv_register_t){TLV_audioIntSetting1_pg, TLV_audioIntSetting1_reg, 0x00};
 	++idx;
 	// bit clock offset
 //	settings[idx] = (tlv_register_t){TLV_audioBitOffset_pg, TLV_audioBitOffset_reg, 5};
@@ -123,6 +119,9 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	// use the internal LDOs
 	settings[idx] = (tlv_register_t){TLV_ldoControl_pg, TLV_ldoControl_reg, 0x01};
 	idx++;
+	// set up common mode voltages
+	settings[idx] = (tlv_register_t){TLV_commonModeControl_pg, TLV_commonModeControl_reg, 0b00000011};
+	++idx;
 	// set the analog quick charge time to 3.1ms
 	settings[idx] = (tlv_register_t){TLV_analogQuickCharge_pg, TLV_analogQuickCharge_reg, 0b00110001};
 	idx++;
@@ -174,9 +173,7 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	// power up the left line out driver
 	settings[idx] = (tlv_register_t){TLV_outputDriverPower_pg, TLV_outputDriverPower_reg, 0b00001000};
 	++idx;
-	// set up common mode voltages
-	settings[idx] = (tlv_register_t){TLV_commonModeControl_pg, TLV_commonModeControl_reg, 0b00000011};
-	++idx;
+
 	// route & power up the left DAC
 	settings[idx] = (tlv_register_t){TLV_dacChannelSetup1_pg, TLV_dacChannelSetup1_reg, 0b10100000};
 	++idx;

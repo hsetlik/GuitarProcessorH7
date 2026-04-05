@@ -48,6 +48,8 @@ extern "C" {
 /* USER CODE BEGIN EM */
 #define AUDIO_BUF_SIZE 128
 
+#define isample_t int16_t
+
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
@@ -64,8 +66,6 @@ void Error_Handler(void);
 #define ADC_B_GPIO_Port GPIOC
 #define ADC_A_Pin GPIO_PIN_2
 #define ADC_A_GPIO_Port GPIOA
-#define ADC_EXP_Pin GPIO_PIN_3
-#define ADC_EXP_GPIO_Port GPIOA
 #define CODEC_NRST_Pin GPIO_PIN_15
 #define CODEC_NRST_GPIO_Port GPIOE
 #define CODEC_SCL_Pin GPIO_PIN_10
@@ -84,8 +84,6 @@ void Error_Handler(void);
 #define BYP_GPIO_Port GPIOA
 #define MODE_Pin GPIO_PIN_10
 #define MODE_GPIO_Port GPIOA
-#define TAP_Pin GPIO_PIN_11
-#define TAP_GPIO_Port GPIOA
 #define DISP_SCL_Pin GPIO_PIN_6
 #define DISP_SCL_GPIO_Port GPIOB
 #define DISP_SDA_Pin GPIO_PIN_7
