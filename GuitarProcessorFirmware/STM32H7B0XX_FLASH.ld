@@ -55,9 +55,9 @@ ENTRY(Reset_Handler)
 /* Specify the memory areas */
 MEMORY
 {
-DTCMRAM (xrw)      : ORIGIN = 0x24000000, LENGTH = 1024K
-RAM (xrw)      : ORIGIN = 0x24000000, LENGTH = 1024K
-ITCMRAM (xrw)      : ORIGIN = 0x24000000, LENGTH = 1024K
+ITCMRAM (xrw)      : ORIGIN = 0x00000000, LENGTH = 64K
+DTCMRAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 128K
+RAM (xrw)          : ORIGIN = 0x24000000, LENGTH = 1024K
 FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 128K
 }
 
@@ -238,6 +238,14 @@ KEEP(*(.isr_vector)) /* Startup code */
   } >DTCMRAM
 
 
+
+  /* DMA buffers — must live in AXI SRAM (RAM) so DMA1/DMA2 can reach them */
+  .dma_buf (NOLOAD) : ALIGN(4)
+  {
+    *(.dma_buf)
+    *(.dma_buf*)
+    . = ALIGN(4);
+  } >RAM
 
   /* Remove information from the standard libraries */
   /DISCARD/ :

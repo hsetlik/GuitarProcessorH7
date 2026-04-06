@@ -62,14 +62,14 @@ TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
 // buffers for the input & output audio streams
-static isample_t adcBuf[AUDIO_BUF_SIZE * 2];
-static isample_t dacBuf[AUDIO_BUF_SIZE * 2];
+isample_t adcBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buf")));
+isample_t dacBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buf")));
 static volatile isample_t* adcPtr = adcBuf;
 static volatile isample_t* dacPtr = dacBuf;
 volatile bool chunkReady = false;
 
 // knob values and ADC buffer
-static volatile uint16_t knobValueBuf[3];
+volatile uint16_t knobValueBuf[3] __attribute__((section(".dma_buf")));
 volatile bool knobValuesReady = false;
 /* USER CODE END PV */
 
@@ -86,7 +86,7 @@ static void MX_SPI2_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
-
+void startKnobADC();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -109,9 +109,6 @@ int main(void)
   MPU_Config();
 
   /* MCU Configuration--------------------------------------------------------*/
-
-  /* Configure The Vector Table address */
-  SCB->VTOR = 0x08000000;
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
@@ -146,7 +143,7 @@ int main(void)
 
   HAL_Delay(150);
 
-  HAL_StatusTypeDef dmaStatus = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacBuf, (uint16_t*)adcBuf, AUDIO_BUF_SIZE * 4);
+  HAL_StatusTypeDef dmaStatus = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacBuf, (uint16_t*)adcBuf, AUDIO_BUF_SIZE * 2);
   if(dmaStatus != HAL_OK){
     Error_Handler();
   }
@@ -155,15 +152,13 @@ int main(void)
   if(HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED) != HAL_OK){
     Error_Handler();
   }
-  //start the ADC dma stream
-  HAL_StatusTypeDef adcStatus = HAL_ADC_Start_DMA(&hadc1, (uint32_t*)knobValueBuf, 3);
-  if(adcStatus != HAL_OK){
-    Error_Handler();
-  }
+
   // start the timer
   if(HAL_TIM_Base_Start(&htim4) != HAL_OK){
     Error_Handler();
   }
+
+  startKnobADC();
   //HAL_I2S_StateTypeDef i2sState = HAL_I2S_GetState(&hi2s1);
   /* USER CODE END 2 */
 
@@ -178,6 +173,7 @@ int main(void)
     }
     if(knobValuesReady){
       knobValuesReady = false;
+      startKnobADC();
     }
     /* USER CODE END WHILE */
 
@@ -270,7 +266,7 @@ static void MX_ADC1_Init(void)
   */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV2;
-  hadc1.Init.Resolution = ADC_RESOLUTION_16B;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
@@ -300,7 +296,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_14;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_64CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_387CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -712,6 +708,14 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
 
 void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc){
   if(HAL_ADC_GetError(hadc) == HAL_ADC_ERROR_DMA){
+    Error_Handler();
+  }
+}
+
+void startKnobADC(){
+  //start the ADC dma stream
+  HAL_StatusTypeDef adcStatus = HAL_ADC_Start_DMA(&hadc1, (uint32_t*)knobValueBuf, 3);
+  if(adcStatus != HAL_OK){
     Error_Handler();
   }
 }
