@@ -62,14 +62,14 @@ TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
 // buffers for the input & output audio streams
-static isample_t adcBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buffers")));
-static isample_t dacBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buffers")));
+static isample_t adcBuf[AUDIO_BUF_SIZE * 2];
+static isample_t dacBuf[AUDIO_BUF_SIZE * 2];
 static volatile isample_t* adcPtr = adcBuf;
 static volatile isample_t* dacPtr = dacBuf;
 volatile bool chunkReady = false;
 
 // knob values and ADC buffer
-static volatile uint16_t knobValueBuf[3] __attribute__((section(".dma_buffers")));
+static volatile uint16_t knobValueBuf[3];
 volatile bool knobValuesReady = false;
 /* USER CODE END PV */
 
@@ -109,6 +109,9 @@ int main(void)
   MPU_Config();
 
   /* MCU Configuration--------------------------------------------------------*/
+
+  /* Configure The Vector Table address */
+  SCB->VTOR = 0x08000000;
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
@@ -276,7 +279,7 @@ static void MX_ADC1_Init(void)
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T4_TRGO;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
-  hadc1.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DMA_CIRCULAR;
+  hadc1.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DMA_ONESHOT;
   hadc1.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
   hadc1.Init.LeftBitShift = ADC_LEFTBITSHIFT_NONE;
   hadc1.Init.OversamplingMode = DISABLE;
@@ -297,7 +300,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_14;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_387CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_64CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -346,7 +349,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x003011AD;
+  hi2c1.Init.Timing = 0x00808CD2;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
