@@ -223,6 +223,14 @@ KEEP(*(.isr_vector)) /* Startup code */
   } >DTCMRAM
   PROVIDE( __non_tls_bss_start = ADDR(.bss) );
 
+  /* DMA buffers explicitly placed in RAM (not DTCMRAM) */
+  .dma_buffers (NOLOAD) : ALIGN(4)
+  {
+    *(.dma_buffers)
+    *(.dma_buffers*)
+    . = ALIGN(4);
+  } >RAM
+
   PROVIDE( __bss_start = __tbss_start );
   PROVIDE( __bss_size = __bss_end - __bss_start );
 

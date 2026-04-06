@@ -62,14 +62,14 @@ TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
 // buffers for the input & output audio streams
-static isample_t adcBuf[AUDIO_BUF_SIZE * 2];
-static isample_t dacBuf[AUDIO_BUF_SIZE * 2];
+static isample_t adcBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buffers")));
+static isample_t dacBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buffers")));
 static volatile isample_t* adcPtr = adcBuf;
 static volatile isample_t* dacPtr = dacBuf;
 volatile bool chunkReady = false;
 
 // knob values and ADC buffer
-static volatile uint16_t knobValueBuf[3];
+static volatile uint16_t knobValueBuf[3] __attribute__((section(".dma_buffers")));
 volatile bool knobValuesReady = false;
 /* USER CODE END PV */
 
@@ -173,9 +173,9 @@ int main(void)
 
     //   chunkReady = false;
     // }
-    // if(knobValuesReady){
-    //   knobValuesReady = false;
-    // }
+    if(knobValuesReady){
+      knobValuesReady = false;
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
