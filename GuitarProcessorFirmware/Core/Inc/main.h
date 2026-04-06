@@ -48,7 +48,7 @@ extern "C" {
 /* USER CODE BEGIN EM */
 #define AUDIO_BUF_SIZE 128
 
-#define isample_t int16_t
+#define isample_t int32_t
 
 /* USER CODE END EM */
 
@@ -56,7 +56,8 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+// wire the processing business into here
+void processChunk(isample_t* inBuf, isample_t* outBuf, uint32_t length);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

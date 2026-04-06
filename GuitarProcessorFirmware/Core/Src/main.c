@@ -143,7 +143,7 @@ int main(void)
 
   HAL_Delay(150);
 
-  HAL_StatusTypeDef dmaStatus = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacBuf, (uint16_t*)adcBuf, AUDIO_BUF_SIZE * 2);
+  HAL_StatusTypeDef dmaStatus = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacBuf, (uint16_t*)adcBuf, AUDIO_BUF_SIZE * 4);
   if(dmaStatus != HAL_OK){
     Error_Handler();
   }
@@ -168,11 +168,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    // if(chunkReady){
-    //   //do processing here
-
-    //   chunkReady = false;
-    // }
+    if(chunkReady){
+      //do processing here
+      processChunk(adcBuf, dacBuf, AUDIO_BUF_SIZE);
+      chunkReady = false;
+    }
     if(knobValuesReady){
       knobValuesReady = false;
     }
@@ -694,6 +694,14 @@ void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef *i2s) {
 // void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s){
 //   uint32_t errCode = HAL_I2S_GetError(hi2s);
 // }
+
+
+void processChunk(isample_t* inBuf, isample_t* outBuf, uint32_t length){
+  // just copy input to output 
+  for(uint32_t i = 0; i < length; ++i){
+    outBuf[i] = inBuf[i];
+  }
+}
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
   knobValuesReady = true;
