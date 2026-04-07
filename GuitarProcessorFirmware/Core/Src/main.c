@@ -64,8 +64,8 @@ TIM_HandleTypeDef htim4;
 // buffers for the input & output audio streams
 isample_t adcBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buf")));
 isample_t dacBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buf")));
-static volatile isample_t* adcPtr = adcBuf;
-static volatile isample_t* dacPtr = dacBuf;
+static isample_t* adcPtr = adcBuf;
+static isample_t* dacPtr = dacBuf;
 volatile bool chunkReady = false;
 
 // knob values and ADC buffer
@@ -159,7 +159,6 @@ int main(void)
   }
 
   startKnobADC();
-  //HAL_I2S_StateTypeDef i2sState = HAL_I2S_GetState(&hi2s1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -168,7 +167,7 @@ int main(void)
   {
     if(chunkReady){
       //do processing here
-      processChunk(adcBuf, dacBuf, AUDIO_BUF_SIZE);
+      processChunk(adcPtr, dacPtr, AUDIO_BUF_SIZE);
       chunkReady = false;
     }
     if(knobValuesReady){
@@ -443,7 +442,7 @@ static void MX_I2S1_Init(void)
   hi2s1.Instance = SPI1;
   hi2s1.Init.Mode = I2S_MODE_MASTER_FULLDUPLEX;
   hi2s1.Init.Standard = I2S_STANDARD_PHILIPS;
-  hi2s1.Init.DataFormat = I2S_DATAFORMAT_32B;
+  hi2s1.Init.DataFormat = I2S_DATAFORMAT_16B;
   hi2s1.Init.MCLKOutput = I2S_MCLKOUTPUT_ENABLE;
   hi2s1.Init.AudioFreq = I2S_AUDIOFREQ_48K;
   hi2s1.Init.CPOL = I2S_CPOL_LOW;
@@ -679,12 +678,18 @@ static void MX_GPIO_Init(void)
 
 // I2S callbacks===================================
 void HAL_I2SEx_TxRxCpltCallback(I2S_HandleTypeDef *i2s) {
+  // if(chunkReady){
+  //   Error_Handler();
+  // }
 	adcPtr = &adcBuf[AUDIO_BUF_SIZE];
 	dacPtr = &dacBuf[AUDIO_BUF_SIZE];
   chunkReady = true;
 }
 
 void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef *i2s) {
+  // if(chunkReady){
+  //   Error_Handler();
+  // }
 	adcPtr = &adcBuf[0];
 	dacPtr = &dacBuf[0];
   chunkReady = true;

@@ -1939,6 +1939,16 @@
 	)
 	(wire
 		(pts
+			(xy 208.28 127) (xy 208.28 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "07d50ada-c3cc-4fcd-955a-8a1bd61806a0")
+	)
+	(wire
+		(pts
 			(xy 102.87 45.466) (xy 102.87 57.912)
 		)
 		(stroke
@@ -3039,7 +3049,7 @@
 	)
 	(wire
 		(pts
-			(xy 208.28 118.11) (xy 208.28 120.65)
+			(xy 208.28 118.11) (xy 208.28 119.38)
 		)
 		(stroke
 			(width 0)
@@ -5752,7 +5762,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_US")
-		(at 208.28 124.46 0)
+		(at 208.28 123.19 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5761,7 +5771,7 @@
 		(fields_autoplaced yes)
 		(uuid "971c2bf1-3da3-4d79-968f-1f9ffe7d46a5")
 		(property "Reference" "R202"
-			(at 210.058 123.1899 0)
+			(at 210.058 121.9199 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5770,7 +5780,7 @@
 			)
 		)
 		(property "Value" "100k"
-			(at 210.058 125.7299 0)
+			(at 210.058 124.4599 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5779,7 +5789,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
-			(at 209.296 124.714 90)
+			(at 209.296 123.444 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5788,7 +5798,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 208.28 124.46 0)
+			(at 208.28 123.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5797,7 +5807,7 @@
 			)
 		)
 		(property "Description" "Resistor, US symbol"
-			(at 208.28 124.46 0)
+			(at 208.28 123.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
