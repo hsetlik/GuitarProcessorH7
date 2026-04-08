@@ -93,6 +93,10 @@ HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 //======================================================================
 
 
+
+//======================================================================
+
+
 HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	uint16_t idx = 0;
 	tlv_register_t settings[100];
@@ -106,7 +110,7 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	// set MADC divider to 2
 	settings[idx] = (tlv_register_t){TLV_MADC_pg, TLV_MADC_reg, 0b10000010};
 	++idx;
-	// set 32 bit word length
+	// set audio word length
 	settings[idx] = (tlv_register_t){TLV_audioIntSetting1_pg, TLV_audioIntSetting1_reg, 0x00};
 	++idx;
 	// bit clock offset

@@ -17,22 +17,55 @@
 #define TLV_NRST_GPIO_Port CODEC_NRST_GPIO_Port
 #define TLV_NRST_Pin CODEC_NRST_Pin
 #define I2C_USE_MEM_WRITE
+#define TLV_MAX_SETTING_REGISTERS 250
 
 #define TLV_VERIFY_SETUP
 
 // c-friendly scheme for passing a set of non-default register settings
 // on initialization
 
+// represents one register value
 typedef struct {
 	uint8_t page;
 	uint8_t address;
 	uint8_t value;
-}tlv_register_t;
+} tlv_register_t;
+
+/* a list of register settings that can be passed to the `TLV_initCodec` function. Below functions 
+	should take a pointer to one of these add add their own register settings as approprite.
+*/
+typedef struct {
+	tlv_register_t regs[TLV_MAX_SETTING_REGISTERS];
+	int16_t index = 0;
+} tlv_register_list;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+// bytes that correspond to various settings ==========================================================
+
+// device common mode voltage
+#define TLV_commonMode_075 0b01000000
+#define TLV_commonMode_09 0x00
+
+// audio data word length
+#define TLV_wordLength_16 0b00000000
+#define TLV_wordLength_20 0b00010000
+#define TLV_wordLength_24 0b00100000
+#define TLV_wordLength_32 0b00110000
+
+// DAC and output power controls
+#define TLV_leftDAC_powerOn 0b10000000
+#define TLV_leftLineOut_powerOn 0b01000000
+#define TLV_leftHPOut_powerOn 0b00100000
+#define TLV_rightDAC_powerOn 0b00001000
+#define TLV_rightLineOut_powerOn 0b00000100
+#define TLV_rightHPOut_powerOn 0b00000010
+
+//==============================================================================================
+// sets the device common mode voltage. `commonMode` should be either `TLV_commonMode_075` or `TLV_commonMode_09`
+//void TLV_setCommonMode(uint8_t commonMode, tlv_register_list* list);
 
 
 // does the main work of setting up registers. Should be called after initializing I2C but before starting the DMA loop
