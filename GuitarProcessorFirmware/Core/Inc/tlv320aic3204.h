@@ -36,7 +36,7 @@ typedef struct {
 */
 typedef struct {
 	tlv_register_t regs[TLV_MAX_SETTING_REGISTERS];
-	int16_t index = 0;
+	int16_t index;
 } tlv_register_list;
 
 #ifdef __cplusplus

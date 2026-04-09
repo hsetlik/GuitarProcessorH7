@@ -111,7 +111,7 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	settings[idx] = (tlv_register_t){TLV_MADC_pg, TLV_MADC_reg, 0b10000010};
 	++idx;
 	// set audio word length
-	settings[idx] = (tlv_register_t){TLV_audioIntSetting1_pg, TLV_audioIntSetting1_reg, 0x00};
+	settings[idx] = (tlv_register_t){TLV_audioIntSetting1_pg, TLV_audioIntSetting1_reg, TLV_wordLength_16};
 	++idx;
 	// bit clock offset
 //	settings[idx] = (tlv_register_t){TLV_audioBitOffset_pg, TLV_audioBitOffset_reg, 5};
@@ -124,7 +124,7 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	settings[idx] = (tlv_register_t){TLV_ldoControl_pg, TLV_ldoControl_reg, 0x01};
 	idx++;
 	// set up common mode voltages
-	settings[idx] = (tlv_register_t){TLV_commonModeControl_pg, TLV_commonModeControl_reg, 0b00000011};
+	settings[idx] = (tlv_register_t){TLV_commonModeControl_pg, TLV_commonModeControl_reg, TLV_commonMode_075};
 	++idx;
 	// set the analog quick charge time to 3.1ms
 	settings[idx] = (tlv_register_t){TLV_analogQuickCharge_pg, TLV_analogQuickCharge_reg, 0b00110001};
@@ -154,8 +154,9 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	idx++;
 
 	// DAC setup stuff------------------------------------------------------
-	// set NDAC divider to 1
-	settings[idx] = (tlv_register_t){TLV_NDAC_pg, TLV_NDAC_reg, 0b10000001};
+	// Per the application note, the the master input clock (12.288 Mhz) is equal to NDAC * MDAC * DOSR
+	// set NDAC divider to 2
+	settings[idx] = (tlv_register_t){TLV_NDAC_pg, TLV_NDAC_reg, 0b10000010};
 	++idx;
 	// set MDAC divider to 2
 	settings[idx] = (tlv_register_t){TLV_MDAC_pg, TLV_MDAC_reg, 0b10000010};
