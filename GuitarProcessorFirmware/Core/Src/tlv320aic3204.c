@@ -176,14 +176,14 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	settings[idx] = (tlv_register_t){TLV_lolDriverGain_pg, TLV_lolDriverGain_reg, 0x00};
 	++idx;
 	// power up the left line out driver
-	settings[idx] = (tlv_register_t){TLV_outputDriverPower_pg, TLV_outputDriverPower_reg, 0b00001000};
+	settings[idx] = (tlv_register_t){TLV_outputDriverPower_pg, TLV_outputDriverPower_reg, 0b00001100};
 	++idx;
 
 	// route & power up the left DAC
 	settings[idx] = (tlv_register_t){TLV_dacChannelSetup1_pg, TLV_dacChannelSetup1_reg, 0b10100000};
 	++idx;
 	// unmute the DAC
-	settings[idx] = (tlv_register_t){TLV_dacChannelSetup2_pg, TLV_dacChannelSetup2_reg, 0b00000100};
+	settings[idx] = (tlv_register_t){TLV_dacChannelSetup2_pg, TLV_dacChannelSetup2_reg, 0b10000100};
 	++idx;
 	// run the init
 	return TLV_initCodec(settings, idx);
