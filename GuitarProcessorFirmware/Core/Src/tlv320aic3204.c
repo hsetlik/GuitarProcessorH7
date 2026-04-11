@@ -167,27 +167,49 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	settings[idx] = (tlv_register_t){TLV_DACOSR2_pg, TLV_DACOSR2_reg, 0x80};
 	++idx;
 	// select PRB_R5
-	settings[idx] = (tlv_register_t){TLV_dacSignalProcessingBlock_pg, TLV_dacSignalProcessingBlock_reg, 0x05};
+	//settings[idx] = (tlv_register_t){TLV_dacSignalProcessingBlock_pg, TLV_dacSignalProcessingBlock_reg, 0x05};
+	//++idx;
+	// route right (negative) DAC to left line out
+	settings[idx] = (tlv_register_t){TLV_lolRouting_pg, TLV_lolRouting_reg, 0b00010000};
 	++idx;
-	// route left DAC to left line out
-	settings[idx] = (tlv_register_t){TLV_lolRouting_pg, TLV_lolRouting_reg, 0b00001000};
+	// route right DAC to right line out
+	settings[idx] = (tlv_register_t){TLV_lorRouting_pg, TLV_lorRouting_reg, 0b00001000};
 	++idx;
-	// unmute LOL driver and set gain to 0db
-	settings[idx] = (tlv_register_t){TLV_lolDriverGain_pg, TLV_lolDriverGain_reg, 0x00};
+	// unmute LOL driver and set gain to -6db
+	settings[idx] = (tlv_register_t){TLV_lolDriverGain_pg, TLV_lolDriverGain_reg, 0x3A};
 	++idx;
-	// power up the left line out driver
+	// unmute LOR driver and set gain to -6db
+	settings[idx] = (tlv_register_t){TLV_lorDriverGain_pg, TLV_lorDriverGain_reg, 0x3A};
+	++idx;
+	// power up the left and right line out drivers
 	settings[idx] = (tlv_register_t){TLV_outputDriverPower_pg, TLV_outputDriverPower_reg, 0b00001100};
 	++idx;
 
-	// route & power up the left DAC
-	settings[idx] = (tlv_register_t){TLV_dacChannelSetup1_pg, TLV_dacChannelSetup1_reg, 0b10100000};
+	// route & power up the right DAC
+	settings[idx] = (tlv_register_t){TLV_dacChannelSetup1_pg, TLV_dacChannelSetup1_reg, 0b01000100};
 	++idx;
 	// unmute the DAC
-	settings[idx] = (tlv_register_t){TLV_dacChannelSetup2_pg, TLV_dacChannelSetup2_reg, 0b10000100};
+	settings[idx] = (tlv_register_t){TLV_dacChannelSetup2_pg, TLV_dacChannelSetup2_reg, 0b00001000};
 	++idx;
 	// run the init
 	return TLV_initCodec(settings, idx);
 
 
+
+}
+
+// troubleshooting stuff-------------------------------------------
+void TLV_checkFlags(){
+	uint8_t flagReg1, flagReg2;
+	TLV_readRegister(TLV_dacFlag1_pg, TLV_dacFlag1_reg,  &flagReg1);
+	TLV_readRegister(TLV_dacFlag2_pg, TLV_dacFlag2_reg,  &flagReg2);
+	uint8_t expectedFlags1 = 0b01001100;
+	if(flagReg1 != expectedFlags1){
+		Error_Handler();
+	}
+	uint8_t expectedFlags2 = 0b00010001;
+	if(flagReg2 != expectedFlags2){
+		Error_Handler();
+	}
 
 }

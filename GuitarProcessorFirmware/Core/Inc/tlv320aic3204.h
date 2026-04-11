@@ -73,6 +73,8 @@ HAL_StatusTypeDef TLV_initCodec(tlv_register_t* settings, uint16_t size);
 
 HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
 
+void TLV_checkFlags();
+
 // REGISTER ADDRESSES=================================================
 // these register & page definitions start on p 35 of the datasheet
 #define TLV_softwareReset_pg 0x00
