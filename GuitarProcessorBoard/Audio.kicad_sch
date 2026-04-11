@@ -4171,7 +4171,7 @@
 				)
 			)
 		)
-		(property "Value" "51k"
+		(property "Value" "100k"
 			(at 38.354 107.95 90)
 			(effects
 				(font
@@ -6255,7 +6255,7 @@
 				)
 			)
 		)
-		(property "Value" "51k"
+		(property "Value" "33k"
 			(at 186.944 43.18 90)
 			(effects
 				(font
@@ -6842,7 +6842,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "51k"
+		(property "Value" "33k"
 			(at 181.61 74.4219 0)
 			(effects
 				(font
