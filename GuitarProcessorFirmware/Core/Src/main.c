@@ -672,7 +672,7 @@ static void MX_TIM7_Init(void)
   htim7.Instance = TIM7;
   htim7.Init.Prescaler = 23;
   htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim7.Init.Period = 59999;
+  htim7.Init.Period = 53999;
   htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
   {
@@ -838,10 +838,14 @@ void startKnobADC(){
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+  static bool startupPulseOver = false;
   if(htim == &htim7){
     if(algSwitchDebounce()){
-      //uint32_t tick = HAL_GetTick();
-      ps.algIdx = (ps.algIdx + 1) % 6;
+      if(!startupPulseOver){
+        startupPulseOver = true;
+      } else {
+        ps.algIdx = (ps.algIdx + 1) % 6;
+      }
     }
   } else if (htim == &htim3){
     ledUpdateNeeded = true;
