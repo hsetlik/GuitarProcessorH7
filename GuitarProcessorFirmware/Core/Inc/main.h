@@ -48,7 +48,7 @@ extern "C" {
 /* USER CODE BEGIN EM */
 #define AUDIO_BUF_SIZE 256
 
-#define isample_t uint32_t
+#define isample_t int32_t
 
 /* USER CODE END EM */
 

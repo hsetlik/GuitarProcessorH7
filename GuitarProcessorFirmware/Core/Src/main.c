@@ -65,6 +65,7 @@ TIM_HandleTypeDef htim7;
 /* USER CODE BEGIN PV */
 // buffers for the input & output audio streams
 isample_t adcBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buf")));
+float inputBuf[AUDIO_BUF_SIZE] __attribute__((section(".dma_buf")));
 isample_t dacBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buf")));
 static isample_t* adcPtr = adcBuf;
 static isample_t* dacPtr = dacBuf;
@@ -95,6 +96,8 @@ static void MX_TIM3_Init(void);
 static void MX_TIM7_Init(void);
 /* USER CODE BEGIN PFP */
 void startKnobADC();
+void loadInputBuf(isample_t* ptr);
+void loadOutputBuf(isample_t* dac, float* fBuf);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -206,6 +209,7 @@ int main(void)
   {
     if(chunkReady){
       //do processing here
+      loadInputBuf(adcPtr);
       processChunk(adcPtr, dacPtr, AUDIO_BUF_SIZE);
       chunkReady = false;
     }
@@ -790,6 +794,23 @@ void processChunk(isample_t* inBuf, isample_t* outBuf, uint32_t length){
   for(uint32_t i = 0; i < length; ++i){
     outBuf[i] = inBuf[i];
   }
+}
+
+static inline float sampleToFloat_signed(isample_t value){
+  return (float)((int16_t)(value >> 16)) / 32768.0f;
+}
+
+
+
+void loadInputBuf(isample_t* ptr){
+  for(uint32_t i = 0; i < AUDIO_BUF_SIZE; ++i){
+    inputBuf[i] = sampleToFloat_signed(ptr[i]);
+  }
+}
+
+
+void loadOutputBuf(isample_t* dac, float* fBuf){
+  
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
