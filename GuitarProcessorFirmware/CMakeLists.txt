@@ -53,6 +53,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     ${SRC_DIR}/tlv320aic3204.c
     ${SRC_DIR}/PedalState.c
+    ${SRC_DIR}/FxAlgorithm.cpp
+    ${SRC_DIR}/FxProcessor.cpp
 )
 
 # Add include paths

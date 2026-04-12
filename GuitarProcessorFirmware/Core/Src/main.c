@@ -28,6 +28,7 @@
 #include "stm32h7xx_hal_tim.h"
 #include "tlv320aic3204.h"
 #include "PedalState.h"
+#include "FxProcessor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -81,6 +82,8 @@ volatile bool knobValuesReady = false;
 // state
 uint8_t ledData __attribute__((section(".dma_buf")));
 pedal_state_t ps;
+fx_processor_t fx;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -115,7 +118,7 @@ void updateLedData(uint8_t data){
 }
 
 bool algSwitchDebounce(){
-	static uint16_t switchStates = 0;
+	static uint16_t switchStates = 0xFFFF;
 	switchStates = (switchStates << 1)
 			| HAL_GPIO_ReadPin(MODE_GPIO_Port, MODE_Pin);
 	return switchStates == 0x000F;
@@ -198,11 +201,14 @@ int main(void)
   if(HAL_TIM_Base_Start_IT(&htim3) != HAL_OK){
     Error_Handler();
   }
-  HAL_Delay(350);
+  //HAL_Delay(350);
    // start the timer for checking the algorithm button
   if(HAL_TIM_Base_Start_IT(&htim7) != HAL_OK){
     Error_Handler();
   } 
+
+  // initialize the fx processor
+  fx = create_fx_processor();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -212,7 +218,7 @@ int main(void)
     if(chunkReady){
       //do processing here
       loadInputBuf(adcPtr);
-      processChunk(inputBuf, outputBuf, AUDIO_BUF_SIZE);
+      process_fx(fx, inputBuf, outputBuf, AUDIO_BUF_SIZE);
       loadOutputBuf(dacPtr);
       chunkReady = false;
     }
@@ -220,6 +226,7 @@ int main(void)
       ps.knobA = (float)knobValueBuf[0] / 4096.0f;
       ps.knobB = (float)knobValueBuf[1] / 4096.0f;
       ps.knobC = (float)knobValueBuf[2] / 4096.0f;
+      update_params(fx, &ps);
       knobValuesReady = false;
       startKnobADC();
     }
@@ -793,10 +800,7 @@ void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef *i2s) {
 
 
 void processChunk(float* inBuf, float* outBuf, uint32_t length){
-  // just copy input to output 
-  for(uint32_t i = 0; i < length; ++i){
-    outBuf[i] = inBuf[i];
-  }
+  process_fx(fx, inBuf, outBuf, length);
 }
 
 static inline float sampleToFloat(isample_t value){
@@ -838,19 +842,15 @@ void startKnobADC(){
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-  static bool startupPulseOver = false;
   if(htim == &htim7){
     if(algSwitchDebounce()){
-      if(!startupPulseOver){
-        startupPulseOver = true;
-      } else {
         ps.algIdx = (ps.algIdx + 1) % 6;
       }
-    }
   } else if (htim == &htim3){
     ledUpdateNeeded = true;
   }
 }
+//=====================================================================================
 /* USER CODE END 4 */
 
  /* MPU Configuration */
