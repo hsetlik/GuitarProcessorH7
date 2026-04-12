@@ -26,6 +26,7 @@
 #include "stm32h7xx_hal_def.h"
 #include "stm32h7xx_hal_tim.h"
 #include "tlv320aic3204.h"
+#include "PedalState.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,6 +60,7 @@ DMA_HandleTypeDef hdma_spi2_tx;
 
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim7;
 
 /* USER CODE BEGIN PV */
 // buffers for the input & output audio streams
@@ -67,10 +69,15 @@ isample_t dacBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buf")));
 static isample_t* adcPtr = adcBuf;
 static isample_t* dacPtr = dacBuf;
 volatile bool chunkReady = false;
+volatile bool ledUpdateNeeded = false;
 
 // knob values and ADC buffer
 volatile uint16_t knobValueBuf[3] __attribute__((section(".dma_buf")));
 volatile bool knobValuesReady = false;
+
+// state
+uint8_t ledData __attribute__((section(".dma_buf")));
+pedal_state_t ps;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -85,12 +92,29 @@ static void MX_I2S1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_TIM7_Init(void);
 /* USER CODE BEGIN PFP */
 void startKnobADC();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+bool ledUpdateDue() {
+  return ledUpdateNeeded;
+}
+
+void updateLedData(uint8_t data){
+  ledData = data;
+  HAL_SPI_Transmit_DMA(&hspi2, &ledData, 1); 
+  ledUpdateNeeded = false;
+}
+
+bool algSwitchDebounce(){
+	static uint16_t switchStates = 0;
+	switchStates = (switchStates << 1)
+			| HAL_GPIO_ReadPin(MODE_GPIO_Port, MODE_Pin);
+	return switchStates == 0x000F;
+}
 
 /* USER CODE END 0 */
 
@@ -134,6 +158,7 @@ int main(void)
   MX_SPI2_Init();
   MX_TIM4_Init();
   MX_TIM3_Init();
+  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
   // initialize the audio codec
   HAL_StatusTypeDef tlvStatus = TLV_quickInit_monoGuitarPedal();
@@ -155,12 +180,24 @@ int main(void)
     Error_Handler();
   }
 
-  // start the timer
+  // start the timer for the knobs
   if(HAL_TIM_Base_Start(&htim4) != HAL_OK){
     Error_Handler();
   }
 
   startKnobADC();
+
+  PedalState_init(&ps);
+  HAL_GPIO_WritePin(LED_NRST_GPIO_Port, LED_NRST_Pin, GPIO_PIN_SET);
+  // start the timer for the LED updating
+  if(HAL_TIM_Base_Start_IT(&htim3) != HAL_OK){
+    Error_Handler();
+  }
+
+   // start the timer for checking the algorithm button
+  if(HAL_TIM_Base_Start_IT(&htim7) != HAL_OK){
+    Error_Handler();
+  } 
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -173,8 +210,16 @@ int main(void)
       chunkReady = false;
     }
     if(knobValuesReady){
+      ps.knobA = (float)knobValueBuf[0] / 4096.0f;
+      ps.knobB = (float)knobValueBuf[1] / 4096.0f;
+      ps.knobC = (float)knobValueBuf[2] / 4096.0f;
       knobValuesReady = false;
       startKnobADC();
+    }
+    if(ledUpdateDue()){
+      // check the bypass switch while we're here
+      ps.fxEngaged = HAL_GPIO_ReadPin(BYP_GPIO_Port, BYP_Pin);
+      updateLedData(PedalState_getLedData(&ps));
     }
     /* USER CODE END WHILE */
 
@@ -529,9 +574,9 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 99;
+  htim3.Init.Prescaler = 287;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 54999;
+  htim3.Init.Period = 49999;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
@@ -597,6 +642,44 @@ static void MX_TIM4_Init(void)
   /* USER CODE BEGIN TIM4_Init 2 */
 
   /* USER CODE END TIM4_Init 2 */
+
+}
+
+/**
+  * @brief TIM7 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM7_Init(void)
+{
+
+  /* USER CODE BEGIN TIM7_Init 0 */
+
+  /* USER CODE END TIM7_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM7_Init 1 */
+
+  /* USER CODE END TIM7_Init 1 */
+  htim7.Instance = TIM7;
+  htim7.Init.Prescaler = 23;
+  htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim7.Init.Period = 59999;
+  htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim7, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM7_Init 2 */
+
+  /* USER CODE END TIM7_Init 2 */
 
 }
 
@@ -724,6 +807,16 @@ void startKnobADC(){
   HAL_StatusTypeDef adcStatus = HAL_ADC_Start_DMA(&hadc1, (uint32_t*)knobValueBuf, 3);
   if(adcStatus != HAL_OK){
     Error_Handler();
+  }
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+  if(htim == &htim7){
+    if(algSwitchDebounce()){
+      ps.algIdx = (ps.algIdx + 1) % 6;
+    }
+  } else if (htim == &htim3){
+    ledUpdateNeeded = true;
   }
 }
 /* USER CODE END 4 */

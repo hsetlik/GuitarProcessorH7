@@ -58,6 +58,10 @@ void Error_Handler(void);
 /* USER CODE BEGIN EFP */
 // wire the processing business into here
 void processChunk(isample_t* inBuf, isample_t* outBuf, uint32_t length);
+
+// stuff for driving the LEDs
+bool ledUpdateDue();
+void updateLedData(uint8_t data);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -93,6 +97,8 @@ void processChunk(isample_t* inBuf, isample_t* outBuf, uint32_t length);
 /* USER CODE BEGIN Private defines */
 extern I2C_HandleTypeDef hi2c2;
 extern I2S_HandleTypeDef hi2s1;
+extern SPI_HandleTypeDef hspi2;
+#define LED_SPI hspi2
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
