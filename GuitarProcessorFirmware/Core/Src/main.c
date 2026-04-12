@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "stm32h7xx_hal.h"
 #include "stm32h7xx_hal_adc.h"
 #include "stm32h7xx_hal_adc_ex.h"
 #include "stm32h7xx_hal_def.h"
@@ -64,9 +65,10 @@ TIM_HandleTypeDef htim7;
 
 /* USER CODE BEGIN PV */
 // buffers for the input & output audio streams
-isample_t adcBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buf")));
+isample_t adcBuf[AUDIO_BUF_SIZE * 4] __attribute__((section(".dma_buf")));
 float inputBuf[AUDIO_BUF_SIZE] __attribute__((section(".dma_buf")));
-isample_t dacBuf[AUDIO_BUF_SIZE * 2] __attribute__((section(".dma_buf")));
+float outputBuf[AUDIO_BUF_SIZE] __attribute__((section(".dma_buf")));
+isample_t dacBuf[AUDIO_BUF_SIZE * 4] __attribute__((section(".dma_buf")));
 static isample_t* adcPtr = adcBuf;
 static isample_t* dacPtr = dacBuf;
 volatile bool chunkReady = false;
@@ -97,7 +99,7 @@ static void MX_TIM7_Init(void);
 /* USER CODE BEGIN PFP */
 void startKnobADC();
 void loadInputBuf(isample_t* ptr);
-void loadOutputBuf(isample_t* dac, float* fBuf);
+void loadOutputBuf(isample_t* dac);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -171,7 +173,7 @@ int main(void)
 
   HAL_Delay(150);
 
-  HAL_StatusTypeDef dmaStatus = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacBuf, (uint16_t*)adcBuf, AUDIO_BUF_SIZE * 4);
+  HAL_StatusTypeDef dmaStatus = HAL_I2SEx_TransmitReceive_DMA(&hi2s1, (uint16_t*)dacBuf, (uint16_t*)adcBuf, AUDIO_BUF_SIZE * sizeof(isample_t));
   if(dmaStatus != HAL_OK){
     Error_Handler();
   }
@@ -196,7 +198,7 @@ int main(void)
   if(HAL_TIM_Base_Start_IT(&htim3) != HAL_OK){
     Error_Handler();
   }
-
+  HAL_Delay(350);
    // start the timer for checking the algorithm button
   if(HAL_TIM_Base_Start_IT(&htim7) != HAL_OK){
     Error_Handler();
@@ -210,7 +212,8 @@ int main(void)
     if(chunkReady){
       //do processing here
       loadInputBuf(adcPtr);
-      processChunk(adcPtr, dacPtr, AUDIO_BUF_SIZE);
+      processChunk(inputBuf, outputBuf, AUDIO_BUF_SIZE);
+      loadOutputBuf(dacPtr);
       chunkReady = false;
     }
     if(knobValuesReady){
@@ -493,7 +496,7 @@ static void MX_I2S1_Init(void)
   hi2s1.Instance = SPI1;
   hi2s1.Init.Mode = I2S_MODE_MASTER_FULLDUPLEX;
   hi2s1.Init.Standard = I2S_STANDARD_PHILIPS;
-  hi2s1.Init.DataFormat = I2S_DATAFORMAT_16B_EXTENDED;
+  hi2s1.Init.DataFormat = I2S_DATAFORMAT_24B;
   hi2s1.Init.MCLKOutput = I2S_MCLKOUTPUT_ENABLE;
   hi2s1.Init.AudioFreq = I2S_AUDIOFREQ_48K;
   hi2s1.Init.CPOL = I2S_CPOL_LOW;
@@ -770,8 +773,8 @@ void HAL_I2SEx_TxRxCpltCallback(I2S_HandleTypeDef *i2s) {
   // if(chunkReady){
   //   Error_Handler();
   // }
-	adcPtr = &adcBuf[AUDIO_BUF_SIZE];
-	dacPtr = &dacBuf[AUDIO_BUF_SIZE];
+	adcPtr = &adcBuf[AUDIO_BUF_SIZE * 2];
+	dacPtr = &dacBuf[AUDIO_BUF_SIZE * 2];
   chunkReady = true;
 }
 
@@ -789,28 +792,31 @@ void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef *i2s) {
 // }
 
 
-void processChunk(isample_t* inBuf, isample_t* outBuf, uint32_t length){
+void processChunk(float* inBuf, float* outBuf, uint32_t length){
   // just copy input to output 
   for(uint32_t i = 0; i < length; ++i){
     outBuf[i] = inBuf[i];
   }
 }
 
-static inline float sampleToFloat_signed(isample_t value){
-  return (float)((int16_t)(value >> 16)) / 32768.0f;
+static inline float sampleToFloat(isample_t value){
+    return (float)value / 2147483648.0f;  // 2^31
 }
 
-
+static inline isample_t floatToSample(float value){
+  return (isample_t)(value * 2147483648.0f);
+}
 
 void loadInputBuf(isample_t* ptr){
   for(uint32_t i = 0; i < AUDIO_BUF_SIZE; ++i){
-    inputBuf[i] = sampleToFloat_signed(ptr[i]);
+    inputBuf[i] = sampleToFloat(ptr[(i * 2) + 1]);
   }
 }
 
-
-void loadOutputBuf(isample_t* dac, float* fBuf){
-  
+void loadOutputBuf(isample_t* dac){
+  for(uint32_t i = 0; i < AUDIO_BUF_SIZE; ++i){
+    dac[(i * 2) + 1] = floatToSample(outputBuf[i]);
+  } 
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
@@ -834,6 +840,7 @@ void startKnobADC(){
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
   if(htim == &htim7){
     if(algSwitchDebounce()){
+      //uint32_t tick = HAL_GetTick();
       ps.algIdx = (ps.algIdx + 1) % 6;
     }
   } else if (htim == &htim3){

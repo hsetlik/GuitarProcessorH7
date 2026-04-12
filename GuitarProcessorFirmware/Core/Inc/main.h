@@ -22,6 +22,7 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
+#include <stdint.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,6 +48,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define AUDIO_BUF_SIZE 256
+#define AUDIO_SAMPLE_RATE 46875.0f
 
 #define isample_t int32_t
 
@@ -57,7 +59,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 // wire the processing business into here
-void processChunk(isample_t* inBuf, isample_t* outBuf, uint32_t length);
+void processChunk(float* inBuf, float* outBuf, uint32_t length);
 
 // stuff for driving the LEDs
 bool ledUpdateDue();
