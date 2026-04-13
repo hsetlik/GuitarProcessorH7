@@ -1,4 +1,6 @@
 #include "DelayLine.h"
+#include <memory>
+#include "AXISRAMPool.h"
 
 uint16_t neededBufSize(uint16_t delay) {
 	uint16_t sigBits = 0;
@@ -17,7 +19,7 @@ void DelayLine::init(uint16_t size) {
 	maxDelay = size;
 	length = neededBufSize(maxDelay);
 	// allocate the buffer
-	data = new float[length];
+	data = AXISRAMPool::alloc(length);
 	// initialize the bitmask
 	mask = length - 1;
 	// set the main delay tap to max
@@ -29,7 +31,6 @@ void DelayLine::setDelay(uint8_t tap, uint16_t delay) {
 }
 
 DelayLine::~DelayLine() {
-	delete[] data;
 }
 
 float DelayLine::process(uint16_t cycle, float input) {

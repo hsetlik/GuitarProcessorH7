@@ -1,5 +1,6 @@
 #ifndef INC_DELAYLINE_H_
 #define INC_DELAYLINE_H_
+#include <memory>
 #include "main.h"
 
 enum {

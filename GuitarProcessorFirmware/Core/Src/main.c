@@ -74,6 +74,7 @@ static isample_t* adcPtr = adcBuf;
 static isample_t* dacPtr = dacBuf;
 volatile bool chunkReady = false;
 volatile bool ledUpdateNeeded = false;
+volatile bool processRunning = false;
 
 // knob values and ADC buffer
 volatile uint16_t knobValueBuf[3] __attribute__((section(".dma_buf")));
@@ -218,7 +219,9 @@ int main(void)
     if(chunkReady){
       //do processing here
       loadInputBuf(adcPtr);
+      processRunning = true;
       process_fx(fx, inputBuf, outputBuf, AUDIO_BUF_SIZE);
+      processRunning = false;
       loadOutputBuf(dacPtr);
       chunkReady = false;
     }
@@ -777,18 +780,18 @@ static void MX_GPIO_Init(void)
 
 // I2S callbacks===================================
 void HAL_I2SEx_TxRxCpltCallback(I2S_HandleTypeDef *i2s) {
-  // if(chunkReady){
-  //   Error_Handler();
-  // }
+  if(processRunning){
+    Error_Handler();
+  }
 	adcPtr = &adcBuf[AUDIO_BUF_SIZE * 2];
 	dacPtr = &dacBuf[AUDIO_BUF_SIZE * 2];
   chunkReady = true;
 }
 
 void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef *i2s) {
-  // if(chunkReady){
-  //   Error_Handler();
-  // }
+  if(processRunning){
+    Error_Handler();
+  }
 	adcPtr = &adcBuf[0];
 	dacPtr = &dacBuf[0];
   chunkReady = true;
@@ -797,11 +800,6 @@ void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef *i2s) {
 // void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s){
 //   uint32_t errCode = HAL_I2S_GetError(hi2s);
 // }
-
-
-void processChunk(float* inBuf, float* outBuf, uint32_t length){
-  process_fx(fx, inBuf, outBuf, length);
-}
 
 static inline float sampleToFloat(isample_t value){
     return (float)value / 2147483648.0f;  // 2^31

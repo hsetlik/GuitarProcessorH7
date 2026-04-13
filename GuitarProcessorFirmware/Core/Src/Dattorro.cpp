@@ -1,11 +1,13 @@
 #include "Dattorro.h"
 #include <algorithm>
+#include "AXISRAMPool.h"
+#include "main.h"
 // filter helpers
-float LP_process(float* out, float in, float freq) {
+static inline float LP_process(float* out, float in, float freq) {
 	*out += (in - *out) * freq;
 	return *out;
 }
-float AP_process(DelayLine *dl, uint16_t cycle, float gain, float in) {
+static inline float AP_process(DelayLine *dl, uint16_t cycle, float gain, float in) {
 	float delayed = dl->read(0, cycle);
 	in += delayed * -gain;
 	dl->write(cycle, in);
@@ -13,6 +15,9 @@ float AP_process(DelayLine *dl, uint16_t cycle, float gain, float in) {
 }
 
 Dattorro::Dattorro() {
+	if(AXISRAMPool::poolInUse()){
+		Error_Handler();
+	}
 	// Initialize the delay buffers w the numbers from Dattorro's paper
 	preDelay.init(MAX_PREDELAY);
 	// input diffusion delays
@@ -64,12 +69,16 @@ Dattorro::Dattorro() {
 
 }
 
+Dattorro::~Dattorro(){
+	AXISRAMPool::freePool();
+}
+
 // the main algorithm
 void Dattorro::processIn(float input) {
 	// modulate decayDiffusion1 for both tanks
-	if(std::isnan(input)){
-		Error_Handler();
-	}
+	// if(std::isnan(input)){
+	// 	Error_Handler();
+	// }
 	if ((t & 0x07ff) == 0) {
 		if (t < (1 << 15)) {
 			decayDiffusion1[0].offsets[0]--;
@@ -134,6 +143,10 @@ float Dattorro::processMono(float in){
 }
 
 //=========================================================
+
+Dattorro1Alg::Dattorro1Alg() : verb(){
+
+}
 
 void Dattorro1Alg::processChunk(float* inBuf, float* outBuf, uint32_t numSamples){
 	for(uint32_t i = 0; i < numSamples; ++i){

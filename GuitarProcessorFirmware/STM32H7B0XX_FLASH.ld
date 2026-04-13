@@ -247,6 +247,14 @@ KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
   } >RAM
 
+  /* Large audio buffers placed explicitly in AXI SRAM (e.g. delay line pools) */
+  .AXI_SRAM (NOLOAD) : ALIGN(4)
+  {
+    *(.AXI_SRAM)
+    *(.AXI_SRAM*)
+    . = ALIGN(4);
+  } >RAM
+
   /* Remove information from the standard libraries */
   /DISCARD/ :
   {

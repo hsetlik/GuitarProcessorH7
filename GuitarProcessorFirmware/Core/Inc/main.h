@@ -57,8 +57,7 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-// wire the processing business into here
-void processChunk(float* inBuf, float* outBuf, uint32_t length);
+
 
 // stuff for driving the LEDs
 bool ledUpdateDue();

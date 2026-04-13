@@ -40,6 +40,7 @@ public:
 	float decayAmt;
 	//=====================================================
 	Dattorro();
+	~Dattorro();
 	float processMono(float input);
 private:
 	//
@@ -53,8 +54,7 @@ class Dattorro1Alg : public FxAlgorithm {
 private:
     Dattorro verb;
 public:
-    Dattorro1Alg(){
-    }
+    Dattorro1Alg();
     ~Dattorro1Alg() override{}
     void processChunk(float* inBuf, float* outBuf, uint32_t numSamples) override;
     void updateParams(pedal_state_t* ps) override;

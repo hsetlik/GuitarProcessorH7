@@ -21,7 +21,6 @@ public:
     void updateParams(pedal_state_t* ps) override;
 };
 
-
 class FxProcessor {
 private:
     std::unique_ptr<FxAlgorithm> alg;

@@ -22,7 +22,7 @@ uint8_t PedalState_getLedData(pedal_state_t* ps) {
 	 * 6: Tempo
 	 * 7: Bypass
 	 * */
-	uint8_t byte = 0x00;
+	uint8_t byte = 0b01000000;
 	// switch the appropriate alg. LED on
 	uint8_t mask = 0x01 << (5 - ps->algIdx);
 	byte = byte | mask;
