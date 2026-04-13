@@ -111,7 +111,7 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	settings[idx] = (tlv_register_t){TLV_MADC_pg, TLV_MADC_reg, 0b10000010};
 	++idx;
 	// set audio word length
-	settings[idx] = (tlv_register_t){TLV_audioIntSetting1_pg, TLV_audioIntSetting1_reg, TLV_wordLength_24};
+	settings[idx] = (tlv_register_t){TLV_audioIntSetting1_pg, TLV_audioIntSetting1_reg, TLV_wordLength_32};
 	++idx;
 	// bit clock offset
 //	settings[idx] = (tlv_register_t){TLV_audioBitOffset_pg, TLV_audioBitOffset_reg, 5};
