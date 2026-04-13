@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <memory>
 #include "FxAlgorithm.h"
+#include "Dattorro.h"
 
 class TransparentAlgorithm : public FxAlgorithm {
 public:

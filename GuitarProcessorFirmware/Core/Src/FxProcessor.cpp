@@ -1,4 +1,5 @@
 #include "FxProcessor.h"
+#include "Dattorro.h"
 #include "FxAlgorithm.h"
 
 void TransparentAlgorithm::processChunk(float* inBuf, float* outBuf, uint32_t length){
@@ -18,8 +19,11 @@ FxProcessor::FxProcessor() : alg(std::make_unique<TransparentAlgorithm>()), algI
 }
 
 void FxProcessor::prepareAlgorithm(){
-    //TODO: eventually this should instantiate a specific algorithm based on `algIdx`
-    alg.reset(new TransparentAlgorithm());
+    if(algIdx == 1){
+        alg.reset(new Dattorro1Alg());
+    } else {
+        alg.reset(new TransparentAlgorithm());
+    }
 }
 
 void FxProcessor::processChunk(float* in, float* out, uint32_t numSamples){

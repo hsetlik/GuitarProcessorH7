@@ -56,6 +56,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${SRC_DIR}/FxAlgorithm.cpp
     ${SRC_DIR}/FxProcessor.cpp
     ${SRC_DIR}/DelayLine.cpp
+    ${SRC_DIR}/Dattorro.cpp
 )
 
 # Add include paths

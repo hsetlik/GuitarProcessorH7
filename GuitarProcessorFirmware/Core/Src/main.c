@@ -121,7 +121,7 @@ bool algSwitchDebounce(){
 	static uint16_t switchStates = 0xFFFF;
 	switchStates = (switchStates << 1)
 			| HAL_GPIO_ReadPin(MODE_GPIO_Port, MODE_Pin);
-	return switchStates == 0x000F;
+	return switchStates == 0xFFF0;
 }
 
 /* USER CODE END 0 */
