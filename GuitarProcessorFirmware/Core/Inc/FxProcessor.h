@@ -8,6 +8,7 @@
 #include <memory>
 #include "FxAlgorithm.h"
 #include "Dattorro.h"
+#include "Schroeder.h"
 
 class TransparentAlgorithm : public FxAlgorithm {
 public:

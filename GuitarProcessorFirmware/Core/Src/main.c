@@ -67,8 +67,8 @@ TIM_HandleTypeDef htim7;
 /* USER CODE BEGIN PV */
 // buffers for the input & output audio streams
 isample_t adcBuf[AUDIO_BUF_SIZE * 4] __attribute__((section(".dma_buf")));
-float inputBuf[AUDIO_BUF_SIZE] __attribute__((section(".dma_buf")));
-float outputBuf[AUDIO_BUF_SIZE] __attribute__((section(".dma_buf")));
+float inputBuf[AUDIO_BUF_SIZE];
+float outputBuf[AUDIO_BUF_SIZE];
 isample_t dacBuf[AUDIO_BUF_SIZE * 4] __attribute__((section(".dma_buf")));
 static isample_t* adcPtr = adcBuf;
 static isample_t* dacPtr = dacBuf;
@@ -591,7 +591,7 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 287;
+  htim3.Init.Prescaler = 431;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 49999;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -636,7 +636,7 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 287;
+  htim4.Init.Prescaler = 431;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim4.Init.Period = 49999;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -680,7 +680,7 @@ static void MX_TIM7_Init(void)
 
   /* USER CODE END TIM7_Init 1 */
   htim7.Instance = TIM7;
-  htim7.Init.Prescaler = 23;
+  htim7.Init.Prescaler = 35;
   htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim7.Init.Period = 53999;
   htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;

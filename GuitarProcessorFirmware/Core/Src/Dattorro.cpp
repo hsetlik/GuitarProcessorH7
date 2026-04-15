@@ -1,6 +1,5 @@
 #include "Dattorro.h"
 #include <algorithm>
-#include "AXISRAMPool.h"
 #include "main.h"
 // filter helpers
 static inline float LP_process(float* out, float in, float freq) {

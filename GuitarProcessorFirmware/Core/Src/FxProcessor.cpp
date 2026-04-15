@@ -1,6 +1,7 @@
 #include "FxProcessor.h"
 #include "Dattorro.h"
 #include "FxAlgorithm.h"
+#include "Schroeder.h"
 
 void TransparentAlgorithm::processChunk(float* inBuf, float* outBuf, uint32_t length){
     for(uint32_t i = 0; i < length; ++i){
@@ -20,7 +21,7 @@ FxProcessor::FxProcessor() : alg(std::make_unique<TransparentAlgorithm>()), algI
 
 void FxProcessor::prepareAlgorithm(){
     if(algIdx == 1){
-        alg.reset(new Dattorro1Alg());
+        alg.reset(new SchroederAlg());
     } else {
         alg.reset(new TransparentAlgorithm());
     }

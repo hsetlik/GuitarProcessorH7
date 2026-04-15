@@ -6,7 +6,7 @@
  * largely a C++-ified version of the 'dattorro-verb' C implementation:
  * https://github.com/el-visio/dattorro-verb
  * */
-
+#include "AXISRAMPool.h"
 #ifdef __cplusplus
 #include "DelayLine.h"
 #include "FxAlgorithm.h"
