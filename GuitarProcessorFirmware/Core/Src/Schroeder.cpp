@@ -1,9 +1,20 @@
 #include "Schroeder.h"
 #include <cstdint>
 #include "AXISRAMPool.h"
+#define WET_MIN 0.2f
+#define WET_MAX 0.95f
+#define FB_MIN 0.5f
+#define FB_MAX 0.95f
+#define DAMP_MIN 0.1f
+#define DAMP_MAX 0.85f
+static inline float flerp(float a, float b, float prop){
+    return a + ((b - a) * prop);
+}
 
 static const uint32_t COMB_LENGTHS[]   = {1116, 1188, 1277, 1356};
 static const uint32_t ALLPASS_LENGTHS[] = {556, 441};
+
+
 
 SchroederAlg::SchroederAlg(){
     for(uint16_t i = 0; i < NUM_COMBS; ++i){
@@ -71,5 +82,7 @@ void SchroederAlg::processChunk(float* inBuf, float* outBuf, uint32_t numSamples
 }
 
 void SchroederAlg::updateParams(pedal_state_t* ps){
-    //TODO: update stuff here
+   feedback = flerp(FB_MIN, FB_MAX, ps->knobA); 
+   damping = flerp(DAMP_MIN, DAMP_MAX, ps->knobB); 
+   wetLvl = flerp(WET_MIN, WET_MAX, ps->knobC); 
 }
