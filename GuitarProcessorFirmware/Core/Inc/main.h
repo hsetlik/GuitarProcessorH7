@@ -69,36 +69,42 @@ void updateLedData(uint8_t data);
 #define ADC_C_GPIO_Port GPIOC
 #define ADC_B_Pin GPIO_PIN_1
 #define ADC_B_GPIO_Port GPIOC
+#define ADC_D_Pin GPIO_PIN_0
+#define ADC_D_GPIO_Port GPIOA
 #define ADC_A_Pin GPIO_PIN_2
 #define ADC_A_GPIO_Port GPIOA
+#define LED_LATCH_Pin GPIO_PIN_4
+#define LED_LATCH_GPIO_Port GPIOA
+#define LED_CLK_Pin GPIO_PIN_5
+#define LED_CLK_GPIO_Port GPIOA
+#define LED_DATA_Pin GPIO_PIN_7
+#define LED_DATA_GPIO_Port GPIOA
+#define LED_NRST_Pin GPIO_PIN_4
+#define LED_NRST_GPIO_Port GPIOC
+#define SW_1_Pin GPIO_PIN_2
+#define SW_1_GPIO_Port GPIOB
+#define SW_2_Pin GPIO_PIN_7
+#define SW_2_GPIO_Port GPIOE
 #define CODEC_NRST_Pin GPIO_PIN_15
 #define CODEC_NRST_GPIO_Port GPIOE
 #define CODEC_SCL_Pin GPIO_PIN_10
 #define CODEC_SCL_GPIO_Port GPIOB
 #define CODEC_SDA_Pin GPIO_PIN_11
 #define CODEC_SDA_GPIO_Port GPIOB
-#define LED_LATCH_Pin GPIO_PIN_12
-#define LED_LATCH_GPIO_Port GPIOB
-#define LED_SCK_Pin GPIO_PIN_13
-#define LED_SCK_GPIO_Port GPIOB
-#define LED_NRST_Pin GPIO_PIN_14
-#define LED_NRST_GPIO_Port GPIOB
-#define LED_DATA_Pin GPIO_PIN_15
-#define LED_DATA_GPIO_Port GPIOB
+#define MODE_Pin GPIO_PIN_8
+#define MODE_GPIO_Port GPIOC
 #define BYP_Pin GPIO_PIN_9
-#define BYP_GPIO_Port GPIOA
-#define MODE_Pin GPIO_PIN_10
-#define MODE_GPIO_Port GPIOA
-#define DISP_SCL_Pin GPIO_PIN_6
-#define DISP_SCL_GPIO_Port GPIOB
-#define DISP_SDA_Pin GPIO_PIN_7
-#define DISP_SDA_GPIO_Port GPIOB
+#define BYP_GPIO_Port GPIOC
+#define DBG1_Pin GPIO_PIN_1
+#define DBG1_GPIO_Port GPIOD
+#define DBG2_Pin GPIO_PIN_2
+#define DBG2_GPIO_Port GPIOD
 
 /* USER CODE BEGIN Private defines */
 extern I2C_HandleTypeDef hi2c2;
-extern I2S_HandleTypeDef hi2s1;
-extern SPI_HandleTypeDef hspi2;
-#define LED_SPI hspi2
+extern I2S_HandleTypeDef hi2s2;
+extern SPI_HandleTypeDef hspi1;
+#define LED_SPI hspi1
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

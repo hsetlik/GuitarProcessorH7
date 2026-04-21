@@ -13,7 +13,7 @@
 
 #define TLV_DEVICE_ADDR (uint16_t)(0x18 << 1)
 #define TLV_I2C hi2c2
-#define TLV_I2S hi2s1
+#define TLV_I2S hi2s2
 #define TLV_NRST_GPIO_Port CODEC_NRST_GPIO_Port
 #define TLV_NRST_Pin CODEC_NRST_Pin
 #define I2C_USE_MEM_WRITE
@@ -64,14 +64,14 @@ extern "C" {
 #define TLV_rightHPOut_powerOn 0b00000010
 
 //==============================================================================================
-// sets the device common mode voltage. `commonMode` should be either `TLV_commonMode_075` or `TLV_commonMode_09`
-//void TLV_setCommonMode(uint8_t commonMode, tlv_register_list* list);
 
 
 // does the main work of setting up registers. Should be called after initializing I2C but before starting the DMA loop
 HAL_StatusTypeDef TLV_initCodec(tlv_register_t* settings, uint16_t size);
 
 HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
+
+HAL_StatusTypeDef TLV_quickInit_stereoGuitarPedal();
 
 void TLV_checkFlags();
 

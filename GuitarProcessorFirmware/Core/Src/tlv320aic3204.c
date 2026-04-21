@@ -122,16 +122,16 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 
 	// use the internal LDOs
 	settings[idx] = (tlv_register_t){TLV_ldoControl_pg, TLV_ldoControl_reg, 0x01};
-	idx++;
+	++idx;
 	// set up common mode voltages
 	settings[idx] = (tlv_register_t){TLV_commonModeControl_pg, TLV_commonModeControl_reg, TLV_commonMode_075};
 	++idx;
 	// set the analog quick charge time to 3.1ms
 	settings[idx] = (tlv_register_t){TLV_analogQuickCharge_pg, TLV_analogQuickCharge_reg, 0b00110001};
-	idx++;
+	++idx;
 	// set the reference charging time to 40ms
 	settings[idx] = (tlv_register_t){TLV_refBootTime_pg, TLV_refBootTime_reg, 0x01};
-	idx++;
+	++idx;
 
 
 	// our differential input circuit will use the right MICPGA, with IN1_R routed to the
@@ -139,19 +139,19 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 
 	// IN1_R gets routed to the pos. input with 20k input impedance
 	settings[idx] = (tlv_register_t){TLV_rightMICPGAPosRouting_pg, TLV_rightMICPGAPosRouting_reg, 0x80};
-	idx++;
+	++idx;
 	// IN1_L gets routed to the neg. input also via 20k input impedance
 	settings[idx] = (tlv_register_t){TLV_rightMICPGANegRouting_pg, TLV_rightMICPGANegRouting_reg, 0b01010000};
-	idx++;
+	++idx;
 	// unmute right MICPGA and set unity gain
 	settings[idx] = (tlv_register_t){TLV_rightMICPGAGain_pg, TLV_rightMICPGAGain_reg, 0x0C};
-	idx++;
+	++idx;
 	// power on right ADC channel
 	settings[idx] = (tlv_register_t){TLV_adcChannelSetup_pg, TLV_adcChannelSetup_reg, 0b01000000};
-	idx++;
+	++idx;
 	// unmute the right ADC vis fine gain adjust
 	settings[idx] = (tlv_register_t){TLV_adcFineGainAdjust_pg, TLV_adcFineGainAdjust_reg, 0b10000000};
-	idx++;
+	++idx;
 
 	// DAC setup stuff------------------------------------------------------
 	// Per the application note, the the master input clock (12.288 Mhz) is equal to NDAC * MDAC * DOSR
@@ -194,9 +194,117 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal(){
 	// run the init
 	return TLV_initCodec(settings, idx);
 
+}
 
+// Stereo setup------------------------------------------------------------------------------------------
+HAL_StatusTypeDef TLV_quickInit_stereoGuitarPedal(){
+	uint16_t idx = 0;
+	tlv_register_t settings[100];
+	// setup based on TI's application note SLA557: https://www.ti.com/lit/ml/slaa557/slaa557.pdf?ts=1752009023928
+	// and the register map from p. 35-39 of the datasheet: https://www.ti.com/lit/ds/symlink/tlv320aic3204.pdf?ts=1752054663881&ref_url=https%253A%252F%252Fwww.mouser.fr%252F
+
+	// ADC setup stuff-----------------------------------------
+	// set NADC divider to 1
+	settings[idx] = (tlv_register_t){TLV_NADC_pg, TLV_NADC_reg, 0b10000001};
+	++idx;
+	// set MADC divider to 2
+	settings[idx] = (tlv_register_t){TLV_MADC_pg, TLV_MADC_reg, 0b10000010};
+	++idx;
+	// set audio word length
+	settings[idx] = (tlv_register_t){TLV_audioIntSetting1_pg, TLV_audioIntSetting1_reg, TLV_wordLength_32};
+	++idx;
+
+	// set ADC oversampling to 128
+	settings[idx] = (tlv_register_t){TLV_adcOversampling_pg, TLV_adcOversampling_reg, 0x80};
+	++idx;
+
+	// use the internal LDOs
+	settings[idx] = (tlv_register_t){TLV_ldoControl_pg, TLV_ldoControl_reg, 0x01};
+	++idx;
+	// set up common mode voltages
+	settings[idx] = (tlv_register_t){TLV_commonModeControl_pg, TLV_commonModeControl_reg, TLV_commonMode_075};
+	++idx;
+	// set the analog quick charge time to 3.1ms
+	settings[idx] = (tlv_register_t){TLV_analogQuickCharge_pg, TLV_analogQuickCharge_reg, 0b00110001};
+	++idx;
+	// set the reference charging time to 40ms
+	settings[idx] = (tlv_register_t){TLV_refBootTime_pg, TLV_refBootTime_reg, 0x01};
+	++idx;
+
+	// Right channel input setup-
+	// differential input to right MICPGA, with IN1_R routed to the
+	// positive input and IN1_L to the negative
+	// IN1_R gets routed to the pos. input with 20k input impedance
+	settings[idx] = (tlv_register_t){TLV_rightMICPGAPosRouting_pg, TLV_rightMICPGAPosRouting_reg, 0b10000000};
+	++idx;
+	// IN1_L gets routed to the neg. input also via 20k input impedance
+	settings[idx] = (tlv_register_t){TLV_rightMICPGANegRouting_pg, TLV_rightMICPGANegRouting_reg, 0b01010000};
+	++idx;
+	// unmute right MICPGA and set unity gain
+	settings[idx] = (tlv_register_t){TLV_rightMICPGAGain_pg, TLV_rightMICPGAGain_reg, 0x00};
+	++idx;
+
+	// Left channel input, similar setup to above-
+	// IN2_L goes to positive terminal @ 20k	
+	settings[idx] = (tlv_register_t){TLV_leftMICPGAPosRouting_pg, TLV_leftMICPGAPosRouting_reg, 0b00100000};
+	++idx;
+	// IN2_R goes to negative terminal @ 20k
+	settings[idx] = (tlv_register_t){TLV_leftMICPGANegRouting_pg, TLV_leftMICPGANegRouting_reg, 0b00100000};
+	++idx;
+	// unmute left MICPGA and set unity gain
+	settings[idx] = (tlv_register_t){TLV_leftMICPGAVolumeControl_pg, TLV_leftMICPGAVolumeControl_reg, 0x00};
+	++idx;
+	// power on both ADC channels
+	settings[idx] = (tlv_register_t){TLV_adcChannelSetup_pg, TLV_adcChannelSetup_reg, 0b11000000};
+	++idx;
+	// unmute both ADCs via fine gain adjust
+	settings[idx] = (tlv_register_t){TLV_adcFineGainAdjust_pg, TLV_adcFineGainAdjust_reg, 0b00000000};
+	++idx;
+
+	// DAC setup stuff------------------------------------------------------
+	// Per the application note, the the master input clock (12.288 Mhz) is equal to NDAC * MDAC * DOSR
+	// set NDAC divider to 2
+	settings[idx] = (tlv_register_t){TLV_NDAC_pg, TLV_NDAC_reg, 0b10000010};
+	++idx;
+	// set MDAC divider to 2
+	settings[idx] = (tlv_register_t){TLV_MDAC_pg, TLV_MDAC_reg, 0b10000010};
+	++idx;
+	// set the DAC OSR to 128
+	settings[idx] = (tlv_register_t){TLV_DACOSR1_pg, TLV_DACOSR1_reg, 0x00};
+	++idx;
+	settings[idx] = (tlv_register_t){TLV_DACOSR2_pg, TLV_DACOSR2_reg, 0x80};
+	++idx;
+	// select PRB_R5
+	//settings[idx] = (tlv_register_t){TLV_dacSignalProcessingBlock_pg, TLV_dacSignalProcessingBlock_reg, 0x05};
+	//++idx;
+	// route left DAC to left line out
+	settings[idx] = (tlv_register_t){TLV_lolRouting_pg, TLV_lolRouting_reg, 0b00001000};
+	++idx;
+	// route right DAC to right line out
+	settings[idx] = (tlv_register_t){TLV_lorRouting_pg, TLV_lorRouting_reg, 0b00001000};
+	++idx;
+	// unmute LOL driver and set gain to -6db
+	settings[idx] = (tlv_register_t){TLV_lolDriverGain_pg, TLV_lolDriverGain_reg, 0x3A};
+	++idx;
+	// unmute LOR driver and set gain to -6db
+	settings[idx] = (tlv_register_t){TLV_lorDriverGain_pg, TLV_lorDriverGain_reg, 0x3A};
+	++idx;
+	// power up the left and right line out drivers
+	settings[idx] = (tlv_register_t){TLV_outputDriverPower_pg, TLV_outputDriverPower_reg, 0b00001100};
+	++idx;
+
+	// route & power up the DACs
+	settings[idx] = (tlv_register_t){TLV_dacChannelSetup1_pg, TLV_dacChannelSetup1_reg, 0b11010100};
+	++idx;
+	// unmute the DACs
+	settings[idx] = (tlv_register_t){TLV_dacChannelSetup2_pg, TLV_dacChannelSetup2_reg, 0b00000000};
+	++idx;
+	// run the init
+	return TLV_initCodec(settings, idx);
 
 }
+
+
 
 // troubleshooting stuff-------------------------------------------
 void TLV_checkFlags(){
