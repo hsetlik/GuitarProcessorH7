@@ -11,7 +11,8 @@ class FxAlgorithm {
 public:
     FxAlgorithm()=default;
     virtual ~FxAlgorithm();
-    virtual void processChunk(float* inBuf, float* outBuf, uint32_t numSamples)=0;
+    virtual void processChunkMono(float* inBuf, float* outBuf, uint32_t numSamples)=0;
+    virtual void processChunkStereo(float* inL, float* inR, float* outL, float* outR, uint32_t numSamples){}
     virtual void updateParams(pedal_state_t* ps)=0;
 };
 

@@ -18,7 +18,8 @@ public:
     ~TransparentAlgorithm() override {
 
     }
-    void processChunk(float* inBuf, float* outBuf, uint32_t numSamples) override;
+    void processChunkMono(float* inBuf, float* outBuf, uint32_t numSamples) override;
+    void processChunkStereo(float* inL, float* inR, float* outL, float* outR, uint32_t numSamples) override;
     void updateParams(pedal_state_t* ps) override;
 };
 
@@ -30,6 +31,7 @@ private:
 public:
     FxProcessor();
     void processChunk(float* in, float* out, uint32_t numSamples);
+    void processChunkStereo(float* inL, float* inR, float* outL, float* outR, uint32_t numSamples);
     void updateParams(pedal_state_t* ps);
 };
 

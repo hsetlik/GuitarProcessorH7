@@ -75,7 +75,7 @@ float SchroederAlg::processSample(float input){
     return (dry * (1.0f - wetLvl)) + (out * wetLvl);
 }
 
-void SchroederAlg::processChunk(float* inBuf, float* outBuf, uint32_t numSamples){
+void SchroederAlg::processChunkMono(float* inBuf, float* outBuf, uint32_t numSamples){
     for(uint32_t i = 0; i < numSamples; ++i){
         outBuf[i] = processSample(inBuf[i]);
     }

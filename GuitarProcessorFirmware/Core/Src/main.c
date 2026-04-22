@@ -66,7 +66,9 @@ TIM_HandleTypeDef htim7;
 // buffers for the input & output audio streams
 isample_t adcBuf[AUDIO_BUF_SIZE * 4] __attribute__((section(".dma_buf")));
 float inputBufLeft[AUDIO_BUF_SIZE];
+float inputBufRight[AUDIO_BUF_SIZE];
 float outputBufLeft[AUDIO_BUF_SIZE];
+float outputBufRight[AUDIO_BUF_SIZE];
 isample_t dacBuf[AUDIO_BUF_SIZE * 4] __attribute__((section(".dma_buf")));
 static isample_t* adcPtr = adcBuf;
 static isample_t* dacPtr = dacBuf;
@@ -777,12 +779,14 @@ static inline isample_t floatToSample(float value){
 void loadInputBuf(isample_t* ptr){
   for(uint32_t i = 0; i < AUDIO_BUF_SIZE; ++i){
     inputBufLeft[i] = sampleToFloat(ptr[(i * 2) + 1]);
+    inputBufRight[i] = sampleToFloat(ptr[(i * 2)]);
   }
 }
 
 void loadOutputBuf(isample_t* dac){
   for(uint32_t i = 0; i < AUDIO_BUF_SIZE; ++i){
     dac[(i * 2) + 1] = floatToSample(outputBufLeft[i]);
+    dac[(i * 2)] = floatToSample(outputBufRight[i]);
   } 
 }
 

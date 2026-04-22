@@ -3,9 +3,17 @@
 #include "FxAlgorithm.h"
 #include "Schroeder.h"
 
-void TransparentAlgorithm::processChunk(float* inBuf, float* outBuf, uint32_t length){
+void TransparentAlgorithm::processChunkMono(float* inBuf, float* outBuf, uint32_t length){
     for(uint32_t i = 0; i < length; ++i){
         outBuf[i] = inBuf[i];
+    }
+}
+
+
+void TransparentAlgorithm::processChunkStereo(float* inL, float* inR, float* outL, float* outR, uint32_t numSamples){
+    for(uint32_t i = 0; i < numSamples; ++i){
+        outL[i] = inL[i];
+        outR[i] = inR[i];
     }
 }
 
@@ -28,7 +36,12 @@ void FxProcessor::prepareAlgorithm(){
 }
 
 void FxProcessor::processChunk(float* in, float* out, uint32_t numSamples){
-    alg->processChunk(in, out, numSamples);
+    alg->processChunkMono(in, out, numSamples);
+}
+
+
+void FxProcessor::processChunkStereo(float* inL, float* inR, float* outL, float* outR, uint32_t numSamples){
+    alg->processChunkStereo(inL, inR, outL, outR, numSamples);
 }
 
 void FxProcessor::updateParams(pedal_state_t* ps){

@@ -147,7 +147,7 @@ Dattorro1Alg::Dattorro1Alg() : verb(){
 
 }
 
-void Dattorro1Alg::processChunk(float* inBuf, float* outBuf, uint32_t numSamples){
+void Dattorro1Alg::processChunkMono(float* inBuf, float* outBuf, uint32_t numSamples){
 	for(uint32_t i = 0; i < numSamples; ++i){
 		outBuf[i] = verb.processMono(inBuf[i]);
 	}
