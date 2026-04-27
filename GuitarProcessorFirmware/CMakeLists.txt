@@ -59,6 +59,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${SRC_DIR}/Dattorro.cpp
     ${SRC_DIR}/AXISRAMPool.cpp
     ${SRC_DIR}/Schroeder.cpp
+    ${SRC_DIR}/Freeverb.cpp
 )
 
 # Add include paths
