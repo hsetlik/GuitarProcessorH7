@@ -10,6 +10,7 @@ GuitarProcessorBoard/gerber
 GuitarProcessorBoard/*.zip
 GuitarProcessorBoard/*cache
 GuitarProcessorBoard/*.lck
+*/.history
 DSPPapers/*.zip
 
 
