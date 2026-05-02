@@ -8,6 +8,9 @@ typedef struct {
     float knobA;
     float knobB;
     float knobC;
+    float knobD;
+    bool switchA;
+    bool switchB;
 } pedal_state_t;
 
 // initializes the pedal state's values

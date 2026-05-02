@@ -25,6 +25,7 @@
 #include "stm32h7xx_hal_adc.h"
 #include "stm32h7xx_hal_adc_ex.h"
 #include "stm32h7xx_hal_def.h"
+#include "stm32h7xx_hal_gpio.h"
 #include "stm32h7xx_hal_tim.h"
 #include "tlv320aic3204.h"
 #include "PedalState.h"
@@ -77,7 +78,7 @@ volatile bool ledUpdateNeeded = false;
 volatile bool processRunning = false;
 
 // knob values and ADC buffer
-volatile uint16_t knobValueBuf[3] __attribute__((section(".dma_buf")));
+volatile uint16_t knobValueBuf[4] __attribute__((section(".dma_buf")));
 volatile bool knobValuesReady = false;
 
 // state
@@ -227,13 +228,16 @@ int main(void)
       ps.knobA = (float)knobValueBuf[0] / 4096.0f;
       ps.knobB = (float)knobValueBuf[1] / 4096.0f;
       ps.knobC = (float)knobValueBuf[2] / 4096.0f;
+      ps.knobD = (float)knobValueBuf[3] / 4096.0f;
       update_params(fx, &ps);
       knobValuesReady = false;
       startKnobADC();
     }
     if(ledUpdateDue()){
-      // check the bypass switch while we're here
+      // check the switches while we're here
       ps.fxEngaged = HAL_GPIO_ReadPin(BYP_GPIO_Port, BYP_Pin);
+      ps.switchA = HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin);
+      ps.switchB = HAL_GPIO_ReadPin(SW_2_GPIO_Port, SW_2_Pin);
       updateLedData(PedalState_getLedData(&ps));
     }
     /* USER CODE END WHILE */
@@ -332,7 +336,7 @@ static void MX_ADC1_Init(void)
   hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
-  hadc1.Init.NbrOfConversion = 3;
+  hadc1.Init.NbrOfConversion = 4;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T4_TRGO;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
@@ -355,7 +359,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_14;
+  sConfig.Channel = ADC_CHANNEL_11;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLETIME_387CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
@@ -369,7 +373,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_10;
+  sConfig.Channel = ADC_CHANNEL_16;
   sConfig.Rank = ADC_REGULAR_RANK_2;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -378,8 +382,17 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_11;
+  sConfig.Channel = ADC_CHANNEL_14;
   sConfig.Rank = ADC_REGULAR_RANK_3;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_10;
+  sConfig.Rank = ADC_REGULAR_RANK_4;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
