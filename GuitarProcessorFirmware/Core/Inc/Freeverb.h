@@ -1,12 +1,20 @@
 #ifndef FREEVERB_H
 #define FREEVERB_H
 
+#include <cstdint>
+#include "FxAlgorithm.h"
 #include "main.h"
 #ifdef __cplusplus
 
 // The lowpass feedback comb filter as described here: https://ccrma.stanford.edu/~jos/pasp/Lowpass_Feedback_Comb_Filter.html
 // code pretty similar to the freeverb implementation on the CCRMA website
 
+// Defines from the freeverb implementation
+#define NUM_COMBS 8
+#define NUM_ALLPASSES 4
+
+
+//=========================================================================
 class LBCF {
 private:
     float* buffer = nullptr;
@@ -57,6 +65,41 @@ public:
         head = (head + 1) % bufSize;
         return output;
     }
+};
+//======================================================================
+
+class FreeverbAlg : public FxAlgorithm {
+private:
+    // filter objects
+    LBCF combsLeft[NUM_COMBS];
+    LBCF combsRight[NUM_COMBS];
+    FVAllpass apLeft[NUM_ALLPASSES];
+    FVAllpass apRight[NUM_ALLPASSES];
+    // state variables
+    float gain;
+	float roomsize, roomsize1;
+	float damp, damp1;
+	float wet, wet1, wet2;
+	float dry;
+	float width;
+	float mode;
+    // parameter setting handlers
+    void setWet(float val);
+    void setRoomsize(float val);
+    void setDry(float val);
+    void setDamp(float val);
+    void setWidth(float val);
+    void setMode(float val);
+
+
+    void updateState();
+    void processSample(float input, float* outputL, float* outputR);
+public:
+    FreeverbAlg();
+    ~FreeverbAlg();
+    void processChunkMono(float* inBuf, float* outBuf, uint32_t numSamples) override;
+    void processChunkStereo(float* inL, float* inR, float* outL, float* outR, uint32_t numSamples) override;
+    void updateParams(pedal_state_t* ps) override;
 };
 
 #endif

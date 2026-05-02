@@ -1,6 +1,6 @@
 #include "AXISRAMPool.h"
 
-static constexpr size_t POOL_FLOATS = 45000; // ~180 KB, fits all delay lines
+static constexpr size_t POOL_FLOATS = 55000;
 
 __attribute__((section(".AXI_SRAM")))
 static float pool[POOL_FLOATS];
