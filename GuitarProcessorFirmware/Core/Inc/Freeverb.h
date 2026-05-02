@@ -1,7 +1,7 @@
 #ifndef FREEVERB_H
 #define FREEVERB_H
-#include "Denormals.h"
 
+#include "main.h"
 #ifdef __cplusplus
 
 // The lowpass feedback comb filter as described here: https://ccrma.stanford.edu/~jos/pasp/Lowpass_Feedback_Comb_Filter.html
@@ -27,8 +27,8 @@ public:
         feedback = val;
     }
     inline float process(float input){
-        float output = undenormalize(buffer[head]);
-        filterState = undenormalize((output * damp2) + (filterState * damp1));
+        float output = buffer[head];
+        filterState = (output * damp2) + (filterState * damp1);
         buffer[head] = input + (filterState * feedback);
         head = (head + 1) % bufSize;
         return output;
@@ -51,7 +51,7 @@ public:
         feedback = fb;
     }
     inline float process(float input){
-        float bufHead = undenormalize(buffer[head]);
+        float bufHead = buffer[head];
         float output = -input + bufHead;
         buffer[head] = input + (bufHead * feedback);
         head = (head + 1) % bufSize;

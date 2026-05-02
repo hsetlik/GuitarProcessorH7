@@ -21,10 +21,22 @@ void TransparentAlgorithm::updateParams(pedal_state_t*){
 
 }
 
+// helper for Denormal handling--------------------------------
+void flushDenormalsToZero(bool shouldFlush){
+    uint32_t prevValue = __get_FPSCR();
+    uint32_t newValue;
+    if(shouldFlush){
+       newValue = prevValue | (1 << 24); 
+    } else {
+        newValue = prevValue & ~(1 << 24);
+    }
+    __set_FPSCR(newValue);
+}
+
 //==========================================================
 
 FxProcessor::FxProcessor() : alg(std::make_unique<TransparentAlgorithm>()), algIdx(0){
-
+    flushDenormalsToZero(true);
 }
 
 void FxProcessor::prepareAlgorithm(){
