@@ -125,6 +125,16 @@ bool algSwitchDebounce(){
 	return switchStates == 0xFFF0;
 }
 
+void setDBG1Level(bool isHigh){
+  GPIO_PinState state = (GPIO_PinState)isHigh;
+  HAL_GPIO_WritePin(DBG1_GPIO_Port, DBG1_Pin, state);
+}
+
+void setDBG2Level(bool isHigh){
+  GPIO_PinState state = (GPIO_PinState)isHigh;
+  HAL_GPIO_WritePin(DBG2_GPIO_Port, DBG2_Pin, state);
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -217,11 +227,15 @@ int main(void)
   {
     if(chunkReady){
       //do processing here
+      setDBG2Level(true);
       loadInputBuf(adcPtr);
       processRunning = true;
-      process_fx(fx, inputBufLeft, outputBufLeft, AUDIO_BUF_SIZE);
+      setDBG1Level(true);
+      process_fx_stereo(fx, inputBufLeft, inputBufRight, outputBufLeft, outputBufRight, AUDIO_BUF_SIZE);
+      setDBG1Level(false);
       processRunning = false;
       loadOutputBuf(dacPtr);
+      setDBG2Level(false);
       chunkReady = false;
     }
     if(knobValuesReady){

@@ -36,7 +36,6 @@ void flushDenormalsToZero(bool shouldFlush){
 //==========================================================
 
 FxProcessor::FxProcessor() : alg(std::make_unique<TransparentAlgorithm>()), algIdx(0){
-    flushDenormalsToZero(true);
 }
 
 void FxProcessor::prepareAlgorithm(){
@@ -53,7 +52,9 @@ void FxProcessor::processChunk(float* in, float* out, uint32_t numSamples){
 
 
 void FxProcessor::processChunkStereo(float* inL, float* inR, float* outL, float* outR, uint32_t numSamples){
+    flushDenormalsToZero(true);
     alg->processChunkStereo(inL, inR, outL, outR, numSamples);
+    flushDenormalsToZero(false);
 }
 
 void FxProcessor::updateParams(pedal_state_t* ps){
@@ -71,9 +72,14 @@ fx_processor_t create_fx_processor(){
 	return new FxProcessor();
 }
 
-void process_fx(fx_processor_t proc, float* input, float* output, uint32_t numSamples){
+void process_fx_mono(fx_processor_t proc, float* input, float* output, uint32_t numSamples){
     FxProcessor* ptr = static_cast<FxProcessor*>(proc);
     ptr->processChunk(input, output, numSamples);
+}
+
+void process_fx_stereo(fx_processor_t proc, float* inL, float* inR, float* outL, float* outR, uint32_t numSamples){
+    FxProcessor* ptr = static_cast<FxProcessor*>(proc);
+    ptr->processChunkStereo(inL, inR, outL, outR, numSamples);
 }
 
 void update_params(fx_processor_t proc, pedal_state_t* ps){

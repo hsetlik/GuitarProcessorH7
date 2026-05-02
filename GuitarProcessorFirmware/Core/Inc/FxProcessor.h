@@ -50,7 +50,8 @@ typedef void* fx_processor_t;
 
 EXTERNC fx_processor_t create_fx_processor();
 // main processing callback
-EXTERNC void process_fx(fx_processor_t proc, float* input, float* output, uint32_t numSamples);
+EXTERNC void process_fx_mono(fx_processor_t proc, float* input, float* output, uint32_t numSamples);
+EXTERNC void process_fx_stereo(fx_processor_t proc, float* inL, float* inR, float* outL, float* outR, uint32_t numSamples);
 EXTERNC void update_params(fx_processor_t proc, pedal_state_t* ps);
 
 #undef EXTERNC

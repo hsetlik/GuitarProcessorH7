@@ -62,6 +62,9 @@ void Error_Handler(void);
 // stuff for driving the LEDs
 bool ledUpdateDue();
 void updateLedData(uint8_t data);
+// drive the debug points
+void setDBG1Level(bool isHigh);
+void setDBG2Level(bool isHigh);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
