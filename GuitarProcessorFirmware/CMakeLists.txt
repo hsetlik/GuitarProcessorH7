@@ -60,6 +60,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${SRC_DIR}/AXISRAMPool.cpp
     ${SRC_DIR}/Schroeder.cpp
     ${SRC_DIR}/Freeverb.cpp
+    ${SRC_DIR}/NormRange.cpp
 )
 
 # Add include paths

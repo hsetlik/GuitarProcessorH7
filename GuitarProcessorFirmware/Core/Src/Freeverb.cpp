@@ -45,7 +45,7 @@ namespace Tuning {
         (uint32_t)(441.0f * tuneFactor),
         (uint32_t)(341.0f * tuneFactor),
         (uint32_t)(225.0f * tuneFactor)
-    }
+    };
 
     // default/fixed parameters
     static const float fixedGain = 0.015f;
@@ -67,7 +67,7 @@ namespace Tuning {
 //=========================================================
 
 void FreeverbAlg::setWet(float val){
-    wet = val * Tuning::scaleWet
+    wet = val * Tuning::scaleWet;
 }
 void FreeverbAlg::setRoomsize(float val){
    roomsize = (val * Tuning::scaleRoom) + Tuning::offsetRoom; 
