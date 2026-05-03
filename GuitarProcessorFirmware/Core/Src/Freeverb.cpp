@@ -62,6 +62,21 @@ namespace Tuning {
     static const float initialMode = 0.0f;
     static const float freezeMode = 0.5f;
 
+    static const float roomsizeMin = 0.02f;
+    static const float roomsizeMax = 1.0f;
+    static const float roomsizeCenter = 0.35f;
+
+    static const float dampMin = 0.1f;
+    static const float dampMax = 0.85f;
+    static const float dampCenter = 0.3f;
+
+    static const float widthMin = 0.01f;
+    static const float widthMax = 0.98f;
+    static const float widthCenter = 0.25f;
+
+    static const float wetMin = 0.02f;
+    static const float wetMax = 1.0f;
+    static const float wetCenter = 0.5f;
 }
 
 //=========================================================
@@ -85,7 +100,12 @@ void FreeverbAlg::setMode(float val){
     mode = val;
 }
 
-FreeverbAlg::FreeverbAlg(){
+FreeverbAlg::FreeverbAlg(): 
+roomRange(Tuning::roomsizeMin, Tuning::roomsizeMax, Tuning::roomsizeCenter),
+dampRange(Tuning::dampMin, Tuning::dampMax, Tuning::dampCenter),
+widthRange(Tuning::widthMin, Tuning::widthMax, Tuning::widthCenter),
+wetRange(Tuning::wetMin, Tuning::wetMax, Tuning::wetCenter)
+{
     // 1. initialize the filters
     for(uint32_t i = 0; i < NUM_COMBS; ++i){
         uint32_t lSize = Tuning::combTuning[i];
@@ -172,6 +192,12 @@ void FreeverbAlg::processChunkStereo(float* inL, float* inR, float* outL, float*
 }
 
 void FreeverbAlg::updateParams(pedal_state_t* ps){
-    //TODO: decide what the knobs should control and figure out curves and such
+    setRoomsize(roomRange.getDenormalized(ps->knobA));
+    setDamp(dampRange.getDenormalized(1.0f - ps->knobB));
+    setWidth(widthRange.getDenormalized(ps->knobC));
+    const float wetVal = wetRange.getDenormalized(ps->knobD);
+    setWet(wetVal);
+    setDry(1.0f - wetVal);
+    updateState();
 }
 

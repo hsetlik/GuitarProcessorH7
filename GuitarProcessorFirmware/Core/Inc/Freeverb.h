@@ -1,10 +1,11 @@
 #ifndef FREEVERB_H
 #define FREEVERB_H
 
+#ifdef __cplusplus
 #include <cstdint>
 #include "FxAlgorithm.h"
 #include "main.h"
-#ifdef __cplusplus
+#include "NormRange.h"
 
 // The lowpass feedback comb filter as described here: https://ccrma.stanford.edu/~jos/pasp/Lowpass_Feedback_Comb_Filter.html
 // code pretty similar to the freeverb implementation on the CCRMA website
@@ -94,6 +95,16 @@ private:
 
     void updateState();
     void processSample(float input, float* outputL, float* outputR);
+    /* Controls are:
+        Knob A: room size
+        Knob B: damping
+        Knob C: stereo width
+        Knob D: wet/dry
+    */
+    NormRange roomRange;
+    NormRange dampRange;
+    NormRange widthRange;
+    NormRange wetRange;
 public:
     FreeverbAlg();
     ~FreeverbAlg();
