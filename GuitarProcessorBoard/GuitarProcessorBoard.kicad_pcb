@@ -33115,19 +33115,30 @@
 		(uuid "6fcdab77-25fd-4d24-a66b-5db89983a614")
 	)
 	(gr_rect
-		(start -181.15 6.23)
-		(end -88.75 123.83)
+		(start -181.7 6.22)
+		(end -89.3 123.82)
 		(stroke
 			(width 0.1)
-			(type default)
+			(type solid)
+		)
+		(fill no)
+		(layer "User.2")
+		(uuid "2ea5755f-380f-4b90-96b9-f4eb64596d5c")
+	)
+	(gr_rect
+		(start -180 7.27)
+		(end -91 122.77)
+		(stroke
+			(width 0.1)
+			(type solid)
 		)
 		(fill no)
 		(layer "User.2")
 		(uuid "cf7d9674-08e9-4f56-bde9-b4e8e5a0a42f")
 	)
 	(gr_rect
-		(start -174.37 6.27)
-		(end -154.77 30.27)
+		(start -172.28 7.26)
+		(end -152.68 31.26)
 		(stroke
 			(width 0.1)
 			(type solid)
@@ -33137,8 +33148,8 @@
 		(uuid "19f9f759-26d2-4ee9-a0a2-9453ee1bbbbc")
 	)
 	(gr_line
-		(start -171.52 104.34)
-		(end -151.72 121.54)
+		(start -171.33 104.4)
+		(end -151.53 121.6)
 		(stroke
 			(width 0.1)
 			(type default)
@@ -33147,8 +33158,8 @@
 		(uuid "400d3c11-4443-4600-8aec-35428b6e3dcb")
 	)
 	(gr_rect
-		(start -171.52 104.34)
-		(end -151.72 121.54)
+		(start -171.33 104.4)
+		(end -151.53 121.6)
 		(stroke
 			(width 0.1)
 			(type default)
@@ -33158,8 +33169,8 @@
 		(uuid "c9dfeabd-f1d2-44d6-903e-203a14407faa")
 	)
 	(gr_line
-		(start -171.52 121.54)
-		(end -151.72 104.34)
+		(start -171.33 121.6)
+		(end -151.53 104.4)
 		(stroke
 			(width 0.1)
 			(type default)
@@ -33168,8 +33179,8 @@
 		(uuid "358c3081-8d7d-49f6-ad3f-f2a4c16e3141")
 	)
 	(gr_line
-		(start -164.57 30.27)
-		(end -164.57 6.27)
+		(start -162.48 31.26)
+		(end -162.48 7.26)
 		(stroke
 			(width 0.1)
 			(type default)
@@ -33178,8 +33189,8 @@
 		(uuid "bd71dd87-88af-489e-8313-d56bd3d1986b")
 	)
 	(gr_rect
-		(start -152.43 6.23)
-		(end -132.83 30.23)
+		(start -151.32 7.31)
+		(end -131.72 31.31)
 		(stroke
 			(width 0.1)
 			(type solid)
@@ -33189,8 +33200,8 @@
 		(uuid "adf485f8-4d7e-4c44-a19f-8205f80e5790")
 	)
 	(gr_line
-		(start -142.63 30.23)
-		(end -142.63 6.23)
+		(start -141.52 31.31)
+		(end -141.52 7.31)
 		(stroke
 			(width 0.1)
 			(type default)
@@ -33198,40 +33209,9 @@
 		(layer "User.2")
 		(uuid "43240cf2-cce8-40e1-948c-c3651be93646")
 	)
-	(gr_line
-		(start -117.84 104.25)
-		(end -98.04 121.45)
-		(stroke
-			(width 0.1)
-			(type default)
-		)
-		(layer "User.2")
-		(uuid "b7bd6b22-d5cb-4b39-977c-2f69b7d9551a")
-	)
 	(gr_rect
-		(start -117.84 104.25)
-		(end -98.04 121.45)
-		(stroke
-			(width 0.1)
-			(type default)
-		)
-		(fill no)
-		(layer "User.2")
-		(uuid "b615e289-0b33-4fc6-89a0-661f819242a1")
-	)
-	(gr_line
-		(start -117.84 121.45)
-		(end -98.04 104.25)
-		(stroke
-			(width 0.1)
-			(type default)
-		)
-		(layer "User.2")
-		(uuid "aedc9816-b280-4712-b36e-eaf074b54968")
-	)
-	(gr_rect
-		(start -115.77 6.24)
-		(end -96.17 30.24)
+		(start -119.08 7.25)
+		(end -99.48 31.25)
 		(stroke
 			(width 0.1)
 			(type solid)
@@ -33241,14 +33221,56 @@
 		(uuid "f92d253d-00f5-491c-87f0-be2e09ec330a")
 	)
 	(gr_line
-		(start -105.97 30.24)
-		(end -105.97 6.24)
+		(start -119.08 104.25)
+		(end -99.28 121.45)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "User.2")
+		(uuid "b7bd6b22-d5cb-4b39-977c-2f69b7d9551a")
+	)
+	(gr_rect
+		(start -119.08 104.25)
+		(end -99.28 121.45)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill no)
+		(layer "User.2")
+		(uuid "b615e289-0b33-4fc6-89a0-661f819242a1")
+	)
+	(gr_line
+		(start -119.08 121.45)
+		(end -99.28 104.25)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "User.2")
+		(uuid "aedc9816-b280-4712-b36e-eaf074b54968")
+	)
+	(gr_line
+		(start -109.28 31.25)
+		(end -109.28 7.25)
 		(stroke
 			(width 0.1)
 			(type default)
 		)
 		(layer "User.2")
 		(uuid "9d663fb0-eaf8-4b1a-b4f4-ab6e02e25365")
+	)
+	(gr_rect
+		(start -172.9 7.27)
+		(end -98.1 122.77)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "User.4")
+		(uuid "e5b1de4b-d664-421f-aa96-8e68426ae2d3")
 	)
 	(gr_text "Rev 4- 05/2026\nHayden Setlik"
 		(at -172.190001 91.91 0)
