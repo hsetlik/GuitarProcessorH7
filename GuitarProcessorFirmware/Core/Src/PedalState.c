@@ -27,7 +27,7 @@ uint8_t PedalState_getLedData(pedal_state_t* ps) {
 	 * */
 	uint8_t byte = 0b10000000;
 	// switch the appropriate alg. LED on
-	uint8_t mask = 0x01 << (6 - ps->algIdx);
+	uint8_t mask = 0x01 << (ps->algIdx + 1);
 	byte = byte | mask;
 	if(ps->fxEngaged){
 		byte = byte | (0b00000001);

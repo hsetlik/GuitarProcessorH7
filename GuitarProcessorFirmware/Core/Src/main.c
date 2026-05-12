@@ -58,6 +58,7 @@ DMA_HandleTypeDef hdma_spi2_rx;
 DMA_HandleTypeDef hdma_spi2_tx;
 
 SPI_HandleTypeDef hspi1;
+DMA_HandleTypeDef hdma_spi1_tx;
 
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
@@ -179,7 +180,7 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   // initialize the audio codec
-  HAL_StatusTypeDef tlvStatus = TLV_quickInit_monoGuitarPedal();
+  HAL_StatusTypeDef tlvStatus = TLV_quickInit_stereoGuitarPedal();
   if(tlvStatus != HAL_OK){
     Error_Handler();
   }
@@ -696,6 +697,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
+  /* DMA1_Stream3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);
 
 }
 

@@ -36,6 +36,7 @@ void flushDenormalsToZero(bool shouldFlush){
 //==========================================================
 
 FxProcessor::FxProcessor() : alg(std::make_unique<TransparentAlgorithm>()), algIdx(0){
+    flushDenormalsToZero(true);
 }
 
 void FxProcessor::prepareAlgorithm(){
@@ -52,9 +53,9 @@ void FxProcessor::processChunk(float* in, float* out, uint32_t numSamples){
 
 
 void FxProcessor::processChunkStereo(float* inL, float* inR, float* outL, float* outR, uint32_t numSamples){
-    flushDenormalsToZero(true);
+    //flushDenormalsToZero(true);
     alg->processChunkStereo(inL, inR, outL, outR, numSamples);
-    flushDenormalsToZero(false);
+    //flushDenormalsToZero(false);
 }
 
 void FxProcessor::updateParams(pedal_state_t* ps){
