@@ -9,7 +9,7 @@
 #include "main.h"
 #include "stm32h7xx_hal_def.h"
 
-static uint16_t TLV_DEVICE_ADDR = (0x18 << 1);
+//static uint16_t TLV_DEVICE_ADDR = (0x18 << 1);
 // little helper for the page scheme
 static HAL_StatusTypeDef TLV_selectPage(uint8_t page) {
 	static uint8_t currentPage = 0xFF;
@@ -59,18 +59,18 @@ uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected) {
 	return 1;
 }
 
-static uint16_t findValidDevices() {
-    for (uint8_t addr = 1; addr < 128; addr++) {
-        // HAL expects the address left-shifted by 1
-		HAL_StatusTypeDef devStatus = HAL_I2C_IsDeviceReady(&TLV_I2C, addr << 1, 1, 200);
-        if (devStatus == HAL_OK) {
-            // device found at 7-bit address `addr`
-			return (uint16_t)(addr << 1);
-        }
-    }
-	Error_Handler();
-	return (uint16_t)(0x18 << 1);
-}
+// static uint16_t findValidDevices() {
+//     for (uint8_t addr = 1; addr < 128; addr++) {
+//         // HAL expects the address left-shifted by 1
+// 		HAL_StatusTypeDef devStatus = HAL_I2C_IsDeviceReady(&TLV_I2C, addr << 1, 1, 200);
+//         if (devStatus == HAL_OK) {
+//             // device found at 7-bit address `addr`
+// 			return (uint16_t)(addr << 1);
+//         }
+//     }
+// 	Error_Handler();
+// 	return (uint16_t)(0x18 << 1);
+// }
 
 HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 	// step 1: cycle the NRST pin
@@ -78,7 +78,6 @@ HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 	HAL_Delay(25);
 	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_SET);
 	HAL_Delay(100);
-	TLV_DEVICE_ADDR = findValidDevices();
 	// step 2: perform hardware reset
 	HAL_StatusTypeDef resetStatus = TLV_writeRegister(TLV_softwareReset_pg,
 			TLV_softwareReset_reg, 0x01);
@@ -258,7 +257,7 @@ HAL_StatusTypeDef TLV_quickInit_stereoGuitarPedal(){
 	settings[idx] = (tlv_register_t){TLV_rightMICPGANegRouting_pg, TLV_rightMICPGANegRouting_reg, 0b01010000};
 	++idx;
 	// unmute right MICPGA and set unity gain
-	settings[idx] = (tlv_register_t){TLV_rightMICPGAGain_pg, TLV_rightMICPGAGain_reg, 0x00};
+	settings[idx] = (tlv_register_t){TLV_rightMICPGAGain_pg, TLV_rightMICPGAGain_reg, 0x0C};
 	++idx;
 
 	// Left channel input, similar setup to above-
@@ -269,7 +268,7 @@ HAL_StatusTypeDef TLV_quickInit_stereoGuitarPedal(){
 	settings[idx] = (tlv_register_t){TLV_leftMICPGANegRouting_pg, TLV_leftMICPGANegRouting_reg, 0b00100000};
 	++idx;
 	// unmute left MICPGA and set unity gain
-	settings[idx] = (tlv_register_t){TLV_leftMICPGAVolumeControl_pg, TLV_leftMICPGAVolumeControl_reg, 0x00};
+	settings[idx] = (tlv_register_t){TLV_leftMICPGAVolumeControl_pg, TLV_leftMICPGAVolumeControl_reg, 0x0C};
 	++idx;
 	// power on both ADC channels
 	settings[idx] = (tlv_register_t){TLV_adcChannelSetup_pg, TLV_adcChannelSetup_reg, 0b11000000};
@@ -292,8 +291,8 @@ HAL_StatusTypeDef TLV_quickInit_stereoGuitarPedal(){
 	settings[idx] = (tlv_register_t){TLV_DACOSR2_pg, TLV_DACOSR2_reg, 0x80};
 	++idx;
 	// select PRB_R5
-	//settings[idx] = (tlv_register_t){TLV_dacSignalProcessingBlock_pg, TLV_dacSignalProcessingBlock_reg, 0x05};
-	//++idx;
+	// settings[idx] = (tlv_register_t){TLV_dacSignalProcessingBlock_pg, TLV_dacSignalProcessingBlock_reg, 0x05};
+	// ++idx;
 	// route left DAC to left line out
 	settings[idx] = (tlv_register_t){TLV_lolRouting_pg, TLV_lolRouting_reg, 0b00001000};
 	++idx;
