@@ -59,25 +59,13 @@ uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected) {
 	return 1;
 }
 
-// static uint16_t findValidDevices() {
-//     for (uint8_t addr = 1; addr < 128; addr++) {
-//         // HAL expects the address left-shifted by 1
-// 		HAL_StatusTypeDef devStatus = HAL_I2C_IsDeviceReady(&TLV_I2C, addr << 1, 1, 200);
-//         if (devStatus == HAL_OK) {
-//             // device found at 7-bit address `addr`
-// 			return (uint16_t)(addr << 1);
-//         }
-//     }
-// 	Error_Handler();
-// 	return (uint16_t)(0x18 << 1);
-// }
 
 HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 	// step 1: cycle the NRST pin
 	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_RESET);
 	HAL_Delay(25);
 	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_SET);
-	HAL_Delay(100);
+	HAL_Delay(25);
 	// step 2: perform hardware reset
 	HAL_StatusTypeDef resetStatus = TLV_writeRegister(TLV_softwareReset_pg,
 			TLV_softwareReset_reg, 0x01);

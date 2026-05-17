@@ -18,7 +18,7 @@ static const uint32_t ALLPASS_LENGTHS[] = {556, 441};
 
 
 SchroederAlg::SchroederAlg(){
-    for(uint16_t i = 0; i < NUM_COMBS; ++i){
+    for(uint16_t i = 0; i < NUM_COMB_FILTERS; ++i){
         auto& lComb = combsLeft[i];
         lComb.buffer = AXISRAMPool::alloc(COMB_LENGTHS[i]);
         lComb.length = COMB_LENGTHS[i];
@@ -66,7 +66,7 @@ float SchroederAlg::processSampleMono(float input){
     float out = 0.0f;
 
     // comb filters
-    for(uint16_t i = 0; i < NUM_COMBS; ++i){
+    for(uint16_t i = 0; i < NUM_COMB_FILTERS; ++i){
         auto& comb = combsLeft[i];
         // grab the delayed sample
         float delayed = comb.buffer[comb.head];
@@ -100,7 +100,7 @@ void SchroederAlg::processSampleStereo(float input, float* oL, float* oR){
     float outR = 0.0f;
 
     // comb filters
-    for(uint16_t i = 0; i < NUM_COMBS; ++i){
+    for(uint16_t i = 0; i < NUM_COMB_FILTERS; ++i){
         auto& combL = combsLeft[i];
         // grab the delayed sample
         float delayedL = combL.buffer[combL.head];

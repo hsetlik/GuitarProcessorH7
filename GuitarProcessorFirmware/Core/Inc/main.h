@@ -46,8 +46,8 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-#define AUDIO_BUF_SIZE 256
-#define AUDIO_SAMPLE_RATE 46875.0f
+#define AUDIO_BUF_SIZE 128
+#define AUDIO_SAMPLE_RATE 47554.0f
 
 #define isample_t int32_t
 

@@ -4,7 +4,7 @@
 #include "AXISRAMPool.h"
 #include "FxAlgorithm.h"
 
-#define NUM_COMBS 4
+#define NUM_COMB_FILTERS 4
 #define NUM_ALLPASS 2
 
 struct CombFilter {
@@ -23,8 +23,8 @@ struct AllpassFilter {
 
 class SchroederAlg : public FxAlgorithm {
 private:
-    CombFilter combsLeft[NUM_COMBS];
-    CombFilter combsRight[NUM_COMBS];
+    CombFilter combsLeft[NUM_COMB_FILTERS];
+    CombFilter combsRight[NUM_COMB_FILTERS];
     AllpassFilter apLeft[NUM_ALLPASS];
     AllpassFilter apRight[NUM_ALLPASS];
     float damping = 0.5f;

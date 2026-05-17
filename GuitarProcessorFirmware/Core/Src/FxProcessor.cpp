@@ -2,6 +2,7 @@
 #include "Dattorro.h"
 #include "FxAlgorithm.h"
 #include "Schroeder.h"
+#include "Freeverb.h"
 
 void TransparentAlgorithm::processChunkMono(float* inBuf, float* outBuf, uint32_t length){
     for(uint32_t i = 0; i < length; ++i){
@@ -42,6 +43,8 @@ FxProcessor::FxProcessor() : alg(std::make_unique<TransparentAlgorithm>()), algI
 void FxProcessor::prepareAlgorithm(){
     if(algIdx == 1){
         alg.reset(new SchroederAlg());
+    } else if (algIdx == 2){
+        alg.reset(new FreeverbAlg());
     } else {
         alg.reset(new TransparentAlgorithm());
     }
