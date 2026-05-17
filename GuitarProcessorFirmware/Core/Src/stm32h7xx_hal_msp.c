@@ -102,13 +102,13 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
   /** Initializes the peripherals clock
   */
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_ADC;
-    PeriphClkInitStruct.PLL2.PLL2M = 2;
-    PeriphClkInitStruct.PLL2.PLL2N = 8;
-    PeriphClkInitStruct.PLL2.PLL2P = 3;
+    PeriphClkInitStruct.PLL2.PLL2M = 32;
+    PeriphClkInitStruct.PLL2.PLL2N = 150;
+    PeriphClkInitStruct.PLL2.PLL2P = 2;
     PeriphClkInitStruct.PLL2.PLL2Q = 2;
     PeriphClkInitStruct.PLL2.PLL2R = 2;
-    PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_3;
-    PeriphClkInitStruct.PLL2.PLL2VCOSEL = RCC_PLL2VCOWIDE;
+    PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_0;
+    PeriphClkInitStruct.PLL2.PLL2VCOSEL = RCC_PLL2VCOMEDIUM;
     PeriphClkInitStruct.PLL2.PLL2FRACN = 0.0;
     PeriphClkInitStruct.AdcClockSelection = RCC_ADCCLKSOURCE_PLL2;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
@@ -139,7 +139,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 
     /* ADC1 DMA Init */
     /* ADC1 Init */
-    hdma_adc1.Instance = DMA1_Stream1;
+    hdma_adc1.Instance = DMA1_Stream0;
     hdma_adc1.Init.Request = DMA_REQUEST_ADC1;
     hdma_adc1.Init.Direction = DMA_PERIPH_TO_MEMORY;
     hdma_adc1.Init.PeriphInc = DMA_PINC_DISABLE;
@@ -156,9 +156,6 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 
     __HAL_LINKDMA(hadc,DMA_Handle,hdma_adc1);
 
-    /* ADC1 interrupt Init */
-    HAL_NVIC_SetPriority(ADC_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(ADC_IRQn);
     /* USER CODE BEGIN ADC1_MspInit 1 */
 
     /* USER CODE END ADC1_MspInit 1 */
@@ -195,9 +192,6 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
 
     /* ADC1 DMA DeInit */
     HAL_DMA_DeInit(hadc->DMA_Handle);
-
-    /* ADC1 interrupt DeInit */
-    HAL_NVIC_DisableIRQ(ADC_IRQn);
     /* USER CODE BEGIN ADC1_MspDeInit 1 */
 
     /* USER CODE END ADC1_MspDeInit 1 */
@@ -336,7 +330,7 @@ void HAL_I2S_MspInit(I2S_HandleTypeDef* hi2s)
 
     /* I2S2 DMA Init */
     /* SPI2_RX Init */
-    hdma_spi2_rx.Instance = DMA1_Stream0;
+    hdma_spi2_rx.Instance = DMA1_Stream2;
     hdma_spi2_rx.Init.Request = DMA_REQUEST_SPI2_RX;
     hdma_spi2_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
     hdma_spi2_rx.Init.PeriphInc = DMA_PINC_DISABLE;
@@ -354,7 +348,7 @@ void HAL_I2S_MspInit(I2S_HandleTypeDef* hi2s)
     __HAL_LINKDMA(hi2s,hdmarx,hdma_spi2_rx);
 
     /* SPI2_TX Init */
-    hdma_spi2_tx.Instance = DMA1_Stream2;
+    hdma_spi2_tx.Instance = DMA1_Stream3;
     hdma_spi2_tx.Init.Request = DMA_REQUEST_SPI2_TX;
     hdma_spi2_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
     hdma_spi2_tx.Init.PeriphInc = DMA_PINC_DISABLE;
@@ -459,7 +453,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 
     /* SPI1 DMA Init */
     /* SPI1_TX Init */
-    hdma_spi1_tx.Instance = DMA1_Stream3;
+    hdma_spi1_tx.Instance = DMA1_Stream1;
     hdma_spi1_tx.Init.Request = DMA_REQUEST_SPI1_TX;
     hdma_spi1_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
     hdma_spi1_tx.Init.PeriphInc = DMA_PINC_DISABLE;
@@ -537,9 +531,6 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     /* USER CODE END TIM3_MspInit 0 */
     /* Peripheral clock enable */
     __HAL_RCC_TIM3_CLK_ENABLE();
-    /* TIM3 interrupt Init */
-    HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(TIM3_IRQn);
     /* USER CODE BEGIN TIM3_MspInit 1 */
 
     /* USER CODE END TIM3_MspInit 1 */
@@ -551,9 +542,6 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     /* USER CODE END TIM4_MspInit 0 */
     /* Peripheral clock enable */
     __HAL_RCC_TIM4_CLK_ENABLE();
-    /* TIM4 interrupt Init */
-    HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(TIM4_IRQn);
     /* USER CODE BEGIN TIM4_MspInit 1 */
 
     /* USER CODE END TIM4_MspInit 1 */
@@ -565,9 +553,6 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     /* USER CODE END TIM7_MspInit 0 */
     /* Peripheral clock enable */
     __HAL_RCC_TIM7_CLK_ENABLE();
-    /* TIM7 interrupt Init */
-    HAL_NVIC_SetPriority(TIM7_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(TIM7_IRQn);
     /* USER CODE BEGIN TIM7_MspInit 1 */
 
     /* USER CODE END TIM7_MspInit 1 */
@@ -590,9 +575,6 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
     /* USER CODE END TIM3_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_TIM3_CLK_DISABLE();
-
-    /* TIM3 interrupt DeInit */
-    HAL_NVIC_DisableIRQ(TIM3_IRQn);
     /* USER CODE BEGIN TIM3_MspDeInit 1 */
 
     /* USER CODE END TIM3_MspDeInit 1 */
@@ -604,9 +586,6 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
     /* USER CODE END TIM4_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_TIM4_CLK_DISABLE();
-
-    /* TIM4 interrupt DeInit */
-    HAL_NVIC_DisableIRQ(TIM4_IRQn);
     /* USER CODE BEGIN TIM4_MspDeInit 1 */
 
     /* USER CODE END TIM4_MspDeInit 1 */
@@ -618,9 +597,6 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
     /* USER CODE END TIM7_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_TIM7_CLK_DISABLE();
-
-    /* TIM7 interrupt DeInit */
-    HAL_NVIC_DisableIRQ(TIM7_IRQn);
     /* USER CODE BEGIN TIM7_MspDeInit 1 */
 
     /* USER CODE END TIM7_MspDeInit 1 */
