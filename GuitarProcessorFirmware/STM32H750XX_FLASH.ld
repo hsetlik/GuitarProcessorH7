@@ -248,11 +248,11 @@ SECTIONS
     . = ALIGN(4);
   } >RAM
 
-  /* Large audio buffers placed explicitly in AXI SRAM (e.g. delay line pools) */
-  .AXI_SRAM (NOLOAD) : ALIGN(4)
+  /* Large scratch/pool allocations that must NOT go in DTCMRAM */
+  .axisram_pool (NOLOAD) : ALIGN(4)
   {
-    *(.AXI_SRAM)
-    *(.AXI_SRAM*)
+    *(.axisram_pool)
+    *(.axisram_pool*)
     . = ALIGN(4);
   } >RAM
 

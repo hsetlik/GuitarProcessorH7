@@ -2,11 +2,11 @@
   "bundles": [
     {
       "name": "cmake",
-      "version": "4.0.1+st.3"
+      "version": "4.3.1+st.1"
     },
     {
       "name": "ninja",
-      "version": "1.13.1+st.1"
+      "version": "1.13.2+st.1"
     },
     {
       "name": "gnu-tools-for-stm32",
@@ -14,7 +14,7 @@
     },
     {
       "name": "st-arm-clangd",
-      "version": "19.1.2+st.3"
+      "version": "21.1.0+st.2"
     },
     {
       "name": "gnu-tools-for-stm32-14_3_1-description",

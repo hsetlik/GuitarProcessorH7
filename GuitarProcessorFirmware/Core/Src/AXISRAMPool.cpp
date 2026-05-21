@@ -2,8 +2,7 @@
 
 static constexpr size_t POOL_FLOATS = 55000;
 
-__attribute__((section(".AXI_SRAM")))
-static float pool[POOL_FLOATS];
+static float pool[POOL_FLOATS] __attribute__((section(".axisram_pool")));
 static size_t poolOffset = 0;
 
 float* AXISRAMPool::alloc(size_t numFloats) {
