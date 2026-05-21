@@ -1,7 +1,7 @@
 #MicroXplorer Configuration settings - do not modify
-ADC1.Channel-0\#ChannelRegularConversion=ADC_CHANNEL_14
+ADC1.Channel-0\#ChannelRegularConversion=ADC_CHANNEL_11
 ADC1.Channel-1\#ChannelRegularConversion=ADC_CHANNEL_16
-ADC1.Channel-2\#ChannelRegularConversion=ADC_CHANNEL_11
+ADC1.Channel-2\#ChannelRegularConversion=ADC_CHANNEL_14
 ADC1.Channel-3\#ChannelRegularConversion=ADC_CHANNEL_10
 ADC1.ConversionDataManagement=ADC_CONVERSIONDATA_DMA_ONESHOT
 ADC1.ExternalTrigConv=ADC_EXTERNALTRIG_T4_TRGO

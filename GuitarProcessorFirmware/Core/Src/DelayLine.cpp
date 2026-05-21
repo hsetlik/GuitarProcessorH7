@@ -12,14 +12,16 @@ uint16_t neededBufSize(uint16_t delay) {
 }
 
 DelayLine::DelayLine() {
-
+	for(uint32_t i = 0; i < MAX_TAPS; ++i){
+		offsets[i] = 0;
+	}
 }
 
 void DelayLine::init(uint16_t size) {
 	maxDelay = size;
 	length = neededBufSize(maxDelay);
 	// allocate the buffer
-	data = AXISRAMPool::alloc(length);
+	data = AXISRAMPool::alloc(length, true);
 	// initialize the bitmask
 	mask = length - 1;
 	// set the main delay tap to max

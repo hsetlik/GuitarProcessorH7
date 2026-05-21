@@ -37,7 +37,7 @@ void flushDenormalsToZero(bool shouldFlush){
 //==========================================================
 
 FxProcessor::FxProcessor() : alg(std::make_unique<TransparentAlgorithm>()), algIdx(0){
-    flushDenormalsToZero(true);
+    //flushDenormalsToZero(true);
 }
 
 void FxProcessor::prepareAlgorithm(){
@@ -45,6 +45,8 @@ void FxProcessor::prepareAlgorithm(){
         alg.reset(new SchroederAlg());
     } else if (algIdx == 2){
         alg.reset(new FreeverbAlg());
+    } else if (algIdx == 3){
+        alg.reset(new Dattorro1Alg());
     } else {
         alg.reset(new TransparentAlgorithm());
     }

@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 #include <cstddef>
 namespace AXISRAMPool {
-    float* alloc(size_t numFloats);
+    float* alloc(size_t numFloats, bool zeroValues=false);
     void freePool();
     bool poolInUse();
 }

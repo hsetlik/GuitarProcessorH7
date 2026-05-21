@@ -7,7 +7,7 @@ static inline float LP_process(float* out, float in, float freq) {
 	return *out;
 }
 static inline float AP_process(DelayLine *dl, uint16_t cycle, float gain, float in) {
-	float delayed = dl->read(0, cycle);
+	const float delayed = dl->read(0, cycle);
 	in += delayed * -gain;
 	dl->write(cycle, in);
 	return delayed + in * gain;
@@ -65,6 +65,7 @@ Dattorro::Dattorro() {
 	decayAmt = 0.75f;
 	decayDiff1Amt = 0.70f;
 	dampingAmt = 0.95f;
+	t = 0;
 
 }
 
@@ -73,7 +74,7 @@ Dattorro::~Dattorro(){
 }
 
 // the main algorithm
-void Dattorro::processIn(float input) {
+void Dattorro::processIn(const float input) {
 	// modulate decayDiffusion1 for both tanks
 	// if(std::isnan(input)){
 	// 	Error_Handler();
@@ -141,6 +142,13 @@ float Dattorro::processMono(float in){
 	return (getLeft() + getRight()) * 0.5f;
 }
 
+
+float Dattorro::processStereo(float input, float* outL, float* outR){
+	processIn(input);
+	*outL = getLeft();
+	*outR = getRight();
+}
+
 //=========================================================
 
 Dattorro1Alg::Dattorro1Alg() : verb(){
@@ -150,6 +158,13 @@ Dattorro1Alg::Dattorro1Alg() : verb(){
 void Dattorro1Alg::processChunkMono(float* inBuf, float* outBuf, uint32_t numSamples){
 	for(uint32_t i = 0; i < numSamples; ++i){
 		outBuf[i] = verb.processMono(inBuf[i]);
+	}
+}
+
+
+void Dattorro1Alg::processChunkStereo(float* inL, float* inR, float* outL, float* outR, uint32_t numSamples) {
+	for(uint32_t i = 0; i < numSamples; ++i){
+		verb.processStereo(inL[i], &outL[i], &outR[i]);
 	}
 }
 

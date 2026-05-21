@@ -42,9 +42,10 @@ public:
 	Dattorro();
 	~Dattorro();
 	float processMono(float input);
+	float processStereo(float input, float* outL, float* outR);
 private:
 	//
-	void processIn(float input);
+	void processIn(const float input);
 	float getLeft();
 	float getRight();
 };
@@ -57,6 +58,7 @@ public:
     Dattorro1Alg();
     ~Dattorro1Alg() override{}
     void processChunkMono(float* inBuf, float* outBuf, uint32_t numSamples) override;
+    void processChunkStereo(float* inL, float* inR, float* outL, float* outR, uint32_t numSamples) override;
     void updateParams(pedal_state_t* ps) override;
 
 };
