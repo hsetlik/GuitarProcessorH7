@@ -355,7 +355,7 @@ static void MX_ADC1_Init(void)
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T4_TRGO;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
-  hadc1.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DR;
+  hadc1.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DMA_ONESHOT;
   hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc1.Init.LeftBitShift = ADC_LEFTBITSHIFT_NONE;
   hadc1.Init.OversamplingMode = DISABLE;
@@ -836,7 +836,7 @@ void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc){
 
 void startKnobADC(){
   //start the ADC dma stream
-  HAL_StatusTypeDef adcStatus = HAL_ADC_Start_DMA(&hadc1, (uint32_t*)knobValueBuf, 3);
+  HAL_StatusTypeDef adcStatus = HAL_ADC_Start_DMA(&hadc1, (uint32_t*)knobValueBuf, 4);
   if(adcStatus != HAL_OK){
     Error_Handler();
   }
@@ -845,8 +845,8 @@ void startKnobADC(){
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
   if(htim == &htim7){
     if(algSwitchDebounce()){
-        ps.algIdx = (ps.algIdx + 1) % 6;
-      }
+      ps.algIdx = (ps.algIdx + 1) % 6;
+    }
   } else if (htim == &htim3){
     ledUpdateNeeded = true;
   }

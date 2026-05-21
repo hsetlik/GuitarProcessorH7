@@ -26,7 +26,7 @@ public:
 class FxProcessor {
 private:
     std::unique_ptr<FxAlgorithm> alg;
-    uint8_t algIdx;
+    uint8_t algIdx = 0;
     void prepareAlgorithm();
 public:
     FxProcessor();
