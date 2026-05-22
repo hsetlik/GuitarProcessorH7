@@ -96,6 +96,95 @@ HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 
 //======================================================================
 
+bool TLV_leftDcMeasurementReady(){
+	uint8_t data;
+	HAL_StatusTypeDef readStatus = TLV_readRegister(TLV_intFlag3_pg, TLV_intFlag3_reg, &data);
+	if(readStatus != HAL_OK){
+		Error_Handler();
+	}
+	const uint8_t mask = 0b00000100;
+	return (mask & data) > 0;
+}
+
+
+bool TLV_rightDcMeasurementReady(){
+	uint8_t data;
+	HAL_StatusTypeDef readStatus = TLV_readRegister(TLV_intFlag3_pg, TLV_intFlag3_reg, &data);
+	if(readStatus != HAL_OK){
+		Error_Handler();
+	}
+	const uint8_t mask = 0b00000010;
+	return (mask & data) > 0;
+}
+
+
+HAL_StatusTypeDef TLV_enableDcMeasurement(){
+	uint8_t data = 0b11000001;
+	return TLV_writeRegister(TLV_dcMeasurement1_pg, TLV_dcMeasurement1_reg, data);
+}
+
+
+uint32_t TLV_getDcMeasurementLeft(){
+	// latch the data into the output register
+	HAL_StatusTypeDef latchOnStatus = TLV_writeRegister(TLV_dcMeasurement2_pg, TLV_dcMeasurement2_reg, 0b01000000);
+	if(latchOnStatus != HAL_OK){
+		Error_Handler();
+	}
+	// get bits 23-16
+	uint8_t bits1 = 0;
+	HAL_StatusTypeDef status1 = TLV_readRegister(TLV_leftDcOutput1_pg, TLV_leftDcOutput1_reg, &bits1);
+	if(status1 != HAL_OK){
+		Error_Handler();
+	}
+	// get bits 15-8
+	uint8_t bits2 = 0;
+	HAL_StatusTypeDef status2 = TLV_readRegister(TLV_leftDcOutput2_pg, TLV_leftDcOutput2_reg, &bits2);
+	if(status2 != HAL_OK){
+		Error_Handler();
+	}
+	// get bits 7-0
+	uint8_t bits3 = 0;
+	HAL_StatusTypeDef status3 = TLV_readRegister(TLV_leftDcOutput3_pg, TLV_leftDcOutput3_reg, &bits3);
+	if(status3 != HAL_OK){
+		Error_Handler();
+	}
+	uint32_t output = 0;
+	output |= (uint32_t)(bits1 << 16);
+	output |= (uint32_t)(bits2 << 8);
+	output |= (uint32_t)(bits3);
+	// un-latch the read register
+	HAL_StatusTypeDef latchOffStatus = TLV_writeRegister(TLV_dcMeasurement2_pg, TLV_dcMeasurement2_reg, 0b00000000);
+	if(latchOffStatus != HAL_OK){
+		Error_Handler();
+	}
+	return output;
+}
+
+uint32_t TLV_getDcMeasurementRight(){
+	// get bits 23-16
+	uint8_t bits1 = 0;
+	HAL_StatusTypeDef status1 = TLV_readRegister(TLV_rightDcOutput1_pg, TLV_rightDcOutput1_reg, &bits1);
+	if(status1 != HAL_OK){
+		Error_Handler();
+	}
+	// get bits 15-8
+	uint8_t bits2 = 0;
+	HAL_StatusTypeDef status2 = TLV_readRegister(TLV_rightDcOutput2_pg, TLV_rightDcOutput2_reg, &bits2);
+	if(status2 != HAL_OK){
+		Error_Handler();
+	}
+	// get bits 7-0
+	uint8_t bits3 = 0;
+	HAL_StatusTypeDef status3 = TLV_readRegister(TLV_rightDcOutput3_pg, TLV_rightDcOutput3_reg, &bits3);
+	if(status3 != HAL_OK){
+		Error_Handler();
+	}
+	uint32_t output = 0;
+	output |= (uint32_t)(bits1 << 16);
+	output |= (uint32_t)(bits2 << 8);
+	output |= (uint32_t)(bits3);
+	return output;
+}
 
 
 //======================================================================

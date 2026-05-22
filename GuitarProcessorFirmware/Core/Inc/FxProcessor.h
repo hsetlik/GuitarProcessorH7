@@ -2,7 +2,9 @@
 #define FX_PROCESSOR_H
 
 #include "PedalState.h"
+#include "main.h"
 
+#define DC_BUF_LENGTH 2048
 #ifdef __cplusplus
 #include <cstdint>
 #include <memory>
@@ -10,7 +12,9 @@
 #include "Dattorro.h"
 #include "Schroeder.h"
 
+
 class TransparentAlgorithm : public FxAlgorithm {
+private:
 public:
     TransparentAlgorithm(){
 
@@ -53,6 +57,10 @@ EXTERNC fx_processor_t create_fx_processor();
 EXTERNC void process_fx_mono(fx_processor_t proc, float* input, float* output, uint32_t numSamples);
 EXTERNC void process_fx_stereo(fx_processor_t proc, float* inL, float* inR, float* outL, float* outR, uint32_t numSamples);
 EXTERNC void update_params(fx_processor_t proc, pedal_state_t* ps);
+// DC measurement stuff
+EXTERNC void init_dc_measurement_buf();
+EXTERNC void push_dc_measurement_value(isample_t value);
+EXTERNC isample_t get_dc_offset();
 
 #undef EXTERNC
 

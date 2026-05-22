@@ -73,6 +73,12 @@ HAL_StatusTypeDef TLV_quickInit_monoGuitarPedal();
 
 HAL_StatusTypeDef TLV_quickInit_stereoGuitarPedal();
 
+bool TLV_leftDcMeasurementReady();
+bool TLV_rightDcMeasurementReady();
+HAL_StatusTypeDef TLV_enableDcMeasurement();
+uint32_t TLV_getDcMeasurementLeft();
+uint32_t TLV_getDcMeasurementRight();
+
 void TLV_checkFlags();
 
 // REGISTER ADDRESSES=================================================

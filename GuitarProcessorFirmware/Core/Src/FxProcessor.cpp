@@ -1,8 +1,11 @@
 #include "FxProcessor.h"
+#include "AXISRAMPool.h"
 #include "Dattorro.h"
 #include "FxAlgorithm.h"
 #include "Schroeder.h"
 #include "Freeverb.h"
+#include "main.h"
+
 
 void TransparentAlgorithm::processChunkMono(float* inBuf, float* outBuf, uint32_t length){
     for(uint32_t i = 0; i < length; ++i){
@@ -45,9 +48,11 @@ void FxProcessor::prepareAlgorithm(){
         alg.reset(new SchroederAlg());
     } else if (algIdx == 2){
         alg.reset(new FreeverbAlg());
-    } else if (algIdx == 3){
-        alg.reset(new Dattorro1Alg());
-    } else {
+    } 
+    // else if (algIdx == 3){
+    //     alg.reset(new Dattorro1Alg());
+    // } 
+    else {
         alg.reset(new TransparentAlgorithm());
     }
 }
@@ -91,4 +96,27 @@ void process_fx_stereo(fx_processor_t proc, float* inL, float* inR, float* outL,
 void update_params(fx_processor_t proc, pedal_state_t* ps){
     FxProcessor* ptr = static_cast<FxProcessor*>(proc);
     ptr->updateParams(ps);
+}
+
+isample_t dcBuf[DC_BUF_LENGTH]__attribute__((section(".axisram_pool")));
+static const float dcDivisor = (float)DC_BUF_LENGTH;
+static uint32_t head = 0;
+static uint32_t dcSum = 0;
+void init_dc_measurement_buf(){
+    for(uint32_t i = 0; i < DC_BUF_LENGTH; ++i){
+        dcBuf[i] = 0;
+    }
+}
+void push_dc_measurement_value(isample_t value){
+    // 1. add the new value to the sum
+    dcSum += value;
+    // 2. subtract the oldest value from the sum
+    dcSum -= dcBuf[head];
+    // 3. overwrite the oldest value
+    dcBuf[head] = value;
+    // 4. increment the head
+    head = (head + 1) % DC_BUF_LENGTH;
+}
+isample_t get_dc_offset(){
+    return (isample_t)((float)dcSum / dcDivisor);
 }

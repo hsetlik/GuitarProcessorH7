@@ -62,6 +62,7 @@ DMA_HandleTypeDef hdma_spi1_tx;
 
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim7;
 
 /* USER CODE BEGIN PV */
@@ -76,7 +77,9 @@ static isample_t* adcPtr = adcBuf;
 static isample_t* dacPtr = dacBuf;
 volatile bool chunkReady = false;
 volatile bool ledUpdateNeeded = false;
+volatile bool flagCheckNeeded = false;
 volatile bool processRunning = false;
+isample_t leftDcBias = 0;
 
 // knob values and ADC buffer
 volatile uint16_t knobValueBuf[4] __attribute__((section(".dma_buf")));
@@ -101,6 +104,7 @@ static void MX_SPI1_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM7_Init(void);
+static void MX_TIM6_Init(void);
 /* USER CODE BEGIN PFP */
 void startKnobADC();
 void loadInputBuf(isample_t* ptr);
@@ -181,6 +185,7 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   MX_TIM7_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
   // initialize the audio codec
   HAL_StatusTypeDef tlvStatus = TLV_quickInit_stereoGuitarPedal();
@@ -220,7 +225,15 @@ int main(void)
   if(HAL_TIM_Base_Start_IT(&htim7) != HAL_OK){
     Error_Handler();
   } 
-
+  init_dc_measurement_buf();
+  // // start the flag checking timer
+  // if(HAL_TIM_Base_Start_IT(&htim6) != HAL_OK){
+  //   Error_Handler();
+  // } 
+  // // enable DC measurement on the ADCs
+  // if(TLV_enableDcMeasurement() != HAL_OK){
+  //   Error_Handler();
+  // }
   // initialize the fx processor
   fx = create_fx_processor();
   /* USER CODE END 2 */
@@ -258,6 +271,12 @@ int main(void)
       ps.switchB = HAL_GPIO_ReadPin(SW_2_GPIO_Port, SW_2_Pin);
       updateLedData(PedalState_getLedData(&ps));
     }
+    // if(flagCheckNeeded){
+    //   if(TLV_leftDcMeasurementReady()){
+    //     leftDcBias = TLV_getDcMeasurementLeft();
+    //   }
+    //   flagCheckNeeded = false;
+    // }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -491,7 +510,7 @@ static void MX_I2S2_Init(void)
   hi2s2.Init.CPOL = I2S_CPOL_LOW;
   hi2s2.Init.FirstBit = I2S_FIRSTBIT_MSB;
   hi2s2.Init.WSInversion = I2S_WS_INVERSION_DISABLE;
-  hi2s2.Init.Data24BitAlignment = I2S_DATA_24BIT_ALIGNMENT_RIGHT;
+  hi2s2.Init.Data24BitAlignment = I2S_DATA_24BIT_ALIGNMENT_LEFT;
   hi2s2.Init.MasterKeepIOState = I2S_MASTER_KEEP_IO_STATE_DISABLE;
   if (HAL_I2S_Init(&hi2s2) != HAL_OK)
   {
@@ -638,6 +657,44 @@ static void MX_TIM4_Init(void)
   /* USER CODE BEGIN TIM4_Init 2 */
 
   /* USER CODE END TIM4_Init 2 */
+
+}
+
+/**
+  * @brief TIM6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM6_Init(void)
+{
+
+  /* USER CODE BEGIN TIM6_Init 0 */
+
+  /* USER CODE END TIM6_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM6_Init 1 */
+
+  /* USER CODE END TIM6_Init 1 */
+  htim6.Instance = TIM6;
+  htim6.Init.Prescaler = 1919;
+  htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim6.Init.Period = 62499;
+  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM6_Init 2 */
+
+  /* USER CODE END TIM6_Init 2 */
 
 }
 
@@ -812,9 +869,12 @@ static inline isample_t floatToSample(float value){
 
 void loadInputBuf(isample_t* ptr){
   for(uint32_t i = 0; i < AUDIO_BUF_SIZE; ++i){
-    inputBufLeft[i] = sampleToFloat(ptr[(i * 2) + 1]);
+    int32_t leftVal = ptr[(i * 2) + 1];
+    push_dc_measurement_value(leftVal);
+    inputBufLeft[i] = sampleToFloat(leftVal);
     inputBufRight[i] = sampleToFloat(ptr[(i * 2)]);
   }
+  leftDcBias = get_dc_offset();
 }
 
 void loadOutputBuf(isample_t* dac){
@@ -849,7 +909,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     }
   } else if (htim == &htim3){
     ledUpdateNeeded = true;
-  }
+  } 
+  // else if (htim == &htim6){
+  //   flagCheckNeeded = true;
+  // }
 }
 //=====================================================================================
 /* USER CODE END 4 */
