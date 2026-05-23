@@ -44,7 +44,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define INPUT_DC_OFFSET 100000
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -860,7 +860,7 @@ void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef *i2s) {
 // }
 
 static inline float sampleToFloat(isample_t value){
-    return (float)value / 2147483648.0f;  // 2^31
+    return (float)(value - INPUT_DC_OFFSET) / 2147483648.0f;  // 2^31
 }
 
 static inline isample_t floatToSample(float value){
@@ -869,12 +869,12 @@ static inline isample_t floatToSample(float value){
 
 void loadInputBuf(isample_t* ptr){
   for(uint32_t i = 0; i < AUDIO_BUF_SIZE; ++i){
-    int32_t leftVal = ptr[(i * 2) + 1];
-    push_dc_measurement_value(leftVal);
-    inputBufLeft[i] = sampleToFloat(leftVal);
+    //int32_t leftVal = ptr[(i * 2) + 1];
+    //push_dc_measurement_value(leftVal);
+    inputBufLeft[i] = sampleToFloat(ptr[(i * 2) + 1]);
     inputBufRight[i] = sampleToFloat(ptr[(i * 2)]);
   }
-  leftDcBias = get_dc_offset();
+  //leftDcBias = get_dc_offset();
 }
 
 void loadOutputBuf(isample_t* dac){
