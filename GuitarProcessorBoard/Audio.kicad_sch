@@ -3788,6 +3788,16 @@
 		)
 		(uuid "fbc71866-471d-4ad5-afe7-766746d3373e")
 	)
+	(wire
+		(pts
+			(xy 191.008 130.81) (xy 191.008 133.35)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fcd3f531-8acc-4205-bb66-3b9dedca3e11")
+	)
 	(label "RightInputNeg"
 		(at 58.42 82.55 0)
 		(effects
@@ -3957,6 +3967,16 @@
 			(justify left bottom)
 		)
 		(uuid "c8186235-1f56-40a7-b7d1-cdd73fbc173e")
+	)
+	(label "Bias1"
+		(at 191.008 133.35 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "df151536-7029-4d70-af45-95be990085b9")
 	)
 	(global_label "IN_R"
 		(shape input)
@@ -6996,6 +7016,85 @@
 			(project "GuitarProcessorBoard"
 				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
 					(reference "#PWR024")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 191.008 130.81 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "74a3b5d1-3a96-4442-ac76-25c903512b7e")
+		(property "Reference" "TP11"
+			(at 193.04 126.2379 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "CM"
+			(at 193.04 128.7779 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm_VAL"
+			(at 196.088 130.81 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 196.088 130.81 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "test point"
+			(at 191.008 130.81 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3bcae077-7ffe-45c1-88a0-acf73ea17178")
+		)
+		(instances
+			(project "GuitarProcessorBoard"
+				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/ef3a9a4a-abe1-4d77-855c-3594c7f88930"
+					(reference "TP11")
 					(unit 1)
 				)
 			)

@@ -7893,6 +7893,12 @@
 		(uuid "f7ca1476-a533-4b28-a43f-0f5691d7e9d5")
 	)
 	(junction
+		(at 55.626 236.474)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "fadb873f-bcd9-4dad-90fd-bd237fa183fa")
+	)
+	(junction
 		(at 226.695 227.33)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -9120,7 +9126,7 @@
 	)
 	(wire
 		(pts
-			(xy 55.626 238.506) (xy 58.674 238.506)
+			(xy 55.626 236.474) (xy 58.674 236.474)
 		)
 		(stroke
 			(width 0)
@@ -9690,6 +9696,16 @@
 	)
 	(wire
 		(pts
+			(xy 55.626 225.044) (xy 55.626 225.806)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7ac675b6-4660-4323-82d3-84e39f61f041")
+	)
+	(wire
+		(pts
 			(xy 372.11 56.134) (xy 373.38 56.134)
 		)
 		(stroke
@@ -10200,6 +10216,16 @@
 	)
 	(wire
 		(pts
+			(xy 55.626 235.966) (xy 55.626 236.474)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a6d3d4e3-6b97-40a5-83e3-cb1d7aef45df")
+	)
+	(wire
+		(pts
 			(xy 283.972 71.12) (xy 283.972 73.66)
 		)
 		(stroke
@@ -10650,7 +10676,7 @@
 	)
 	(wire
 		(pts
-			(xy 55.626 249.174) (xy 55.626 250.19)
+			(xy 55.626 247.142) (xy 55.626 248.158)
 		)
 		(stroke
 			(width 0)
@@ -11070,7 +11096,7 @@
 	)
 	(wire
 		(pts
-			(xy 55.626 238.506) (xy 55.626 241.554)
+			(xy 55.626 236.474) (xy 55.626 239.522)
 		)
 		(stroke
 			(width 0)
@@ -11862,7 +11888,7 @@
 	)
 	(global_label "BOOT0"
 		(shape output)
-		(at 58.674 238.506 0)
+		(at 58.674 236.474 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -11872,7 +11898,7 @@
 		)
 		(uuid "883962cd-b08c-4cf1-b557-e071fe2bb589")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 67.7673 238.506 0)
+			(at 67.7673 236.474 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15087,6 +15113,84 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+3.3V")
+		(at 55.626 225.044 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "34c4bf5c-5fe2-418d-95bd-ffcd8f982fe7")
+		(property "Reference" "#PWR048"
+			(at 55.626 228.854 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "+3.3V"
+			(at 55.626 220.091 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 55.626 225.044 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 55.626 225.044 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 55.626 225.044 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9e63431f-24e0-4445-8b8c-cf09b2cd8b57")
+		)
+		(instances
+			(project "GuitarProcessorBoard"
+				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/29c54663-b974-4b35-ac83-25332e43dd96"
+					(reference "#PWR048")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_name "+3.3V_1")
 		(lib_id "power:+3.3V")
 		(at 246.634 133.223 0)
@@ -16313,7 +16417,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Button_Switch_THT:MiniToggle_SPST"
+		(property "Footprint" "Button_Switch_THT:SW_TH_Tactile_Omron_B3F-102x"
 			(at 332.105 45.085 0)
 			(hide yes)
 			(show_name no)
@@ -18029,7 +18133,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_US")
-		(at 55.626 245.364 0)
+		(at 55.626 243.332 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -18040,7 +18144,7 @@
 		(fields_autoplaced yes)
 		(uuid "6138efd5-e6c1-4267-aac5-69f01827dc14")
 		(property "Reference" "R22"
-			(at 58.166 244.094 0)
+			(at 58.166 242.062 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18051,7 +18155,7 @@
 			)
 		)
 		(property "Value" "100k"
-			(at 58.166 246.634 0)
+			(at 58.166 244.602 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18062,7 +18166,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
-			(at 56.642 245.618 90)
+			(at 56.642 243.586 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18073,7 +18177,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 55.626 245.364 0)
+			(at 55.626 243.332 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18084,7 +18188,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 55.626 245.364 0)
+			(at 55.626 243.332 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18914,7 +19018,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 55.626 250.19 0)
+		(at 55.626 248.158 0)
 		(mirror y)
 		(unit 1)
 		(body_style 1)
@@ -18926,7 +19030,7 @@
 		(fields_autoplaced yes)
 		(uuid "6edb58ce-8689-4f7a-a939-547a4ba02e16")
 		(property "Reference" "#PWR030"
-			(at 55.626 256.54 0)
+			(at 55.626 254.508 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18937,7 +19041,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 55.626 254 0)
+			(at 55.626 251.968 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18948,7 +19052,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 55.626 250.19 0)
+			(at 55.626 248.158 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18959,7 +19063,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 55.626 250.19 0)
+			(at 55.626 248.158 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18970,7 +19074,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 55.626 250.19 0)
+			(at 55.626 248.158 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19738,7 +19842,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Button_Switch_THT:MiniToggle_SPST"
+		(property "Footprint" "Button_Switch_THT:SW_TH_Tactile_Omron_B3F-102x"
 			(at 314.325 45.085 0)
 			(hide yes)
 			(show_name no)
@@ -24216,6 +24320,88 @@
 			(project "GuitarProcessorBoard"
 				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/29c54663-b974-4b35-ac83-25332e43dd96"
 					(reference "C24")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Switch:SW_SPST")
+		(at 55.626 230.886 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d6cc2d35-a96d-4090-8de8-4aa3a933b5df")
+		(property "Reference" "SW2"
+			(at 57.15 229.6159 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "BOOT0"
+			(at 57.15 232.1559 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Button_Switch_SMD:SW_SPST_B3U-1000P"
+			(at 55.626 230.886 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 55.626 230.886 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 55.626 230.886 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "aac39ade-d6ee-45e7-a08b-f65f1d43dc26")
+		)
+		(pin "2"
+			(uuid "7f25ea49-7180-4581-ab23-887f892ac730")
+		)
+		(instances
+			(project "GuitarProcessorBoard"
+				(path "/524c695b-c632-4089-9e9a-ef0f89cad1b2/29c54663-b974-4b35-ac83-25332e43dd96"
+					(reference "SW2")
 					(unit 1)
 				)
 			)
