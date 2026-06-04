@@ -40,7 +40,7 @@ void flushDenormalsToZero(bool shouldFlush){
 //==========================================================
 
 FxProcessor::FxProcessor() : alg(std::make_unique<TransparentAlgorithm>()), algIdx(0){
-    //flushDenormalsToZero(true);
+    flushDenormalsToZero(true);
 }
 
 void FxProcessor::prepareAlgorithm(){

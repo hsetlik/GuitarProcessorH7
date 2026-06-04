@@ -42,7 +42,7 @@ public:
 	Dattorro();
 	~Dattorro();
 	float processMono(float input);
-	float processStereo(float input, float* outL, float* outR);
+	void processStereo(float input, float* outL, float* outR);
 private:
 	//
 	void processIn(const float input);

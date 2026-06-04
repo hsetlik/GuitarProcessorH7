@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "Button.h"
 #include "stm32h7xx_hal.h"
 #include "stm32h7xx_hal_adc.h"
 #include "stm32h7xx_hal_adc_ex.h"
@@ -75,6 +76,7 @@ float outputBufRight[AUDIO_BUF_SIZE];
 isample_t dacBuf[AUDIO_BUF_SIZE * 4] __attribute__((section(".dma_buf")));
 static isample_t* adcPtr = adcBuf;
 static isample_t* dacPtr = dacBuf;
+// flags
 volatile bool chunkReady = false;
 volatile bool ledUpdateNeeded = false;
 volatile bool flagCheckNeeded = false;
@@ -84,6 +86,10 @@ isample_t leftDcBias = 0;
 // knob values and ADC buffer
 volatile uint16_t knobValueBuf[4] __attribute__((section(".dma_buf")));
 volatile bool knobValuesReady = false;
+
+// button objects
+button_t leftBtn;
+button_t rightBtn;
 
 // state
 uint8_t ledData __attribute__((section(".dma_buf")));
@@ -143,6 +149,18 @@ void setDBG2Level(bool isHigh){
   HAL_GPIO_WritePin(DBG2_GPIO_Port, DBG2_Pin, state);
 }
 
+uint16_t i2c_scan(I2C_HandleTypeDef *hi2c) {
+    for (uint8_t addr = 1; addr < 128; addr++) {
+        // HAL expects the address left-shifted by 1
+        if (HAL_I2C_IsDeviceReady(hi2c, addr << 1, 1, 10) == HAL_OK) {
+            // device found at 7-bit address `addr`
+          return (uint16_t)(addr << 1);   
+        }
+    }
+    Error_Handler();
+    return 0;
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -187,6 +205,8 @@ int main(void)
   MX_TIM7_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
+  // find any valid I2C devices
+  uint16_t address = i2c_scan(&hi2c2);
   // initialize the audio codec
   HAL_StatusTypeDef tlvStatus = TLV_quickInit_stereoGuitarPedal();
   if(tlvStatus != HAL_OK){
@@ -221,7 +241,10 @@ int main(void)
     Error_Handler();
   }
   HAL_Delay(350);
-   // start the timer for checking the algorithm button
+  // initialize the button objects
+  button_init(&leftBtn, SW_1_GPIO_Port, SW_1_Pin, true);
+  button_init(&rightBtn, SW_2_GPIO_Port, SW_2_Pin, true);
+   // start the timer for checking the buttons
   if(HAL_TIM_Base_Start_IT(&htim7) != HAL_OK){
     Error_Handler();
   } 
@@ -267,8 +290,7 @@ int main(void)
     if(ledUpdateDue()){
       // check the switches while we're here
       ps.fxEngaged = HAL_GPIO_ReadPin(BYP_GPIO_Port, BYP_Pin);
-      ps.switchA = HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin);
-      ps.switchB = HAL_GPIO_ReadPin(SW_2_GPIO_Port, SW_2_Pin);
+      ps.expButton = HAL_GPIO_ReadPin(MODE_GPIO_Port, MODE_Pin);
       updateLedData(PedalState_getLedData(&ps));
     }
     // if(flagCheckNeeded){
@@ -785,7 +807,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LED_NRST_GPIO_Port, LED_NRST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(CODEC_NRST_GPIO_Port, CODEC_NRST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(CODEC_NRST_GPIO_Port, CODEC_NRST_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, DBG1_Pin|DBG2_Pin, GPIO_PIN_RESET);
@@ -869,12 +891,9 @@ static inline isample_t floatToSample(float value){
 
 void loadInputBuf(isample_t* ptr){
   for(uint32_t i = 0; i < AUDIO_BUF_SIZE; ++i){
-    //int32_t leftVal = ptr[(i * 2) + 1];
-    //push_dc_measurement_value(leftVal);
     inputBufLeft[i] = sampleToFloat(ptr[(i * 2) + 1]);
     inputBufRight[i] = sampleToFloat(ptr[(i * 2)]);
   }
-  //leftDcBias = get_dc_offset();
 }
 
 void loadOutputBuf(isample_t* dac){
@@ -904,16 +923,21 @@ void startKnobADC(){
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
   if(htim == &htim7){
-    if(algSwitchDebounce()){
+    if(button_debounce(&rightBtn)){
       ps.algIdx = (ps.algIdx + 1) % 6;
+    }
+    if(button_debounce(&leftBtn)){
+      if(ps.algIdx == 0){
+        ps.algIdx = 5;
+      } else {
+        ps.algIdx--;
+      }
     }
   } else if (htim == &htim3){
     ledUpdateNeeded = true;
   } 
-  // else if (htim == &htim6){
-  //   flagCheckNeeded = true;
-  // }
 }
+
 //=====================================================================================
 /* USER CODE END 4 */
 

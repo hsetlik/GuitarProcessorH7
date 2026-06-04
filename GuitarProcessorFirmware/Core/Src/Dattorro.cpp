@@ -143,7 +143,7 @@ float Dattorro::processMono(float in){
 }
 
 
-float Dattorro::processStereo(float input, float* outL, float* outR){
+void Dattorro::processStereo(float input, float* outL, float* outR){
 	processIn(input);
 	*outL = getLeft();
 	*outR = getRight();

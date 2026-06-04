@@ -1,4 +1,5 @@
 #include "PedalState.h"
+#include <complex.h>
 
 
 void PedalState_init(pedal_state_t* ps){
@@ -8,8 +9,7 @@ void PedalState_init(pedal_state_t* ps){
     ps->knobB = 0.0f;
     ps->knobC = 0.0f;
     ps->knobD = 0.0f;
-	ps->switchA = false;
-	ps->switchB = false;
+	ps->expButton = false;
 }
 
 
