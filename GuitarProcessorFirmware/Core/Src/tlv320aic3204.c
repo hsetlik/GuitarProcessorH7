@@ -63,9 +63,9 @@ uint8_t TLV_verifyRegister(uint8_t page, uint8_t addr, uint8_t expected) {
 HAL_StatusTypeDef TLV_initCodec(tlv_register_t *settings, uint16_t size) {
 	// step 1: cycle the NRST pin
 	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_RESET);
-	HAL_Delay(100);
+	HAL_Delay(25);
 	HAL_GPIO_WritePin(TLV_NRST_GPIO_Port, TLV_NRST_Pin, GPIO_PIN_SET);
-	HAL_Delay(100);
+	HAL_Delay(25);
 	// step 2: perform hardware reset
 	HAL_StatusTypeDef resetStatus = TLV_writeRegister(TLV_softwareReset_pg,
 			TLV_softwareReset_reg, 0x01);
@@ -355,7 +355,7 @@ HAL_StatusTypeDef TLV_quickInit_stereoGuitarPedal(){
 	++idx;
 
 	// DAC setup stuff------------------------------------------------------
-	// Per the application note, the the master input clock (12.288 Mhz) is equal to NDAC * MDAC * DOSR
+	// Per the application note, the the master input clock (12 Mhz) is equal to NDAC * MDAC * DOSR
 	// set NDAC divider to 2
 	settings[idx] = (tlv_register_t){TLV_NDAC_pg, TLV_NDAC_reg, 0b10000010};
 	++idx;
@@ -396,8 +396,6 @@ HAL_StatusTypeDef TLV_quickInit_stereoGuitarPedal(){
 	return TLV_initCodec(settings, idx);
 
 }
-
-
 
 // troubleshooting stuff-------------------------------------------
 void TLV_checkFlags(){

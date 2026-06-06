@@ -62,7 +62,7 @@ SchroederAlg::~SchroederAlg(){
 
 float SchroederAlg::processSampleMono(float input){
     const float dry = input;
-    input *= 0.2f;
+    input *= 0.8f;
     float out = 0.0f;
 
     // comb filters

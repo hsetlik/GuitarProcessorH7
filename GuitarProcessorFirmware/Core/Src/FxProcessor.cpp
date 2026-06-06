@@ -49,9 +49,9 @@ void FxProcessor::prepareAlgorithm(){
     } else if (algIdx == 2){
         alg.reset(new FreeverbAlg());
     } 
-    // else if (algIdx == 3){
-    //     alg.reset(new Dattorro1Alg());
-    // } 
+    else if (algIdx == 3){
+        alg.reset(new Dattorro1Alg());
+    } 
     else {
         alg.reset(new TransparentAlgorithm());
     }

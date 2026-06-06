@@ -48,7 +48,7 @@ namespace Tuning {
     };
 
     // default/fixed parameters
-    static const float fixedGain = 0.015f;
+    static const float fixedGain = 0.15f;
     static const float scaleWet = 3.0f;
     static const float scaleDry = 2.0f;
     static const float scaleDamp = 0.4f;

@@ -6320,7 +6320,7 @@
 				)
 			)
 		)
-		(property "Value" "100n"
+		(property "Value" "1u"
 			(at 77.47 90.17 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -7983,7 +7983,7 @@
 		(fields_autoplaced yes)
 		(uuid "a5774fd2-c574-4371-a441-9f288e9d479f")
 		(property "Reference" "R12"
-			(at 144.018 176.5299 0)
+			(at 144.78 176.5299 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7994,7 +7994,7 @@
 			)
 		)
 		(property "Value" "100k"
-			(at 144.018 179.0699 0)
+			(at 144.78 179.0699 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8074,7 +8074,7 @@
 				)
 			)
 		)
-		(property "Value" "100n"
+		(property "Value" "1u"
 			(at 81.28 147.32 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8312,7 +8312,7 @@
 				)
 			)
 		)
-		(property "Value" "100n"
+		(property "Value" "1u"
 			(at 77.47 77.47 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8749,7 +8749,7 @@
 				)
 			)
 		)
-		(property "Value" "100n"
+		(property "Value" "1u"
 			(at 80.01 125.73 90)
 			(show_name no)
 			(do_not_autoplace no)
