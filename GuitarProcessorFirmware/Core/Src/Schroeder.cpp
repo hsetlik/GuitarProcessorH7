@@ -7,9 +7,7 @@
 #define FB_MAX 0.95f
 #define DAMP_MIN 0.1f
 #define DAMP_MAX 0.85f
-static inline float flerp(float a, float b, float prop){
-    return a + ((b - a) * prop);
-}
+
 
 static const uint32_t COMB_LENGTHS[]   = {1116, 1188, 1277, 1356};
 static const uint32_t STEREO_WIDTH = 22;

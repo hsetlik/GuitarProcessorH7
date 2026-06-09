@@ -58,6 +58,11 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 
+// math utility that gets used often enough to go here
+inline float flerp(float a, float b, float proportion){
+  return a + ((b - a) * proportion);
+}
+
 
 // stuff for driving the LEDs
 bool ledUpdateDue();

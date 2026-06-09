@@ -13,7 +13,13 @@ static inline float AP_process(DelayLine *dl, uint16_t cycle, float gain, float 
 	return delayed + in * gain;
 }
 
-Dattorro::Dattorro() {
+
+Dattorro::Dattorro() :
+	preFilterRange(0.45f, 0.98f, 0.85f),
+	dampRange(0.65f, 0.999f, 0.9f),
+	decayRange(0.35f, 0.95f, 0.75f),
+	wetRange(0.08f, 0.65f, 0.3f)
+{
 	if(AXISRAMPool::poolInUse()){
 		Error_Handler();
 	}
@@ -64,21 +70,43 @@ Dattorro::Dattorro() {
 	inputDiff2Amt = 0.625f;
 	decayAmt = 0.75f;
 	decayDiff1Amt = 0.70f;
+	decayDiff2Amt = std::clamp(decayAmt, 0.25f, 0.5f);
 	dampingAmt = 0.95f;
 	t = 0;
-
+	setPrefilter(0.5f);
+	setDamping(0.5f);
+	setDecay(0.5f);
+	setWetLevel(0.5f);
 }
 
 Dattorro::~Dattorro(){
 	AXISRAMPool::freePool();
 }
 
+void Dattorro::setPrefilter(float value){
+	preFilterAmt = preFilterRange.getDenormalized(value);
+}
+
+void Dattorro::setDamping(float value){
+	dampingAmt = dampRange.getDenormalized(value);
+}
+
+void Dattorro::setDecay(float value){
+	decayAmt = decayRange.getDenormalized(value);
+	decayDiff2Amt = std::clamp(decayAmt, 0.25f, 0.5f);
+}
+
+void Dattorro::setWetLevel(float value){
+	wetGain = wetRange.getDenormalized(value);
+	dryGain = 1.0f - wetGain;
+}
 // the main algorithm
 void Dattorro::processIn(const float input) {
 	// modulate decayDiffusion1 for both tanks
 	// if(std::isnan(input)){
 	// 	Error_Handler();
 	// }
+	drySample = input;
 	if ((t & 0x07ff) == 0) {
 		if (t < (1 << 15)) {
 			decayDiffusion1[0].offsets[0]--;
@@ -122,7 +150,7 @@ float Dattorro::getLeft(){
 	a -= preDampingDelay[0].read(3, t);
 	a -= decayDiffusion2[0].read(1, t);
 	a += postDampingDelay[0].read(1, t);
-	return a;
+	return (a * wetGain) + (drySample * dryGain);
 }
 
 float Dattorro::getRight(){
@@ -133,7 +161,7 @@ float Dattorro::getRight(){
 	a -= preDampingDelay[1].read(3, t);
 	a -= decayDiffusion2[1].read(1, t);
 	a += postDampingDelay[1].read(1, t);
-	return a;
+	return (a * wetGain) + (drySample * dryGain);
 }
 
 // Main public callback====================================
@@ -170,5 +198,8 @@ void Dattorro1Alg::processChunkStereo(float* inL, float* inR, float* outL, float
 
 
 void Dattorro1Alg::updateParams(pedal_state_t* ps){
-	//TODO: have the knobs control something here
+	verb.setPrefilter(ps->knobA);
+	verb.setDamping(ps->knobB);
+	verb.setDecay(ps->knobC);
+	verb.setWetLevel(ps->knobD);
 }

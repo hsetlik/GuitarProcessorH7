@@ -10,6 +10,7 @@
 #ifdef __cplusplus
 #include "DelayLine.h"
 #include "FxAlgorithm.h"
+#include "NormRange.h"
 #define MAX_PREDELAY 4400
 
 
@@ -20,6 +21,9 @@ private:
 	float preFilter;
 	// input diffusors
 	DelayLine inDiffusion[4];
+
+	// store the last input for mixing in dry signal
+	float drySample;
 
 	// the two 'tanks'
 	DelayLine decayDiffusion1[2];
@@ -38,13 +42,31 @@ public:
 	float decayDiff2Amt;
 	float dampingAmt;
 	float decayAmt;
+
 	//=====================================================
 	Dattorro();
 	~Dattorro();
 	float processMono(float input);
 	void processStereo(float input, float* outL, float* outR);
+	/*controls are, left to right:
+		1. pre-filter
+		2. damping
+		3. decay
+		4. wet/dry	
+	*/ 
+	// all these should take 0-1 values
+	void setPrefilter(float value);
+	void setDamping(float value);
+	void setDecay(float value);
+	void setWetLevel(float value);
 private:
-	//
+	NormRange preFilterRange;
+	NormRange dampRange;
+	NormRange decayRange;
+	NormRange wetRange;
+	float wetGain;
+	float dryGain;
+
 	void processIn(const float input);
 	float getLeft();
 	float getRight();
