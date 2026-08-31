@@ -47,7 +47,7 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 )
 
 set(SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/Core/Src)
-
+set(DSP_DIR ${CMAKE_CURRENT_LIST_DIR}/Drivers/CMSIS/DSP)
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
@@ -62,17 +62,24 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${SRC_DIR}/Schroeder.cpp
     ${SRC_DIR}/Freeverb.cpp
     ${SRC_DIR}/NormRange.cpp
+    ${DSP_DIR}/Source/BasicMathFunctions/BasicMathFunctions.c
+    ${DSP_DIR}/Source/CommonTables/CommonTables.c
+    ${DSP_DIR}/Source/FastMathFunctions/FastMathFunctions.c
+    ${DSP_DIR}/Source/FilteringFunctions/FilteringFunctions.c
+    ${DSP_DIR}/Source/TransformFunctions/TransformFunctions.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
     ${CMAKE_CURRENT_LIST_DIR}/Core/Inc
+    ${CMAKE_CURRENT_LIST_DIR}/Drivers/CMSIS/DSP/Include
 )
 
 # Add project symbols (macros)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined symbols
+    ARM_MATH_LOOPUNROLL
 )
 
 # Remove wrong libob.a library dependency when using cpp files

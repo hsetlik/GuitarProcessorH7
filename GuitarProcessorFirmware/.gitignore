@@ -4,3 +4,4 @@ mx.scratch
 .mxproject
 Drivers/CMSIS/*
 Drivers/STM32*
+*/*/.history
