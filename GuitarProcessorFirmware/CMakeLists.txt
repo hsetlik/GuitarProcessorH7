@@ -59,6 +59,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${SRC_DIR}/DelayLine.cpp
     ${SRC_DIR}/Dattorro.cpp
     ${SRC_DIR}/AXISRAMPool.cpp
+    ${SRC_DIR}/DTCMPool.cpp
     ${SRC_DIR}/Schroeder.cpp
     ${SRC_DIR}/Freeverb.cpp
     ${SRC_DIR}/NormRange.cpp
@@ -68,6 +69,18 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${DSP_DIR}/Source/FilteringFunctions/FilteringFunctions.c
     ${DSP_DIR}/Source/TransformFunctions/TransformFunctions.c
 )
+
+set(DSP_HOT_SOURCES
+    ${SRC_DIR}/Dattorro.cpp
+    ${SRC_DIR}/DelayLine.cpp
+    ${SRC_DIR}/Schroeder.cpp
+    ${SRC_DIR}/Freeverb.cpp
+    ${SRC_DIR}/FxAlgorithm.cpp
+    ${SRC_DIR}/FxProcessor.cpp
+    # add the CMSIS-DSP umbrella .c files here too if you want them at -O3
+)
+set_source_files_properties(${DSP_HOT_SOURCES} PROPERTIES
+    COMPILE_OPTIONS "-O3;-ffp-contract=fast;-funroll-loops")
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE

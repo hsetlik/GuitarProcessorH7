@@ -17,17 +17,25 @@ private:
 	uint16_t length;
 	float* data = nullptr;
 	uint16_t mask = 0;
+	bool useASI = true;
 public:
 	uint16_t offsets[MAX_TAPS];
 	DelayLine();
 	~DelayLine();
-	void init(uint16_t delay);
+	void init(uint16_t delay, bool useASI = true);
 	// set the length of a delay tap
 	void setDelay(uint8_t tap, uint16_t delaySamples);
 	// read/write access
-	float process(uint16_t cycle, float input);
-	void write(uint16_t cycle, float input);
-	float read(uint8_t tap, uint16_t cycle);
+	inline float process(uint16_t cycle, float input){
+		write(cycle, input);
+		return read(TAP_MAIN, cycle);
+	}
+	inline void write(uint16_t cycle, float input){
+		data[cycle & mask] = input;
+	}
+	inline float read(uint8_t tap, uint16_t cycle){
+		return data[(cycle + offsets[tap]) & mask];
+	}
 };
 
 

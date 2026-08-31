@@ -1,6 +1,7 @@
 #include "DelayLine.h"
 #include <memory>
 #include "AXISRAMPool.h"
+#include "DTCMPool.h"
 
 uint16_t neededBufSize(uint16_t delay) {
 	uint16_t sigBits = 0;
@@ -17,11 +18,16 @@ DelayLine::DelayLine() {
 	}
 }
 
-void DelayLine::init(uint16_t size) {
+void DelayLine::init(uint16_t size, bool shouldUseASI) {
+	useASI = shouldUseASI;
 	maxDelay = size;
 	length = neededBufSize(maxDelay);
 	// allocate the buffer
-	data = AXISRAMPool::alloc(length, true);
+	if(useASI){
+		data = AXISRAMPool::alloc(length, true);
+	} else {
+		data = DTCMPool::alloc(length, true);
+	}
 	// initialize the bitmask
 	mask = length - 1;
 	// set the main delay tap to max
@@ -33,17 +39,4 @@ void DelayLine::setDelay(uint8_t tap, uint16_t delay) {
 }
 
 DelayLine::~DelayLine() {
-}
-
-float DelayLine::process(uint16_t cycle, float input) {
-	write(cycle, input);
-	return read(TAP_MAIN, cycle);
-}
-
-void DelayLine::write(uint16_t cycle, float input) {
-	data[cycle & mask] = input;
-}
-
-float DelayLine::read(uint8_t tap, uint16_t cycle) {
-	return data[(cycle + offsets[tap]) & mask];
 }

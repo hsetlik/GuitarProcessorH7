@@ -248,6 +248,14 @@ SECTIONS
     . = ALIGN(4);
   } >RAM
 
+  /* Small CPU-only pool kept in zero-wait-state DTCMRAM (DTCMPool) */
+  .dtcm_pool (NOLOAD) : ALIGN(8)
+  {
+    *(.dtcm_pool)
+    *(.dtcm_pool*)
+    . = ALIGN(8);
+  } >DTCMRAM
+
   /* Large scratch/pool allocations that must NOT go in DTCMRAM */
   .axisram_pool (NOLOAD) : ALIGN(4)
   {

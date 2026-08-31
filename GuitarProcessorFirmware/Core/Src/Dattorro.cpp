@@ -1,5 +1,6 @@
 #include "Dattorro.h"
 #include <algorithm>
+#include "DTCMPool.h"
 #include "main.h"
 // filter helpers
 static inline float LP_process(float* out, float in, float freq) {
@@ -20,18 +21,18 @@ Dattorro::Dattorro() :
 	decayRange(0.35f, 0.95f, 0.75f),
 	wetRange(0.08f, 0.65f, 0.3f)
 {
-	if(AXISRAMPool::poolInUse()){
+	if(AXISRAMPool::poolInUse() || DTCMPool::poolInUse()){
 		Error_Handler();
 	}
 	// Initialize the delay buffers w the numbers from Dattorro's paper
 	preDelay.init(MAX_PREDELAY);
 	// input diffusion delays
-	inDiffusion[0].init(142);
-	inDiffusion[1].init(107);
-	inDiffusion[2].init(379);
-	inDiffusion[3].init(277);
+	inDiffusion[0].init(142, false);
+	inDiffusion[1].init(107, false);
+	inDiffusion[2].init(379, false);
+	inDiffusion[3].init(277, false);
 	// left tank----------------------------
-	decayDiffusion1[0].init(672);
+	decayDiffusion1[0].init(672, false);
 
 	preDampingDelay[0].init(4453);
 	preDampingDelay[0].setDelay(1, 353);
@@ -47,7 +48,7 @@ Dattorro::Dattorro() :
 	postDampingDelay[0].setDelay(2, 2673);
 
 	// right tank----------------------------
-	decayDiffusion1[1].init(908);
+	decayDiffusion1[1].init(908, false);
 
 	preDampingDelay[1].init(4217);
 	preDampingDelay[1].setDelay(1, 266);
@@ -81,6 +82,7 @@ Dattorro::Dattorro() :
 
 Dattorro::~Dattorro(){
 	AXISRAMPool::freePool();
+	DTCMPool::freePool();
 }
 
 void Dattorro::setPrefilter(float value){
