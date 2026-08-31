@@ -40,3 +40,20 @@ void DelayLine::setDelay(uint8_t tap, uint16_t delay) {
 
 DelayLine::~DelayLine() {
 }
+
+#ifndef INLINE_DELAY_ACCESS
+
+float DelayLine::read(uint8_t tap, uint16_t cycle){
+	return data[(cycle + offsets[tap]) & mask];
+
+}
+
+void DelayLine::write(uint16_t cycle, float input){
+	data[cycle & mask] = input;
+}
+
+float DelayLine::process(uint16_t cycle, float input){
+	write(cycle, input);
+	return read(TAP_MAIN, cycle);
+}
+#endif

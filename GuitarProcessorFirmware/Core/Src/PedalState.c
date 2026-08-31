@@ -3,7 +3,7 @@
 
 
 void PedalState_init(pedal_state_t* ps){
-    ps->algIdx = 0;
+    ps->algIdx = 3;
     ps->fxEngaged = true;
     ps->knobA = 0.0f;
     ps->knobB = 0.0f;

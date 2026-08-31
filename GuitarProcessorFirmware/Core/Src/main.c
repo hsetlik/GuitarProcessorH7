@@ -206,7 +206,7 @@ int main(void)
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
   // find any valid I2C devices
-  uint16_t address = i2c_scan(&hi2c2);
+  //uint16_t address = i2c_scan(&hi2c2);
   // initialize the audio codec
   HAL_StatusTypeDef tlvStatus = TLV_quickInit_stereoGuitarPedal();
   if(tlvStatus != HAL_OK){
@@ -882,7 +882,7 @@ void HAL_I2SEx_TxRxHalfCpltCallback(I2S_HandleTypeDef *i2s) {
 // }
 
 static inline float sampleToFloat(isample_t value){
-    return (float)(value - INPUT_DC_OFFSET) / 2147483648.0f;  // 2^31
+    return (float)value / 2147483648.0f;  // 2^31
 }
 
 static inline isample_t floatToSample(float value){
