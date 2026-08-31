@@ -18,12 +18,12 @@ DelayLine::DelayLine() {
 	}
 }
 
-void DelayLine::init(uint16_t size, bool shouldUseASI) {
-	useASI = shouldUseASI;
+void DelayLine::init(uint16_t size, bool shouldUseAXI) {
+	useAXI = shouldUseAXI;
 	maxDelay = size;
 	length = neededBufSize(maxDelay);
 	// allocate the buffer
-	if(useASI){
+	if(useAXI){
 		data = AXISRAMPool::alloc(length, true);
 	} else {
 		data = DTCMPool::alloc(length, true);

@@ -17,12 +17,12 @@ private:
 	uint16_t length;
 	float* data = nullptr;
 	uint16_t mask = 0;
-	bool useASI = true;
+	bool useAXI = true;
 public:
 	uint16_t offsets[MAX_TAPS];
 	DelayLine();
 	~DelayLine();
-	void init(uint16_t delay, bool useASI = true);
+	void init(uint16_t delay, bool useAXI = true);
 	// set the length of a delay tap
 	void setDelay(uint8_t tap, uint16_t delaySamples);
 	// read/write access
